@@ -15,6 +15,7 @@
 <link rel="stylesheet" href="css/bootstrap-theme.min.css">
 </head>
 <body>
+	<%@ include file="Header.jsp" %>
 	<h1>Welcome ${sessionScope.account.name}</h1>
 </body>
 </html>

@@ -17,21 +17,20 @@
 </head>
 <body>
 	<div class="container">
-		<form class="form-signin" method="post" action="LoginServlet">
-			<h2 class="form-signin-heading text-center">Please sign in</h2>
-			<label for="inputUsername" class="sr-only">Username</label> <input
-				type="text" id="inputUsername" class="form-control"
-				placeholder="Username" name="username" required autofocus> <label
-				for="inputPassword" class="sr-only">Password</label> <input
-				type="password" id="inputPassword" class="form-control"
-				placeholder="Password" name="password" required>
-			<button class="btn btn-lg btn-primary btn-block" type="submit">Sign
-				in</button>
+		<form method="post" action="LoginServlet">
+			<h2 class="text-center">Please sign in</h2>
+			<input type="text" class="form-control" placeholder="Username" name="username" required>  
+			<input type="password" class="form-control" placeholder="Password" name="password" required>
+			<button class="btn btn-lg btn-primary btn-block" type="submit">Log In</button>
 		</form>
 		<% 
 			if ((Boolean)(session.getAttribute("incorrect")) != null) {
 				out.println("Incorrect username/password.");
 				session.removeAttribute("incorrect");
+			}
+			if ((Boolean)(session.getAttribute("logout")) != null) {
+				out.println("Successfully logged out.");
+				session.removeAttribute("logout");
 			}
 		%>
 	</div>
