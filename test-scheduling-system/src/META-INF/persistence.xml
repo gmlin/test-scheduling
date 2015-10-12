@@ -1,7 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
-	<persistence-unit name="test-scheduling-system">
-		<class>Appointment</class>
-		<class>Seat</class>
+	<persistence-unit name="test-scheduling-system" transaction-type="RESOURCE_LOCAL">
+		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+		<class>cse308.testscheduling.Administrator</class>
+		<class>cse308.testscheduling.Appointment</class>
+		<class>cse308.testscheduling.Course</class>
+		<class>cse308.testscheduling.Exam</class>
+		<class>cse308.testscheduling.Instructor</class>
+		<class>cse308.testscheduling.Request</class>
+		<class>cse308.testscheduling.Scheduler</class>
+		<class>cse308.testscheduling.Seat</class>
+		<class>cse308.testscheduling.Student</class>
+		<class>cse308.testscheduling.TestingCenter</class>
+		<class>cse308.testscheduling.User</class>
+		<properties>
+			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://mysql2.cs.stonybrook.edu:3306/cse308mingteam"/>
+			<property name="javax.persistence.jdbc.user" value="cse308mingteam"/>
+			<property name="javax.persistence.jdbc.password" value="changeit"/>
+			<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
+		</properties>
 	</persistence-unit>
 </persistence>

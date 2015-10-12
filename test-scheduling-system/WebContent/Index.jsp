@@ -2,7 +2,7 @@
 	pageEncoding="UTF-8"%>
 
 <% 
-	if (session.getAttribute("username") == null)
+	if (session.getAttribute("account") == null)
 		response.sendRedirect("Login.jsp");
 %>
 
@@ -15,6 +15,6 @@
 <link rel="stylesheet" href="css/bootstrap-theme.min.css">
 </head>
 <body>
-	<h1>Welcome ${sessionScope.username}</h1>
+	<h1>Welcome ${sessionScope.account.username}</h1>
 </body>
 </html>

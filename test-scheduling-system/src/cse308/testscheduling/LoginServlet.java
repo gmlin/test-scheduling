@@ -1,7 +1,14 @@
+package cse308.testscheduling;
 
 
 import java.io.IOException;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.NoResultException;
+import javax.persistence.Persistence;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -31,6 +38,21 @@ public class LoginServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		HttpSession session = request.getSession();
 		session.setAttribute("username", request.getParameter("username"));
+		session.setAttribute("password", request.getParameter("password"));
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory("test-scheduling-system");
+	    EntityManager em = emf.createEntityManager();
+		Query query = em.createQuery("SELECT u FROM User u WHERE u.username = :username AND u.password = :password", User.class);
+	    query.setParameter("username", session.getAttribute("username"));
+	    query.setParameter("password", session.getAttribute("password")); 
+	    try{ 
+	    	User user = (User) query.getSingleResult();
+	    	em.persist(user);
+	    	session.setAttribute("account", user);
+	    }
+	    catch (NoResultException e) {
+	    }
+	    finally {
+	    }
 		response.sendRedirect("Index.jsp");
 	}
 
