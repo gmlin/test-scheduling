@@ -14,33 +14,33 @@ public class Scheduler implements Serializable {
 
 	@Id
 	private int id;
-	private List appointments;
-	private List exams;
-	private List requests;
+	private List<Appointment> appointments;
+	private List<Exam> exams;
+	private List<Request> requests;
 	private static final long serialVersionUID = 1L;
 
 	public Scheduler() {
 		super();
 	}   
-	public List getAppointments() {
+	public List<Appointment> getAppointments() {
 		return this.appointments;
 	}
 
-	public void setAppointments(List appointments) {
+	public void setAppointments(List<Appointment> appointments) {
 		this.appointments = appointments;
 	}   
-	public List getExams() {
+	public List<Exam> getExams() {
 		return this.exams;
 	}
 
-	public void setExams(List exams) {
+	public void setExams(List<Exam> exams) {
 		this.exams = exams;
 	}   
-	public List getRequests() {
+	public List<Request> getRequests() {
 		return this.requests;
 	}
 
-	public void setRequests(List requests) {
+	public void setRequests(List<Request> requests) {
 		this.requests = requests;
 	}
    

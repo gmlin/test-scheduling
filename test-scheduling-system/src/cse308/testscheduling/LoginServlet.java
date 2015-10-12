@@ -8,7 +8,6 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.NoResultException;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
-import javax.persistence.TypedQuery;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -50,10 +49,12 @@ public class LoginServlet extends HttpServlet {
 	    	session.setAttribute("account", user);
 	    }
 	    catch (NoResultException e) {
+	    	session.setAttribute("incorrect", true);
+	    	
 	    }
 	    finally {
+	    	response.sendRedirect("Login.jsp");
 	    }
-		response.sendRedirect("Index.jsp");
 	}
 
 }

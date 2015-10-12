@@ -15,7 +15,7 @@ public class TestingCenter implements Serializable {
 	   
 	@Id
 	private int id;
-	private List seats;
+	private List<Seat> seats;
 	private static final long serialVersionUID = 1L;
 
 	public TestingCenter() {
@@ -28,11 +28,11 @@ public class TestingCenter implements Serializable {
 	public void setId(int id) {
 		this.id = id;
 	}   
-	public List getSeats() {
+	public List<Seat> getSeats() {
 		return this.seats;
 	}
 
-	public void setSeats(List seats) {
+	public void setSeats(List<Seat> seats) {
 		this.seats = seats;
 	}
    

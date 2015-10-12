@@ -16,6 +16,7 @@ public class Appointment implements Serializable {
 
 	   
 	@Id
+	private int appointmentID;
 	private int seatNumber;
 	private int studentID;
 	private int examID;

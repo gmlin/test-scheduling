@@ -18,6 +18,7 @@ public class Student extends User implements Serializable {
 	@Id
 	private int StudentID;
 	private List<Appointment> appointments;   
+	private List<Course> courses;
 	private static final long serialVersionUID = 1L;
 
 	public Student() {
@@ -36,6 +37,12 @@ public class Student extends User implements Serializable {
 
 	public void setStudentID(int StudentID) {
 		this.StudentID = StudentID;
+	}
+	public List<Course> getCourses() {
+		return courses;
+	}
+	public void setCourses(List<Course> courses) {
+		this.courses = courses;
 	}
    
 }

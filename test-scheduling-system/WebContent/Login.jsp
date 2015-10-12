@@ -2,7 +2,6 @@
 	pageEncoding="UTF-8"%>
 
 <% 
-
 	if (session.getAttribute("account") != null) {
 		response.sendRedirect("Index.jsp");
 	}
@@ -29,6 +28,12 @@
 			<button class="btn btn-lg btn-primary btn-block" type="submit">Sign
 				in</button>
 		</form>
+		<% 
+			if ((Boolean)(session.getAttribute("incorrect")) != null) {
+				out.println("Incorrect username/password.");
+				session.removeAttribute("incorrect");
+			}
+		%>
 	</div>
 </body>
 </html>
