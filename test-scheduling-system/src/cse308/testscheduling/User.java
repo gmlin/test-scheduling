@@ -12,16 +12,25 @@ import javax.persistence.*;
 
 public class User implements Serializable {
 
-	   
+	//name the primary key column "NET_ID"	   
 	@Id
 	@Column(name ="NET_ID")
 	private String username;
 	private String password;
 	private String name;
+	
+	//this is a one-to-one association between admin and user, 
+	//admin field specifies the role of user
 	@OneToOne(optional=true)
 	private Administrator administrator;
-	@OneToOne(optional=true)
+	
+	//this is a one-to-one association between instructor and user, 
+	//instructor field specifies the role of user
+	@OneToOne(mappedBy="user",optional=true)
 	private Instructor instructor;
+	
+	//this is a one-to-one association between student and user, 
+	//student field specifies the role of user
 	@OneToOne(optional=true)
 	private Student student;
 	private static final long serialVersionUID = 1L;

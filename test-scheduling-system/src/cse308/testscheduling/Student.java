@@ -15,12 +15,21 @@ import javax.persistence.*;
 
 public class Student implements Serializable {
 
+	//primary key is StudentID
 	@Id
 	private int StudentID;
+	
+	//this is a one-to-one association between student and user, 
+	//student field specifies the role of user
 	@OneToOne(mappedBy="student",optional=false)
 	private User user;
+	
+	//a student can have multiple appointments
 	@OneToMany(mappedBy="student")
 	private List<Appointment> appointments;
+	
+	//a student can take many courses
+	//a course can have many students
 	@ManyToMany(mappedBy="roster")
 	private List<Course> courses;
 	private static final long serialVersionUID = 1L;

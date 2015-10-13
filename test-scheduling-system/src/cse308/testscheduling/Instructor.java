@@ -13,13 +13,21 @@ import javax.persistence.*;
 
 public class Instructor implements Serializable {
 
+	//primary key is ID
 	@Id
 	private int ID;
-	@OneToOne(mappedBy="instructor",optional=false)
+	
+	//this is a one-to-one association between instructor and user, 
+	//instructor field specifies the role of user
+	@OneToOne(optional=false)
 	private User user;
+	
+	//a course has multiple instructors, instructor can teach multiple courses
 	@ManyToMany(mappedBy="instructors")
 	private List<Course> courses;
 	//private List<Request> requests; don't need?
+	
+	//a instructor can associate with multiple exams
 	@OneToMany(mappedBy="instructor")
 	private List<Exam> exams;
 	private static final long serialVersionUID = 1L;

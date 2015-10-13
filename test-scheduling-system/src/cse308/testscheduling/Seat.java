@@ -13,9 +13,11 @@ import java.util.List;
 
 public class Seat implements Serializable {
 
-	   
+	//primary key is seatNumber  
 	@Id
 	private int seatNumber;
+	
+	//a seat can be assigned to multiple appointments
 	@OneToMany(mappedBy="seat")
 	private List<Appointment> appointments;
 	private boolean setAside;

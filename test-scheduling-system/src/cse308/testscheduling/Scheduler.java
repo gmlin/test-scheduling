@@ -12,6 +12,7 @@ import javax.persistence.*;
 
 public class Scheduler implements Serializable {
 
+	//primary key is id
 	@Id
 	private int id;
 	private List<Appointment> appointments;

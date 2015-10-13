@@ -12,8 +12,12 @@ import javax.persistence.*;
 
 public class Administrator implements Serializable {
 
-	@Id
+	@Id 
+	//ID is the primary key in admin table
 	private int ID;
+	
+	//this is a one-to-one association between admin and user, 
+	//admin field specifies the role of user
 	@OneToOne(mappedBy="administrator",optional=false)
 	private User user;
 
