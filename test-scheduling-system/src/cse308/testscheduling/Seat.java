@@ -3,6 +3,8 @@ package cse308.testscheduling;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,6 +27,7 @@ public class Seat implements Serializable {
 
 	public Seat() {
 		super();
+		appointments = new ArrayList<Appointment>();
 	}   
 	public int getSeatNumber() {
 		return this.seatNumber;
@@ -40,4 +43,7 @@ public class Seat implements Serializable {
 		this.setAside = setAside;
 	}
    
+	public void addAppointment(Appointment appointment) {
+		appointments.add(appointment);
+	}
 }

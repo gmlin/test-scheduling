@@ -2,7 +2,7 @@
 	pageEncoding="UTF-8"%>
 
 <% 
-	if (session.getAttribute("account") != null) {
+	if (session.getAttribute("user") != null) {
 		response.sendRedirect("Index.jsp");
 	}
 %>

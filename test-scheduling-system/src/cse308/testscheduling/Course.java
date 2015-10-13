@@ -2,6 +2,7 @@ package cse308.testscheduling;
 
 import java.io.Serializable;
 import java.lang.String;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
 
@@ -16,7 +17,7 @@ public class Course implements Serializable {
 	//The primary key in nameed "COURSE_ID" in course table   
 	@Id
 	@Column(name="COURSE_ID")
-	private String courseID;
+	private String courseId;
 	
 	//a course has multiple students, student can have multiple courses
 	//generate new table contains the course id column and student net id column
@@ -24,8 +25,8 @@ public class Course implements Serializable {
 	@JoinTable(
 		name="COURSE_STUDENT",
 		joinColumns={@JoinColumn(name="COURSE_ID", referencedColumnName="COURSE_ID")},
-		inverseJoinColumns={@JoinColumn(name="STUDENT_NET_ID", referencedColumnName="NET_ID")})
-	private List<Student> roster;
+		inverseJoinColumns={@JoinColumn(name="NET_ID", referencedColumnName="NET_ID")})
+	private List<Student> students;
 	
 	//a course has multiple instructors, instructor can teach multiple courses
 	//generate new table contains the course id column and instructor net id column
@@ -33,7 +34,7 @@ public class Course implements Serializable {
 	@JoinTable(
 		name="COURSE_INSTRUCTOR",
 		joinColumns={@JoinColumn(name="COURSE_ID", referencedColumnName="course_ID")},
-		inverseJoinColumns={@JoinColumn(name="INSTRUCTOR_NET_ID", referencedColumnName="NET_ID")})
+		inverseJoinColumns={@JoinColumn(name="NET_ID", referencedColumnName="NET_ID")})
 	private List<Instructor> instructors;
 	
 	//a course can have multiple exam, so it is one-to-many
@@ -45,26 +46,23 @@ public class Course implements Serializable {
 
 	public Course() {
 		super();
+		students = new ArrayList<Student>();
+		instructors = new ArrayList<Instructor>();
 	}   
-	public String getCourseID() {
-		return this.courseID;
+	public String getCourseId() {
+		return this.courseId;
 	}
 
-	public void setCourseID(String courseID) {
-		this.courseID = courseID;
+	public void setCourseId(String courseId) {
+		this.courseId = courseId;
 	}   
-	public List<Student> getRoster() {
-		return this.roster;
-	}
 
-	public void setRoster(List<Student> roster) {
-		this.roster = roster;
+	public void addStudent(Student student) {
+		students.add(student);
 	}
-	public List<Instructor> getInstructors() {
-		return instructors;
-	}
-	public void setInstructors(List<Instructor> instructors) {
-		this.instructors = instructors;
+	
+	public void addInstructor(Instructor instructor) {
+		instructors.add(instructor);
 	}
    
 }

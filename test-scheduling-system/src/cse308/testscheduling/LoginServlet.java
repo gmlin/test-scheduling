@@ -40,12 +40,12 @@ public class LoginServlet extends HttpServlet {
 		session.setAttribute("password", request.getParameter("password"));
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("test-scheduling-system");
 	    EntityManager em = emf.createEntityManager();
-		Query query = em.createQuery("SELECT u FROM User u WHERE u.username = :username AND u.password = :password", User.class);
+		Query query = em.createQuery("SELECT u FROM User u WHERE u.netId = :username AND u.password = :password", User.class);
 	    query.setParameter("username", session.getAttribute("username"));
 	    query.setParameter("password", session.getAttribute("password")); 
 	    try{ 
 	    	User user = (User) query.getSingleResult();
-	    	session.setAttribute("account", user);
+	    	session.setAttribute("user", user);
 	    }
 	    catch (NoResultException e) {
 	    	session.setAttribute("incorrect", true);

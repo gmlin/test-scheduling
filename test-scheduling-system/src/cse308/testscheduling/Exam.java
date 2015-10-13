@@ -2,6 +2,7 @@ package cse308.testscheduling;
 
 import cse308.testscheduling.Course;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -15,9 +16,9 @@ import javax.persistence.*;
 
 public class Exam implements Serializable {
 
-	//primary key is examID   
+	//primary key is examId   
 	@Id
-	private String examID;
+	private String examId;
 	
 	////a course can have multiple exams.
 	//"COURSE_ID" is the column name corresponding to course
@@ -56,13 +57,14 @@ public class Exam implements Serializable {
 
 	public Exam() {
 		super();
+		appointments = new ArrayList<Appointment>();
 	}   
-	public String getExamID() {
-		return this.examID;
+	public String getExamId() {
+		return this.examId;
 	}
 
-	public void setExamID(String examID) {
-		this.examID = examID;
+	public void setExamId(String examId) {
+		this.examId = examId;
 	}   
 	public Course getCourse() {
 		return this.course;
@@ -92,5 +94,9 @@ public class Exam implements Serializable {
 	}
     public Instructor getInstructor() {
     	return instructor;
+    }
+    
+    public void addAppointment(Appointment appointment) {
+    	appointments.add(appointment);
     }
 }

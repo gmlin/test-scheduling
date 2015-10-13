@@ -7,11 +7,11 @@
 		<class>cse308.testscheduling.Exam</class>
 		<class>cse308.testscheduling.Instructor</class>
 		<class>cse308.testscheduling.Request</class>
-		<class>cse308.testscheduling.Scheduler</class>
 		<class>cse308.testscheduling.Seat</class>
 		<class>cse308.testscheduling.Student</class>
 		<class>cse308.testscheduling.TestingCenter</class>
 		<class>cse308.testscheduling.User</class>
+		<class>cse308.testscheduling.Course</class>
 		<properties>
 			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://mysql2.cs.stonybrook.edu:3306/cse308mingteam"/>
 			<property name="javax.persistence.jdbc.user" value="cse308mingteam"/>

@@ -4,6 +4,8 @@ package cse308.testscheduling;
 import java.io.Serializable;
 import java.sql.Date;
 import java.sql.Time;
+import java.util.Calendar;
+
 import javax.persistence.*;
 
 /**
@@ -14,10 +16,11 @@ import javax.persistence.*;
 
 public class Appointment implements Serializable {
 
-	   
+
 	@Id
-	//primary key is appointmentID
-	private int appointmentID;
+	@GeneratedValue(strategy = GenerationType.IDENTITY) 
+	//primary key is appointmentId
+	private int appointmentId;
 	private boolean setAsideSeat;
 
 	//a seat can belongs to multiple appointments
@@ -28,22 +31,26 @@ public class Appointment implements Serializable {
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="SEAT_NUMBER")
 	private Seat seat;
-	
+
 	//a student can have multiple appointments.
 	//"STUDENT_ID" is the column name corresponding to student
 	//in the appointment table
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="STUDENT_ID")
 	private Student student;
-	
+
 	//a exam can have multiple appointments.
 	//"EXAM_ID" is the column name corresponding to student
 	//in the appointment table
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="EXAM_ID")
 	private Exam exam;
-	private Date date;
-	private Time time;
+	
+	//temporal must be  specified for persistent fields or 
+	//properties of type java.util.Date and java.util.Calendar
+	@Temporal(TemporalType.TIMESTAMP)
+	private Calendar dateTime;
+	
 	private static final long serialVersionUID = 1L;
 
 	public Appointment() {
@@ -75,20 +82,12 @@ public class Appointment implements Serializable {
 
 	public void setExam(Exam exam) {
 		this.exam = exam;
+	}
+	public Calendar getDateTime() {
+		return dateTime;
+	}
+	public void setDateTime(Calendar dateTime) {
+		this.dateTime = dateTime;
 	}   
-	public Date getDate() {
-		return this.date;
-	}
-
-	public void setDate(Date date) {
-		this.date = date;
-	}   
-	public Time getTime() {
-		return this.time;
-	}
-
-	public void setTime(Time time) {
-		this.time = time;
-	}
-   
+	
 }

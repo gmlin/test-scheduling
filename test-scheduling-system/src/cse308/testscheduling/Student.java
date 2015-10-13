@@ -3,6 +3,7 @@ package cse308.testscheduling;
 import cse308.testscheduling.Appointment;
 import cse308.testscheduling.User;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.*;
@@ -15,13 +16,14 @@ import javax.persistence.*;
 
 public class Student implements Serializable {
 
-	//primary key is StudentID
+	//primary key is studentID
 	@Id
-	private int StudentID;
+	private int studentId;
 	
 	//this is a one-to-one association between student and user, 
 	//student field specifies the role of user
-	@OneToOne(mappedBy="student",optional=false)
+	@OneToOne(optional=false)
+	@JoinColumn(name="NET_ID")
 	private User user;
 	
 	//a student can have multiple appointments
@@ -30,32 +32,32 @@ public class Student implements Serializable {
 	
 	//a student can take many courses
 	//a course can have many students
-	@ManyToMany(mappedBy="roster")
+	@ManyToMany(mappedBy="students")
 	private List<Course> courses;
 	private static final long serialVersionUID = 1L;
 
 	public Student() {
 		super();
+		appointments = new ArrayList<Appointment>();
+		courses = new ArrayList<Course>();
 	}   
 	public List<Appointment> getAppointments() {
 		return this.appointments;
 	}
 
-	public void setAppointments(List<Appointment> appointments) {
-		this.appointments = appointments;
-	}   
-	public int getStudentID() {
-		return this.StudentID;
+	public void addAppointment(Appointment appointment) {
+		appointments.add(appointment);
 	}
-
-	public void setStudentID(int StudentID) {
-		this.StudentID = StudentID;
+	
+	public void addCourse(Course course) {
+		courses.add(course);
 	}
-	public List<Course> getCourses() {
-		return courses;
+	
+	public int getStudentId() {
+		return studentId;
 	}
-	public void setCourses(List<Course> courses) {
-		this.courses = courses;
+	public void setStudentId(int studentId) {
+		this.studentId = studentId;
 	}
    
 }

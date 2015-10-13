@@ -1,8 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ page import="cse308.testscheduling.User" %>
 
+<%@ taglib prefix="c" 
+           uri="http://java.sun.com/jsp/jstl/core" %>
+           
 <% 
-	if (session.getAttribute("account") == null)
+	if (session.getAttribute("user") == null)
 		response.sendRedirect("Login.jsp");
 %>
 
@@ -23,9 +27,15 @@
 		<%@ include file="Header.jsp"%>
 		<div class="row">
 			<div class="col-sm-4">
+			<c:if test="${sessionScope.user.administrator != null}">
 				<%@ include file="AdminSidebar.jsp"%>
+			</c:if>
+			<c:if test="${sessionScope.user.instructor != null}">
 				<%@ include file="InstructorSidebar.jsp"%>
+			</c:if>
+			<c:if test="${sessionScope.user.student != null}">
 				<%@ include file="StudentSidebar.jsp"%>
+			</c:if>
 			</div>
 			<div class="col-sm-6">
                 <div class="panel panel-default">

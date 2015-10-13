@@ -29,7 +29,7 @@ public class LogoutServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		HttpSession session = request.getSession();
-		session.removeAttribute("account");
+		session.removeAttribute("user");
 		session.setAttribute("logout", true);
 		response.sendRedirect("Login.jsp");
 	}

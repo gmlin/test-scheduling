@@ -12,9 +12,9 @@ import javax.persistence.*;
 
 public class Request implements Serializable {
 
-	//primary key is requestID   
+	//primary key is requestId   
 	@Id
-	private int requestID;
+	private int requestId;
 	
 	//a request is associate with one exam in the table
 	@OneToOne(mappedBy="request")
@@ -26,12 +26,12 @@ public class Request implements Serializable {
 	public Request() {
 		super();
 	}   
-	public int getRequestID() {
-		return this.requestID;
+	public int getRequestId() {
+		return this.requestId;
 	}
 
-	public void setRequestID(int requestID) {
-		this.requestID = requestID;
+	public void setRequestID(int requestId) {
+		this.requestId = requestId;
 	}   
 	/*public Instructor getInstructor() {
 		return this.instructor;
@@ -46,6 +46,13 @@ public class Request implements Serializable {
 
 	public void setStatus(int status) {
 		this.status = status;
+	}
+	public Exam getExam() {
+		return exam;
+	}
+	
+	public void setExam(Exam exam) {
+		this.exam = exam;
 	}
    
 }
