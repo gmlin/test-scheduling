@@ -4,7 +4,6 @@
 		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
 		<class>cse308.testscheduling.Administrator</class>
 		<class>cse308.testscheduling.Appointment</class>
-		<class>cse308.testscheduling.Course</class>
 		<class>cse308.testscheduling.Exam</class>
 		<class>cse308.testscheduling.Instructor</class>
 		<class>cse308.testscheduling.Request</class>

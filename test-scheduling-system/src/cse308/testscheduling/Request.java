@@ -12,9 +12,11 @@ import javax.persistence.*;
 
 public class Request implements Serializable {
 
-	   
+	//primary key is requestID   
 	@Id
 	private int requestID;
+	
+	//a request is associate with one exam in the table
 	@OneToOne(mappedBy="request")
 	private Exam exam;
 	//private Instructor instructor; not needed?

@@ -15,22 +15,40 @@ import javax.persistence.*;
 
 public class Exam implements Serializable {
 
-	   
+	//primary key is examID   
 	@Id
 	private String examID;
+	
+	////a course can have multiple exams.
+	//"COURSE_ID" is the column name corresponding to course
+	//in the exam table
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="COURSE_ID")
 	private Course course;
 	private boolean adHoc;
+	
+	//temporal must be  specified for persistent fields or 
+	//properties of type java.util.Date and java.util.Calendar
 	@Temporal(TemporalType.TIMESTAMP)
 	private Calendar startDateTime;
+	
+	//temporal must be  specified for persistent fields or 
+	//properties of type java.util.Date and java.util.Calendar
 	@Temporal(TemporalType.TIMESTAMP)
 	private Calendar endDateTime;
+	
+	//a exam can have multiple appointments, so it is one-to-many
+	// the mappedBy element indicates that this is the non−owning side of
+	// the association.
 	@OneToMany(mappedBy="exam")
 	private List<Appointment> appointments;
+	
+	//each request is for one exam. so one-to-one
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="REQUEST_ID")
 	private Request request;
+	
+	//a instructor can associate with multiple exams
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="INSTRUCTOR_ID")
 	private Instructor instructor;

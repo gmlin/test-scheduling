@@ -12,7 +12,7 @@ import javax.persistence.*;
 
 public class TestingCenter implements Serializable {
 
-	   
+	//primary key is id   
 	@Id
 	private int id;
 	private List<Seat> seats;

@@ -16,14 +16,29 @@ public class Appointment implements Serializable {
 
 	   
 	@Id
+	//primary key is appointmentID
 	private int appointmentID;
 	private boolean setAsideSeat;
+
+	//a seat can belongs to multiple appointments
+	//the "SEAT_NUMBER" is the name of the column 
+	//in the table corresponding to this class
+	//that identifies the one associated instance of seat.
+	//That is the column corresponding to appointment
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="SEAT_NUMBER")
 	private Seat seat;
+	
+	//a student can have multiple appointments.
+	//"STUDENT_ID" is the column name corresponding to student
+	//in the appointment table
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="STUDENT_ID")
 	private Student student;
+	
+	//a exam can have multiple appointments.
+	//"EXAM_ID" is the column name corresponding to student
+	//in the appointment table
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="EXAM_ID")
 	private Exam exam;
