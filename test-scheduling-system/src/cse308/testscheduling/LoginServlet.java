@@ -45,7 +45,6 @@ public class LoginServlet extends HttpServlet {
 	    query.setParameter("password", session.getAttribute("password")); 
 	    try{ 
 	    	User user = (User) query.getSingleResult();
-	    	em.persist(user);
 	    	session.setAttribute("account", user);
 	    }
 	    catch (NoResultException e) {

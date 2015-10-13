@@ -26,8 +26,8 @@ public class Course implements Serializable {
 	@ManyToMany
 	@JoinTable(
 		name="COURSE_INSTRUCTOR",
-		joinColumns={@JoinColumn(name="COURSE_ID", referencedColumnName="courseID")},
-		inverseJoinColumns={@JoinColumn(name="INSTRUCTOR_NET_ID", referencedColumnName="NET_ID")})
+		joinColumns={@JoinColumn(name="COURSE_ID", referencedColumnName="course_ID")},
+		inverseJoinColumns={@JoinColumn(name="INSTRUCTOR_NET_ID", referencedColumnName="USER_NET_ID")})
 	private List<Instructor> instructors;
 	@OneToMany(mappedBy="course")
 	private List<Exam> exams;
@@ -49,6 +49,12 @@ public class Course implements Serializable {
 
 	public void setRoster(List<Student> roster) {
 		this.roster = roster;
+	}
+	public List<Instructor> getInstructors() {
+		return instructors;
+	}
+	public void setInstructors(List<Instructor> instructors) {
+		this.instructors = instructors;
 	}
    
 }

@@ -17,10 +17,11 @@ public class User implements Serializable {
 	@Column(name ="NET_ID")
 	private String username;
 	private String password;
-	private String name;
+	private String firstName;
+	private String lastName;
 	@OneToOne(optional=true)
 	private Administrator administrator;
-	@OneToOne(optional=true)
+	@OneToOne(mappedBy="user",optional=true)
 	private Instructor instructor;
 	@OneToOne(optional=true)
 	private Student student;
@@ -43,19 +44,44 @@ public class User implements Serializable {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
+	
 	public boolean isAdministrator(){
-		return administrator!=null;
+		return getAdministrator()!=null;
 	}
 	public boolean isInstructor(){
-		return instructor!=null;
+		return getInstructor()!=null;
 	}
 	public boolean isStudent(){
-		return student!=null;
+		return getStudent()!=null;
+	}
+	public Administrator getAdministrator() {
+		return administrator;
+	}
+	public void setAdministrator(Administrator administrator) {
+		this.administrator = administrator;
+	}
+	public Instructor getInstructor() {
+		return instructor;
+	}
+	public void setInstructor(Instructor instructor) {
+		this.instructor = instructor;
+	}
+	public Student getStudent() {
+		return student;
+	}
+	public void setStudent(Student student) {
+		this.student = student;
+	}
+	public String getFirstName() {
+		return firstName;
+	}
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+	public String getLastName() {
+		return lastName;
+	}
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
 	}
 }

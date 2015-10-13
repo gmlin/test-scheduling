@@ -17,7 +17,7 @@ public class Exam implements Serializable {
 
 	   
 	@Id
-	private int examID;
+	private String examID;
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="COURSE_ID")
 	private Course course;
@@ -39,11 +39,11 @@ public class Exam implements Serializable {
 	public Exam() {
 		super();
 	}   
-	public int getExamID() {
+	public String getExamID() {
 		return this.examID;
 	}
 
-	public void setExamID(int examID) {
+	public void setExamID(String examID) {
 		this.examID = examID;
 	}   
 	public Course getCourse() {
