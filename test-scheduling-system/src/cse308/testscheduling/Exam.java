@@ -26,10 +26,10 @@ public class Exam implements Serializable {
 	private Calendar startDateTime;
 	@Temporal(TemporalType.TIMESTAMP)
 	private Calendar endDateTime;
-	@OneToMany(mappedBy="examID")
+	@OneToMany(mappedBy="exam")
 	private List<Appointment> appointments;
 	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="REUQEST_ID")
+	@JoinColumn(name="REQUEST_ID")
 	private Request request;
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="INSTRUCTOR_ID")

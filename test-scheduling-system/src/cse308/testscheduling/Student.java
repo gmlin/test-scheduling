@@ -19,7 +19,7 @@ public class Student implements Serializable {
 	private int StudentID;
 	@OneToOne(mappedBy="student",optional=false)
 	private User user;
-	@OneToMany(mappedBy="studentID")
+	@OneToMany(mappedBy="student")
 	private List<Appointment> appointments;
 	@ManyToMany(mappedBy="roster")
 	private List<Course> courses;
