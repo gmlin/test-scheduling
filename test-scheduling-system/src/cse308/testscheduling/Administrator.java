@@ -6,6 +6,7 @@ import javax.persistence.*;
 
 /**
  * Entity implementation class for Entity: Administrator
+ * testing
  *
  */
 @Entity
