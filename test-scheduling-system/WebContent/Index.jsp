@@ -27,13 +27,13 @@
 		<%@ include file="Header.jsp"%>
 		<div class="row">
 			<div class="col-sm-4">
-			<c:if test="${sessionScope.user.administrator != null}">
+			<c:if test="${sessionScope.user.administrator}">
 				<%@ include file="AdminSidebar.jsp"%>
 			</c:if>
-			<c:if test="${sessionScope.user.instructor != null}">
+			<c:if test="${sessionScope.user.instructor}">
 				<%@ include file="InstructorSidebar.jsp"%>
 			</c:if>
-			<c:if test="${sessionScope.user.student != null}">
+			<c:if test="${sessionScope.user.student}">
 				<%@ include file="StudentSidebar.jsp"%>
 			</c:if>
 			</div>
