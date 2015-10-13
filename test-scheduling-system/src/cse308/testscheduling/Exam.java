@@ -3,6 +3,7 @@ package cse308.testscheduling;
 import cse308.testscheduling.Course;
 import java.io.Serializable;
 import java.util.Calendar;
+import java.util.List;
 
 import javax.persistence.*;
 
@@ -17,12 +18,22 @@ public class Exam implements Serializable {
 	   
 	@Id
 	private int examID;
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="COURSE_ID")
 	private Course course;
 	private boolean adHoc;
 	@Temporal(TemporalType.TIMESTAMP)
 	private Calendar startDateTime;
 	@Temporal(TemporalType.TIMESTAMP)
 	private Calendar endDateTime;
+	@OneToMany(mappedBy="examID")
+	private List<Appointment> appointments;
+	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="REUQEST_ID")
+	private Request request;
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="INSTRUCTOR_ID")
+	private Instructor instructor;
 	private static final long serialVersionUID = 1L;
 
 	public Exam() {
@@ -61,5 +72,7 @@ public class Exam implements Serializable {
 	public void setEndDateTime(Calendar endDateTime) {
 		this.endDateTime = endDateTime;
 	}
-   
+    public Instructor getInstructor() {
+    	return instructor;
+    }
 }

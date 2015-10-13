@@ -3,6 +3,7 @@ package cse308.testscheduling;
 
 import java.io.Serializable;
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * Entity implementation class for Entity: Seat
@@ -15,7 +16,9 @@ public class Seat implements Serializable {
 	   
 	@Id
 	private int seatNumber;
-	private boolean reserved;
+	@OneToMany(mappedBy="seat")
+	private List<Appointment> appointments;
+	private boolean setAside;
 	private static final long serialVersionUID = 1L;
 
 	public Seat() {
@@ -28,12 +31,11 @@ public class Seat implements Serializable {
 	public void setSeatNumber(int seatNumber) {
 		this.seatNumber = seatNumber;
 	}   
-	public boolean getReserved() {
-		return this.reserved;
+	public boolean getSetAside() {
+		return this.setAside;
 	}
-
-	public void setReserved(boolean reserved) {
-		this.reserved = reserved;
+	public void setSetAside(boolean setAside) {
+		this.setAside = setAside;
 	}
    
 }

@@ -14,9 +14,16 @@ public class User implements Serializable {
 
 	   
 	@Id
+	@Column(name ="NET_ID")
 	private String username;
 	private String password;
 	private String name;
+	@OneToOne(optional=true)
+	private Administrator administrator;
+	@OneToOne(optional=true)
+	private Instructor instructor;
+	@OneToOne(optional=true)
+	private Student student;
 	private static final long serialVersionUID = 1L;
 
 	public User() {
@@ -42,5 +49,13 @@ public class User implements Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
-   
+	public boolean isAdministrator(){
+		return administrator!=null;
+	}
+	public boolean isInstructor(){
+		return instructor!=null;
+	}
+	public boolean isStudent(){
+		return student!=null;
+	}
 }

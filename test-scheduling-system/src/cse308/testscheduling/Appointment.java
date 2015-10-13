@@ -17,8 +17,15 @@ public class Appointment implements Serializable {
 	   
 	@Id
 	private int appointmentID;
-	private int seatNumber;
+	private boolean setAsideSeat;
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="SEAT_NUMBER")
+	private Seat seat;
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="STUDENT_ID")
 	private int studentID;
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="EXAM_ID")
 	private int examID;
 	private Date date;
 	private Time time;
@@ -27,13 +34,19 @@ public class Appointment implements Serializable {
 	public Appointment() {
 		super();
 	}   
-	public int getSeatNumber() {
-		return this.seatNumber;
+	public Seat getSeat() {
+		return this.seat;
 	}
 
-	public void setSeatNumber(int seatNumber) {
-		this.seatNumber = seatNumber;
+	public void setSeat(Seat seat) {
+		this.seat = seat;
 	}   
+	public boolean getSetAsideSeat() {
+		return this.setAsideSeat;
+	}
+	public void setSetAsideSeat(boolean setAside) {
+		this.setAsideSeat = setAside;
+	}
 	public int getStudentID() {
 		return this.studentID;
 	}

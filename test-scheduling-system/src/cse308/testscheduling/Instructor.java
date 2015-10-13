@@ -9,13 +9,18 @@ import javax.persistence.*;
  * Entity implementation class for Entity: Instructor
  *
  */
-@MappedSuperclass
+@Entity
 
-public class Instructor extends User implements Serializable {
+public class Instructor implements Serializable {
 
-	
+	@Id
+	private int ID;
+	@OneToOne(mappedBy="instructor",optional=false)
+	private User user;
+	@ManyToMany(mappedBy="instructors")
 	private List<Course> courses;
-	private List<Request> requests;
+	//private List<Request> requests; don't need?
+	@OneToMany(mappedBy="instructor")
 	private List<Exam> exams;
 	private static final long serialVersionUID = 1L;
 
@@ -29,12 +34,12 @@ public class Instructor extends User implements Serializable {
 	public void setCourses(List<Course> courses) {
 		this.courses = courses;
 	}
-	public List<Request> getRequests() {
+	/*public List<Request> getRequests() {
 		return requests;
 	}
 	public void setRequests(List<Request> requests) {
 		this.requests = requests;
-	}
+	} */
 	public List<Exam> getExams() {
 		return exams;
 	}

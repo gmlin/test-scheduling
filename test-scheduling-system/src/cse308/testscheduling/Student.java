@@ -11,13 +11,17 @@ import javax.persistence.*;
  * Entity implementation class for Entity: Student
  *
  */
-@MappedSuperclass
+@Entity
 
-public class Student extends User implements Serializable {
+public class Student implements Serializable {
 
 	@Id
 	private int StudentID;
-	private List<Appointment> appointments;   
+	@OneToOne(mappedBy="student",optional=false)
+	private User user;
+	@OneToMany(mappedBy="studentID")
+	private List<Appointment> appointments;
+	@ManyToMany(mappedBy="roster")
 	private List<Course> courses;
 	private static final long serialVersionUID = 1L;
 
