@@ -6,7 +6,6 @@
 		<class>cse308.testscheduling.Appointment</class>
 		<class>cse308.testscheduling.Exam</class>
 		<class>cse308.testscheduling.Instructor</class>
-		<class>cse308.testscheduling.Request</class>
 		<class>cse308.testscheduling.Seat</class>
 		<class>cse308.testscheduling.Student</class>
 		<class>cse308.testscheduling.TestingCenter</class>

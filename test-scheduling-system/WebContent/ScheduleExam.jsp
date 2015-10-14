@@ -46,7 +46,7 @@
 						<form>
 							<div class="form-group">
 								<label for="courseId">Course</label> <select
-									class="form-control" id="courseId">
+									class="form-control" id="courseId" required>
 									<c:forEach items="${sessionScope.user.instructor.courses}" var="course">
 									   <option>${course.courseId}</option>
 									</c:forEach>
@@ -55,15 +55,15 @@
 							<div class="form-group">
 								<label for="examDuration">Duration</label> <input
 									type="number" class="form-control" id="examDuration"
-									placeholder="minutes">
+									placeholder="minutes" required>
 							</div>
 							<div class="form-group">
 								<label for="startDateTime">Start</label> <input
-									type="datetime-local" id="startDateTime">
+									type="datetime-local" id="startDateTime" required>
 							</div>
 							<div class="form-group">
                                 <label for="endDateTime">End</label><input
-                                    type="datetime-local" id="endDateTime">
+                                    type="datetime-local" id="endDateTime" required>
                             </div>
 							<button type="submit" class="btn btn-default">Submit</button>
 						</form>

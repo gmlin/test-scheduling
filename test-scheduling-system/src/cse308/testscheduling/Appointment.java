@@ -2,8 +2,6 @@ package cse308.testscheduling;
 
 
 import java.io.Serializable;
-import java.sql.Date;
-import java.sql.Time;
 import java.util.Calendar;
 
 import javax.persistence.*;
@@ -19,10 +17,10 @@ public class Appointment implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY) 
-	//primary key is appointmentId
-	private int appointmentId;
+	//primary key is id
+	private int id;
+	@Column(name="SET_ASIDE_SEAT")
 	private boolean setAsideSeat;
-
 	//a seat can belongs to multiple appointments
 	//the "SEAT_NUMBER" is the name of the column 
 	//in the table corresponding to this class
@@ -49,6 +47,7 @@ public class Appointment implements Serializable {
 	//temporal must be  specified for persistent fields or 
 	//properties of type java.util.Date and java.util.Calendar
 	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name="DATE_TIME")
 	private Calendar dateTime;
 	
 	private boolean attendance;

@@ -17,11 +17,13 @@ public class Seat implements Serializable {
 
 	//primary key is seatNumber  
 	@Id
+	@Column(name="SEAT_NUMBER")
 	private int seatNumber;
 	
 	//a seat can be assigned to multiple appointments
 	@OneToMany(mappedBy="seat")
 	private List<Appointment> appointments;
+	@Column(name="SET_ASIDE")
 	private boolean setAside;
 	private static final long serialVersionUID = 1L;
 

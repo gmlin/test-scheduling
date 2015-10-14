@@ -3,7 +3,7 @@
 <hr>
 
 <ul class="nav nav-stacked">
-	<li><a href="#">Edit Testing Center Info</a></li>
+	<li><a href="EditTestingCenter.jsp">Edit Testing Center Info</a></li>
 	<li><a href="#">Import Data</a></li>
 	<li><a href="#">Display Utilization</a></li>
 	<li><a href="#">View Requests</a></li>
