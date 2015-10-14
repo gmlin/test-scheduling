@@ -55,15 +55,6 @@ public class User implements Serializable {
 		this.password = password;
 	}
 	
-	public boolean isAdministrator(){
-		return getAdministrator()!=null;
-	}
-	public boolean isInstructor(){
-		return getInstructor()!=null;
-	}
-	public boolean isStudent(){
-		return getStudent()!=null;
-	}
 	public Administrator getAdministrator() {
 		return administrator;
 	}

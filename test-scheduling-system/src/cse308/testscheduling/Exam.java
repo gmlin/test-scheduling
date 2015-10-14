@@ -27,6 +27,7 @@ public class Exam implements Serializable {
 	@JoinColumn(name="COURSE_ID")
 	private Course course;
 	private boolean adHoc;
+	private int duration;
 	
 	//temporal must be  specified for persistent fields or 
 	//properties of type java.util.Date and java.util.Calendar
@@ -99,4 +100,10 @@ public class Exam implements Serializable {
     public void addAppointment(Appointment appointment) {
     	appointments.add(appointment);
     }
+	public int getDuration() {
+		return duration;
+	}
+	public void setDuration(int duration) {
+		this.duration = duration;
+	}
 }

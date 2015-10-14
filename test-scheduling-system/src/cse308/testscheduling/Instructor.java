@@ -39,11 +39,11 @@ public class Instructor implements Serializable {
 
 	public Instructor() {
 		super();
-		courses = new ArrayList<Course>();
+		setCourses(new ArrayList<Course>());
 	}   
 	
 	public void addCourse(Course course) {
-		courses.add(course);
+		getCourses().add(course);
 	}
 	/*public List<Request> getRequests() {
 		return requests;
@@ -63,6 +63,14 @@ public class Instructor implements Serializable {
 	}
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	public List<Course> getCourses() {
+		return courses;
+	}
+
+	public void setCourses(List<Course> courses) {
+		this.courses = courses;
 	}
    
 }

@@ -38,7 +38,7 @@ public class Course implements Serializable {
 	private List<Instructor> instructors;
 	
 	//a course can have multiple exam, so it is one-to-many
-	// the mappedBy element indicates that this is the non−owning side of
+	// the mappedBy element indicates that this is the nonowning side of
 	// the association.
 	@OneToMany(mappedBy="course")
 	private List<Exam> exams;

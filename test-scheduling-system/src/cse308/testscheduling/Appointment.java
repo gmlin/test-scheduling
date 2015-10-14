@@ -51,6 +51,8 @@ public class Appointment implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Calendar dateTime;
 	
+	private boolean attendance;
+	
 	private static final long serialVersionUID = 1L;
 
 	public Appointment() {
@@ -88,6 +90,12 @@ public class Appointment implements Serializable {
 	}
 	public void setDateTime(Calendar dateTime) {
 		this.dateTime = dateTime;
-	}   
+	}
+	public boolean isAttendance() {
+		return attendance;
+	}
+	public void setAttendance(boolean attendance) {
+		this.attendance = attendance;
+	}
 	
 }

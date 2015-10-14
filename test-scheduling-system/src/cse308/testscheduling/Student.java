@@ -59,5 +59,11 @@ public class Student implements Serializable {
 	public void setStudentId(int studentId) {
 		this.studentId = studentId;
 	}
+	public User getUser() {
+		return user;
+	}
+	public void setUser(User user) {
+		this.user = user;
+	}
    
 }
