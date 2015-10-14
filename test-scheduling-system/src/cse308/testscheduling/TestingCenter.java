@@ -36,6 +36,7 @@ public class TestingCenter implements Serializable {
 	private int gapTime;
 	@Column(name="REMINDER_INTERVAL")
 	private int reminderInterval;
+	private List<Administrator> administrators;
 	
 	private static final long serialVersionUID = 1L;
 
@@ -43,6 +44,7 @@ public class TestingCenter implements Serializable {
 		super();
 		closedDateRanges = new ArrayList<Date[]>();
 		reservedPeriods = new ArrayList<Calendar[]>();
+		setAdministrators(new ArrayList<Administrator>());
 	}   
 	public int getId() {
 		return this.id;
@@ -103,4 +105,14 @@ public class TestingCenter implements Serializable {
 	public void setReservedPeriods(List<Calendar[]> reservedPeriods) {
 		this.reservedPeriods = reservedPeriods;
 	}
+	public List<Administrator> getAdministrators() {
+		return administrators;
+	}
+	public void setAdministrators(List<Administrator> administrators) {
+		this.administrators = administrators;
+	}
+	public void addAdministrators(Administrator administrator) {
+		administrators.add(administrator);
+	}
+	
 }

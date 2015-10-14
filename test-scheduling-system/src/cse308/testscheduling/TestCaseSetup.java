@@ -45,9 +45,20 @@ public class TestCaseSetup {
 		u1.setFirstName("Admin");
 		u1.setLastName("Test");
 		u1.setEmail("test@test.com");
+		
 		Administrator admin = new Administrator();
 		u1.setAdministrator(admin);
 		admin.setUser(u1);
+		
+		TestingCenter t = new TestingCenter();
+		t.setNumSeats(64);
+		t.setNumSetAsideSeats(4);
+		t.setOpenTime(new Time(8, 0, 0));
+		t.setCloseTime(new Time(20, 0, 0));
+		t.setGapTime(10);
+		t.setReminderInterval(30);
+		t.addAdministrators(admin);
+		admin.setTestingCenter(t);
 		
 		User u2 = new User();
 		u2.setNetId("instructor");
@@ -83,14 +94,6 @@ public class TestCaseSetup {
 		instructor.addCourse(c2);
 		c2.addInstructor(instructor);
 		c2.addStudent(student);
-		
-		TestingCenter t = new TestingCenter();
-		t.setNumSeats(64);
-		t.setNumSetAsideSeats(4);
-		t.setOpenTime(new Time(8, 0, 0));
-		t.setCloseTime(new Time(20, 0, 0));
-		t.setGapTime(10);
-		t.setReminderInterval(30);
 		
 		em.persist(u1);
 		em.persist(u2);

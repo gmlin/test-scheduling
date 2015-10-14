@@ -47,19 +47,19 @@
                             <div class="form-group">
                                 <label for="examDuration">Duration</label> <input
                                     type="number" class="form-control" id="examDuration"
-                                    placeholder="minutes">
+                                    placeholder="minutes" required>
                             </div>
                             <div class="form-group">
                                 <label for="startDateTime">Start</label> <input
-                                    type="datetime-local" class="form-control" id="startDateTime">
+                                    type="datetime-local" class="form-control" id="startDateTime" required>
                             </div>
                             <div class="form-group">
                                 <label for="endDateTime">End</label> <input
-                                    type="datetime-local" class="form-control" id="endDateTime">
+                                    type="datetime-local" class="form-control" id="endDateTime" required>
                             </div>
                             </div class="form-group">
                                 <label for="netids">Examinee NetIDs</label>
-                                <textarea id="netids" class="form-control" rows="10" placeholder="One per line"></textarea>
+                                <textarea id="netids" class="form-control" rows="10" placeholder="One per line" required></textarea>
                             <button type="submit" class="btn btn-default">Submit</button>
                         </form>
                     </div>

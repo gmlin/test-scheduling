@@ -24,6 +24,8 @@ public class Administrator implements Serializable {
 	@JoinColumn(name="NET_ID")
 	private User user;
 
+	private TestingCenter testingCenter;
+	
 	private static final long serialVersionUID = 1L;
 
 	public Administrator() {
@@ -36,6 +38,14 @@ public class Administrator implements Serializable {
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	public TestingCenter getTestingCenter() {
+		return testingCenter;
+	}
+
+	public void setTestingCenter(TestingCenter testingCenter) {
+		this.testingCenter = testingCenter;
 	}
 
 }
