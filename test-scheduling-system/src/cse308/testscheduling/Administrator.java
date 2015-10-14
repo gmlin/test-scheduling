@@ -24,6 +24,8 @@ public class Administrator implements Serializable {
 	@JoinColumn(name="NET_ID")
 	private User user;
 
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="TESTING_CENTER")
 	private TestingCenter testingCenter;
 	
 	private static final long serialVersionUID = 1L;

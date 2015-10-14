@@ -36,6 +36,7 @@ public class TestingCenter implements Serializable {
 	private int gapTime;
 	@Column(name="REMINDER_INTERVAL")
 	private int reminderInterval;
+	@OneToMany(mappedBy="testingCenter")
 	private List<Administrator> administrators;
 	
 	private static final long serialVersionUID = 1L;
