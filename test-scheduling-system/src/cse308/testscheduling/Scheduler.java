@@ -8,7 +8,6 @@ import javax.persistence.*;
  * Entity implementation class for Entity: Scheduler
  *
  */
-@Entity
 
 public class Scheduler implements Serializable {
 
