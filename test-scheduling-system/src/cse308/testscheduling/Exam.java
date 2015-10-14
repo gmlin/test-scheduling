@@ -26,17 +26,25 @@ public class Exam implements Serializable {
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="COURSE_ID")
 	private Course course;
+	@Column(name="AD_HOC")
 	private boolean adHoc;
 	private int duration;
+	//0 is waiting for approval
+	//1 is approved
+	//2 is denied
+	//3 is exam ended
+	private int status;
 	
 	//temporal must be  specified for persistent fields or 
 	//properties of type java.util.Date and java.util.Calendar
 	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name="START_DATE_TIME")
 	private Calendar startDateTime;
 	
 	//temporal must be  specified for persistent fields or 
 	//properties of type java.util.Date and java.util.Calendar
 	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name="END_DATE_TIME")
 	private Calendar endDateTime;
 	
 	//a exam can have multiple appointments, so it is one-to-many
@@ -45,15 +53,6 @@ public class Exam implements Serializable {
 	@OneToMany(mappedBy="exam")
 	private List<Appointment> appointments;
 	
-	//each request is for one exam. so one-to-one
-	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="REQUEST_ID")
-	private Request request;
-	
-	//a instructor can associate with multiple exams
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="INSTRUCTOR_ID")
-	private Instructor instructor;
 	private static final long serialVersionUID = 1L;
 
 	public Exam() {
@@ -93,10 +92,7 @@ public class Exam implements Serializable {
 	public void setEndDateTime(Calendar endDateTime) {
 		this.endDateTime = endDateTime;
 	}
-    public Instructor getInstructor() {
-    	return instructor;
-    }
-    
+	
     public void addAppointment(Appointment appointment) {
     	appointments.add(appointment);
     }
@@ -105,5 +101,11 @@ public class Exam implements Serializable {
 	}
 	public void setDuration(int duration) {
 		this.duration = duration;
+	}
+	public int getStatus() {
+		return status;
+	}
+	public void setStatus(int status) {
+		this.status = status;
 	}
 }

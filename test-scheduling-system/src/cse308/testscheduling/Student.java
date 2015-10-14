@@ -18,6 +18,7 @@ public class Student implements Serializable {
 
 	//primary key is studentID
 	@Id
+	@Column(name="STUDENT_ID")
 	private int studentId;
 	
 	//this is a one-to-one association between student and user, 

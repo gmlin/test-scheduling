@@ -1,5 +1,6 @@
 package cse308.testscheduling;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,18 +11,18 @@ import javax.persistence.Query;
 
 public class TestCaseSetup {
 
+	@SuppressWarnings("deprecation")
 	public static void main(String[] args) {
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("test-scheduling-system");
 		EntityManager em = emf.createEntityManager();
 		List<Query> clearTableQueries = new ArrayList<Query>();
 		clearTableQueries.add(em.createNativeQuery("DELETE FROM administrator"));
 		clearTableQueries.add(em.createNativeQuery("DELETE FROM appointment"));
-		clearTableQueries.add(em.createNativeQuery("DELETE FROM course"));
 		clearTableQueries.add(em.createNativeQuery("DELETE FROM course_instructor"));
 		clearTableQueries.add(em.createNativeQuery("DELETE FROM course_student"));
+		clearTableQueries.add(em.createNativeQuery("DELETE FROM course"));
 		clearTableQueries.add(em.createNativeQuery("DELETE FROM exam"));
 		clearTableQueries.add(em.createNativeQuery("DELETE FROM instructor"));
-		clearTableQueries.add(em.createNativeQuery("DELETE FROM request"));
 		clearTableQueries.add(em.createNativeQuery("DELETE FROM seat"));
 		clearTableQueries.add(em.createNativeQuery("DELETE FROM student"));
 		clearTableQueries.add(em.createNativeQuery("DELETE FROM testingcenter"));
@@ -43,6 +44,7 @@ public class TestCaseSetup {
 		u1.setPassword("123");
 		u1.setFirstName("Admin");
 		u1.setLastName("Test");
+		u1.setEmail("test@test.com");
 		Administrator admin = new Administrator();
 		u1.setAdministrator(admin);
 		admin.setUser(u1);
@@ -52,6 +54,7 @@ public class TestCaseSetup {
 		u2.setPassword("123");
 		u2.setFirstName("Instructor");
 		u2.setLastName("Test");
+		u1.setEmail("test@test.com");
 		Instructor instructor = new Instructor();
 		u2.setInstructor(instructor);
 		instructor.setUser(u2);
@@ -61,6 +64,7 @@ public class TestCaseSetup {
 		u3.setPassword("123");
 		u3.setFirstName("Student");
 		u3.setLastName("Test");
+		u1.setEmail("test@test.com");
 		Student student = new Student();
 		student.setStudentId(100000000);
 		u3.setStudent(student);
@@ -80,11 +84,20 @@ public class TestCaseSetup {
 		c2.addInstructor(instructor);
 		c2.addStudent(student);
 		
+		TestingCenter t = new TestingCenter();
+		t.setNumSeats(64);
+		t.setNumSetAsideSeats(4);
+		t.setOpenTime(new Time(8, 0, 0));
+		t.setCloseTime(new Time(20, 0, 0));
+		t.setGapTime(10);
+		t.setReminderInterval(30);
+		
 		em.persist(u1);
 		em.persist(u2);
 		em.persist(u3);
 		em.persist(c1);
 		em.persist(c2);
+		em.persist(t);
 		
 		em.getTransaction().commit();
 		

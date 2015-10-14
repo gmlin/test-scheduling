@@ -16,7 +16,7 @@
 <link rel="stylesheet" href="css/bootstrap-theme.min.css">
 </head>
 <body>
-	<div class="container">
+	<div class="container-fluid">
 		<form method="post" action="LoginServlet">
 			<h2 class="text-center">Please sign in</h2>
 			<input type="text" class="form-control" placeholder="Username" name="username" required>  

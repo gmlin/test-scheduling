@@ -17,8 +17,11 @@ public class User implements Serializable {
 	@Column(name ="NET_ID")
 	private String netId;
 	private String password;
+	@Column(name="FIRST_NAME")
 	private String firstName;
+	@Column(name="LAST_NAME")
 	private String lastName;
+	private String email;
 	
 	//this is a one-to-one association between admin and user, 
 	//admin field specifies the role of user
@@ -84,5 +87,11 @@ public class User implements Serializable {
 	}
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
 	}
 }
