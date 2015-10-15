@@ -5,7 +5,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <%
-	User user = (User)(session.getAttribute("user"));
+	User user = (User) (session.getAttribute("user"));
 	if (user == null || user.getInstructor() == null)
 		response.sendRedirect("Index.jsp");
 %>
@@ -43,29 +43,38 @@
 						<h4 class="text-center">Schedule Course Exam</h4>
 					</div>
 					<div class="panel-body">
-						<form>
+						<form action="schedule_exam" method="post">
+							<input type="hidden" name="exam_type" value="course" />
+							<%
+								if (session.getAttribute("message") != null) {
+									out.println(session.getAttribute("message"));
+									session.removeAttribute("message");
+								}
+							%>
 							<div class="form-group">
 								<label for="courseId">Course</label> <select
-									class="form-control" id="courseId" required>
-									<c:forEach items="${sessionScope.user.instructor.courses}" var="course">
-									   <option>${course.courseId}</option>
+									class="form-control" name="courseId" id="courseId" required>
+									<c:forEach items="${sessionScope.user.instructor.courses}"
+										var="course">
+										<option>${course.courseId}</option>
 									</c:forEach>
 								</select>
 							</div>
 							<div class="form-group">
-								<label for="examDuration">Duration</label> <input
-									type="number" class="form-control" id="examDuration"
-									placeholder="minutes" required>
+								<label for="examDuration">Duration</label> <input type="number"
+									class="form-control" name="examDuration" id="examDuration" placeholder="minutes"
+									required>
 							</div>
 							<div class="form-group">
 								<label for="startDateTime">Start</label> <input
-									type="datetime-local" id="startDateTime" required>
+									type="datetime-local" name="startDateTime" id="startDateTime" required>
 							</div>
 							<div class="form-group">
-                                <label for="endDateTime">End</label><input
-                                    type="datetime-local" id="endDateTime" required>
-                            </div>
+								<label for="endDateTime">End</label><input type="datetime-local"
+									name="endDateTime" id="endDateTime" required>
+							</div>
 							<button type="submit" class="btn btn-default">Submit</button>
+
 						</form>
 					</div>
 				</div>

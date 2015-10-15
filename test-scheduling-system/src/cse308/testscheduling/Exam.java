@@ -1,12 +1,24 @@
 package cse308.testscheduling;
 
-import cse308.testscheduling.Course;
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+
+import cse308.testscheduling.Instructor;
 
 /**
  * Entity implementation class for Entity: Exam
@@ -16,96 +28,132 @@ import javax.persistence.*;
 
 public class Exam implements Serializable {
 
-	//primary key is examId   
-	@Id
-	private String examId;
-	
-	////a course can have multiple exams.
-	//"COURSE_ID" is the column name corresponding to course
-	//in the exam table
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="COURSE_ID")
-	private Course course;
-	@Column(name="AD_HOC")
-	private boolean adHoc;
-	private int duration;
-	//0 is waiting for approval
-	//1 is approved
-	//2 is denied
-	//3 is exam ended
-	private int status;
-	
-	//temporal must be  specified for persistent fields or 
-	//properties of type java.util.Date and java.util.Calendar
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="START_DATE_TIME")
-	private Calendar startDateTime;
-	
-	//temporal must be  specified for persistent fields or 
-	//properties of type java.util.Date and java.util.Calendar
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="END_DATE_TIME")
-	private Calendar endDateTime;
-	
-	//a exam can have multiple appointments, so it is one-to-many
-	// the mappedBy element indicates that this is the non−owning side of
-	// the association.
-	@OneToMany(mappedBy="exam")
-	private List<Appointment> appointments;
-	
 	private static final long serialVersionUID = 1L;
 
+	// primary key is examId
+	@Id
+	@Column(name = "EXAM_ID")
+	private String examId;
+	//// a course can have multiple exams.
+	// "COURSE_ID" is the column name corresponding to course
+	// in the exam table
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "COURSE_ID")
+	private Course course;
+	@Column(name = "AD_HOC")
+	private boolean adHoc;
+	private int duration;
+
+	@Enumerated(EnumType.STRING)
+	private Status status;
+
+	@Column(name = "START_DATE_TIME")
+	private Timestamp startDateTime;
+
+	@Column(name = "END_DATE_TIME")
+	private Timestamp endDateTime;
+
+	// a exam can have multiple appointments, so it is one-to-many
+	// the mappedBy element indicates that this is the non owning side of
+	// the association.
+	@OneToMany(mappedBy = "exam")
+	private List<Appointment> appointments;
+	
+	//for adhoc exam only
+	@ManyToMany
+	@JoinTable(name = "AD_HOC_EXAM_STUDENT", joinColumns = {
+			@JoinColumn(name = "EXAM_ID", referencedColumnName = "EXAM_ID") }, inverseJoinColumns = {
+					@JoinColumn(name = "NET_ID", referencedColumnName = "NET_ID") })
+	private List<Student> students;
+
+	//for adhoc exam only
+		@ManyToOne
+		private Instructor instructor;
+	
 	public Exam() {
 		super();
 		appointments = new ArrayList<Appointment>();
-	}   
-	public String getExamId() {
-		return this.examId;
+		students = new ArrayList<Student>();
 	}
 
-	public void setExamId(String examId) {
-		this.examId = examId;
-	}   
+	public void addAppointment(Appointment appointment) {
+		appointments.add(appointment);
+	}
+
+	public boolean getAdHoc() {
+		return this.adHoc;
+	}
+
 	public Course getCourse() {
 		return this.course;
 	}
 
-	public void setCourse(Course course) {
-		this.course = course;
-	}   
-	public boolean getAdHoc() {
-		return this.adHoc;
+	public int getDuration() {
+		return duration;
+	}
+
+	public Timestamp getEndDateTime() {
+		return endDateTime;
+	}
+
+	public String getExamId() {
+		return this.examId;
+	}
+
+	public Timestamp getStartDateTime() {
+		return startDateTime;
+	}
+
+	public Status getStatus() {
+		return status;
 	}
 
 	public void setAdHoc(boolean adHoc) {
 		this.adHoc = adHoc;
 	}
-	public Calendar getStartDateTime() {
-		return startDateTime;
+
+	public void setCourse(Course course) {
+		this.course = course;
 	}
-	public void setStartDateTime(Calendar startDateTime) {
-		this.startDateTime = startDateTime;
-	}
-	public Calendar getEndDateTime() {
-		return endDateTime;
-	}
-	public void setEndDateTime(Calendar endDateTime) {
-		this.endDateTime = endDateTime;
-	}
-	
-    public void addAppointment(Appointment appointment) {
-    	appointments.add(appointment);
-    }
-	public int getDuration() {
-		return duration;
-	}
+
 	public void setDuration(int duration) {
 		this.duration = duration;
 	}
-	public int getStatus() {
-		return status;
+
+	public void setEndDateTime(Timestamp endDateTime) {
+		this.endDateTime = endDateTime;
 	}
-	public void setStatus(int status) {
+
+	public void setExamId(String examId) {
+		this.examId = examId;
+	}
+
+	public void setStartDateTime(Timestamp startDateTime) {
+		this.startDateTime = startDateTime;
+	}
+
+	public void setStatus(Status status) {
 		this.status = status;
 	}
+
+	public List<Student> getStudents() {
+		return students;
+	}
+
+	public void setStudents(List<Student> students) {
+		this.students = students;
+	}
+	
+	public void addStudent(Student student) {
+		students.add(student);
+	}
+	
+	public Instructor getInstructor() {
+		return instructor;
+	}
+
+	public void setInstructor(Instructor instructor) {
+		this.instructor = instructor;
+	}
+	
 }
