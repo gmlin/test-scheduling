@@ -30,7 +30,7 @@ public class Appointment implements Serializable {
 	@Column(name = "SET_ASIDE_SEAT")
 	private boolean setAsideSeat;
 
-	// a seat can belongs to multiple appointments
+	// a seat can belong to multiple appointments
 	// the "SEAT_NUMBER" is the name of the column
 	// in the table corresponding to this class
 	// that identifies the one associated instance of seat.

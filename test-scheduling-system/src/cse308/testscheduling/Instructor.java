@@ -45,6 +45,7 @@ public class Instructor implements Serializable {
 	@ManyToMany(mappedBy = "instructors")
 	private List<Course> courses;
 
+	// a instructor can have multiple ad hoc exams
 	@OneToMany(mappedBy = "instructor", cascade = CascadeType.ALL)
 	private List<Exam> adHocExams;
 	

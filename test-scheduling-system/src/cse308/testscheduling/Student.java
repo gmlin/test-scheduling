@@ -41,7 +41,8 @@ public class Student implements Serializable {
 	// a course can have many students
 	@ManyToMany(mappedBy = "students")
 	private List<Course> courses;
-	
+	// a many-to-many association between students,
+	// and their available ad hoc exams
 	@ManyToMany(mappedBy = "students", cascade = CascadeType.PERSIST)
 	private List<Exam> adHocExams;
 

@@ -31,6 +31,7 @@ public class Administrator implements Serializable {
 	@JoinColumn(name = "NET_ID")
 	private User user;
 
+	// this is a many-to-one association between admin and testing center
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "TESTINGCENTER_ID")
 	private TestingCenter testingCenter;

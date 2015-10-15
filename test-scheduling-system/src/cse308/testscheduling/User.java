@@ -29,17 +29,20 @@ public class User implements Serializable {
 
 	private String email;
 
-	// this is a one-to-one association between admin and user,
+	//aggregation used so that user can have multiple permission states
+	//as multiple inheritance is not possible in java
+	
+	// this is an optional one-to-one association between admin and user,
 	// admin field specifies the role of user
 	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL, optional = true)
 	private Administrator administrator;
 
-	// this is a one-to-one association between instructor and user,
+	// this is an optional one-to-one association between instructor and user,
 	// instructor field specifies the role of user
 	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL, optional = true)
 	private Instructor instructor;
 
-	// this is a one-to-one association between student and user,
+	// this is an optional association between student and user,
 	// student field specifies the role of user
 	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL, optional = true)
 	private Student student;

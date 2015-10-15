@@ -59,7 +59,7 @@ public class Exam implements Serializable {
 	@OneToMany(mappedBy = "exam")
 	private List<Appointment> appointments;
 	
-	//for adhoc exam only
+	// for adhoc exam only
 	@ManyToMany
 	@JoinTable(name = "AD_HOC_EXAM_STUDENT", joinColumns = {
 			@JoinColumn(name = "EXAM_ID", referencedColumnName = "EXAM_ID") }, inverseJoinColumns = {
