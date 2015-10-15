@@ -34,14 +34,17 @@ public class Exam implements Serializable {
 	@Id
 	@Column(name = "EXAM_ID")
 	private String examId;
+	
 	//// a course can have multiple exams.
 	// "COURSE_ID" is the column name corresponding to course
 	// in the exam table
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "COURSE_ID")
 	private Course course;
+	
 	@Column(name = "AD_HOC")
 	private boolean adHoc;
+	
 	private int duration;
 
 	@Enumerated(EnumType.STRING)

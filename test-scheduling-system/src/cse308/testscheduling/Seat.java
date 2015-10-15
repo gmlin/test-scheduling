@@ -23,9 +23,11 @@ public class Seat implements Serializable {
 	@Id
 	@Column(name = "SEAT_NUMBER")
 	private int seatNumber;
+	
 	// a seat can be assigned to multiple appointments
 	@OneToMany(mappedBy = "seat")
 	private List<Appointment> appointments;
+	
 	@Column(name = "SET_ASIDE")
 	private boolean setAside;
 

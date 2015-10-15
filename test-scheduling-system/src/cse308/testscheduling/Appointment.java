@@ -23,10 +23,12 @@ import javax.persistence.TemporalType;
 public class Appointment implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	// primary key is id
 	private int id;
+	
 	@Column(name = "SET_ASIDE_SEAT")
 	private boolean setAsideSeat;
 

@@ -45,6 +45,7 @@ public class Course implements Serializable {
 			@JoinColumn(name = "COURSE_ID", referencedColumnName = "course_ID") }, inverseJoinColumns = {
 					@JoinColumn(name = "NET_ID", referencedColumnName = "NET_ID") })
 	private List<Instructor> instructors;
+	
 	// a course can have multiple exam, so it is one-to-many
 	// the mappedBy element indicates that this is the nonowning side of
 	// the association.

@@ -17,13 +17,17 @@ import javax.persistence.OneToOne;
 public class User implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	
 	// name the primary key column "NET_ID"
 	@Id
 	@Column(name = "NET_ID")
 	private String netId;
+	
 	private String password;
+	
 	@Column(name = "FIRST_NAME")
 	private String firstName;
+	
 	@Column(name = "LAST_NAME")
 	private String lastName;
 
