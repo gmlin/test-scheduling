@@ -1,6 +1,8 @@
 package cse308.testscheduling;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -20,6 +22,7 @@ import javax.servlet.http.HttpSession;
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private static final Logger logger = Logger.getLogger(ScheduleExamServlet.class.getName());
 
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -47,8 +50,19 @@ public class LoginServlet extends HttpServlet {
 		try {
 			User user = (User) query.getSingleResult();
 			session.setAttribute("user", user);
+			if(user.getAdministrator()!= null){
+				logger.log(Level.SEVERE, "Login sucesfully as a Administrator: " + session.getAttribute("username"));
+			}
+			if(user.getStudent()!= null){
+				logger.log(Level.SEVERE, "Login sucesfully as a Student: " + session.getAttribute("username"));
+			}
+			if(user.getInstructor()!= null){
+				logger.log(Level.SEVERE, "Login sucesfully as a Instructor: " + session.getAttribute("username"));
+			}
 		} catch (NoResultException e) {
 			session.setAttribute("incorrect", true);
+			logger.log(Level.SEVERE, "Login failure", e);
+			
 
 		} finally {
 			response.sendRedirect("Login.jsp");
