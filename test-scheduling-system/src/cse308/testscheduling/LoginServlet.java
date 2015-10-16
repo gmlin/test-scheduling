@@ -1,6 +1,8 @@
 package cse308.testscheduling;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -38,6 +40,9 @@ public class LoginServlet extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		File f = new File("/loginTest.txt");
+		FileHandler fh = new FileHandler("loginTest.txt");
+		logger.addHandler(fh);
 		HttpSession session = request.getSession();
 		session.setAttribute("username", request.getParameter("username"));
 		session.setAttribute("password", request.getParameter("password"));

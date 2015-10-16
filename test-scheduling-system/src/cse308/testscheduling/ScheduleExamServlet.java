@@ -1,5 +1,6 @@
 package cse308.testscheduling;
 
+import java.io.File;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.logging.*;
@@ -22,6 +23,7 @@ import javax.servlet.http.HttpSession;
 public class ScheduleExamServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final Logger logger = Logger.getLogger(ScheduleExamServlet.class.getName());
+	
 
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -43,6 +45,9 @@ public class ScheduleExamServlet extends HttpServlet {
 		Exam exam = new Exam();
 		exam.setStatus(Status.PENDING);
 		logger.entering(getClass().getName(), "doPost", request);
+		File f = new File("/ExamRequestTest.txt");
+		FileHandler fh = new FileHandler("ExamRequestTest.txt");
+		logger.addHandler(fh);
 		try {
 			exam.setDuration(Integer.parseInt(request.getParameter("examDuration")));
 			exam.setStartDateTime(Timestamp.valueOf(request.getParameter("startDateTime").replace("T", " ") + ":00"));
