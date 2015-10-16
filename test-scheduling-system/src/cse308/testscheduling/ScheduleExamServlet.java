@@ -2,6 +2,7 @@ package cse308.testscheduling;
 
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.util.logging.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -20,6 +21,7 @@ import javax.servlet.http.HttpSession;
 @WebServlet("/schedule_exam")
 public class ScheduleExamServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private static final Logger logger = Logger.getLogger(ScheduleExamServlet.class.getName());
 
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -40,6 +42,7 @@ public class ScheduleExamServlet extends HttpServlet {
 		em.getTransaction().begin();
 		Exam exam = new Exam();
 		exam.setStatus(Status.PENDING);
+		logger.entering(getClass().getName(), "doPost", request);
 		try {
 			exam.setDuration(Integer.parseInt(request.getParameter("examDuration")));
 			exam.setStartDateTime(Timestamp.valueOf(request.getParameter("startDateTime").replace("T", " ") + ":00"));
@@ -50,6 +53,10 @@ public class ScheduleExamServlet extends HttpServlet {
 				exam.setCourse(course);
 				course.addExam(exam);
 				exam.setExamId(course.getCourseId() + "_ex" + String.valueOf(course.getExams().size()));
+				logger.log(Level.SEVERE, "Regular Exam Sucessfully Requested for " + course.getCourseId() + 
+						" . Duration is: " + request.getParameter("examDuration") +
+						". StartDate is " + request.getParameter("startDateTime").replace("T", " ") + ":00" +
+						". EndDate is " + request.getParameter("endDateTime").replace("T", " ") + ":00");
 			}
 			else if (request.getParameter("exam_type").equals("adhoc")) {
 				exam.setAdHoc(true);
@@ -68,18 +75,28 @@ public class ScheduleExamServlet extends HttpServlet {
 				Instructor instructor = ((User)(s.getAttribute("user"))).getInstructor();
 				exam.setInstructor(instructor);
 				instructor.addAdHocExam(exam);
+				logger.log(Level.SEVERE, "AdHoc Exam Sucessfully Requested" + 
+						" . Duration is: " + request.getParameter("examDuration") +
+						". StartDate is " + request.getParameter("startDateTime").replace("T", " ") + ":00" +
+						". EndDate is " + request.getParameter("endDateTime").replace("T", " ") + ":00");
 			}
 			em.persist(exam);
 			em.getTransaction().commit();
 			request.getSession().setAttribute("message", "Successfully scheduled exam.");
+			
 		}
 		catch (Exception e) {
 			request.getSession().setAttribute("message", e.toString());
+			logger.log(Level.SEVERE, "Error in making Exam", e);
+			
 		}
 		finally {
+			logger.exiting(getClass().getName(), "doPost");
+			
 			em.close();
 			emf.close();
 			response.sendRedirect(request.getHeader("Referer"));
+			
 		}
 	}
 }
