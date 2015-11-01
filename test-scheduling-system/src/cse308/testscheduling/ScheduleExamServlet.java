@@ -39,11 +39,20 @@ public class ScheduleExamServlet extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory("test-scheduling-system");
-		EntityManager em = emf.createEntityManager();
-		em.getTransaction().begin();
-		Exam exam = new Exam();
-		exam.setStatus(Status.PENDING);
+		HttpSession s = request.getSession();
+		Instructor instructor = ((User)(s.getAttribute("user"))).getInstructor();
+		int duration = Integer.parseInt(request.getParameter("examDuration"));
+		Timestamp startDateTime = Timestamp.valueOf(request.getParameter("startDateTime").replace("T", " ") + ":00");
+		Timestamp endDateTime = Timestamp.valueOf(request.getParameter("endDateTime").replace("T", " ") + ":00");
+		if (request.getParameter("exam_type").equals("course")) {
+			String courseId = request.getParameter("courseId");
+			instructor.requestCourseExam(courseId, duration, startDateTime, endDateTime);
+		}
+		else if (request.getParameter("exam_type").equals("adhoc")) {
+			String[] netIds = request.getParameter("netids").split("\n");
+			instructor.requestAdHocExam(netIds, duration, startDateTime, endDateTime);
+		}
+		/*
 		logger.entering(getClass().getName(), "doPost", request);
 		File f = new File("/ExamRequestTest.txt");
 		FileHandler fh = new FileHandler("ExamRequestTest.txt");
@@ -103,5 +112,6 @@ public class ScheduleExamServlet extends HttpServlet {
 			response.sendRedirect(request.getHeader("Referer"));
 			
 		}
+		*/
 	}
 }

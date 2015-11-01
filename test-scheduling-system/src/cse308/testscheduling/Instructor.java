@@ -1,11 +1,15 @@
 package cse308.testscheduling;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -13,6 +17,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Persistence;
+import javax.persistence.Query;
 
 /**
  * Entity implementation class for Entity: Instructor
@@ -48,7 +54,7 @@ public class Instructor implements Serializable {
 	// a instructor can have multiple ad hoc exams
 	@OneToMany(mappedBy = "instructor", cascade = CascadeType.ALL)
 	private List<Exam> adHocExams;
-	
+
 	public Instructor() {
 		super();
 		setCourses(new ArrayList<Course>());
@@ -90,9 +96,71 @@ public class Instructor implements Serializable {
 	public void setAdHocExams(List<Exam> adHocExams) {
 		this.adHocExams = adHocExams;
 	}
-	
+
 	public void addAdHocExam(Exam adHocExam) {
 		adHocExams.add(adHocExam);
 	}
-	
+
+	public void requestCourseExam(String courseId, int duration, Timestamp startDateTime, Timestamp endDateTime) {
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory("test-scheduling-system");
+		EntityManager em = emf.createEntityManager();
+		try {
+			em.getTransaction().begin();
+			Exam exam = new Exam();
+			exam.setStatus(Status.PENDING);
+			exam.setAdHoc(false);
+			Course course = em.find(Course.class, courseId);
+			exam.setCourse(course);
+			course.addExam(exam);
+			exam.setExamId(course.getCourseId() + "_ex" + String.valueOf(course.getExams().size()));
+			exam.setDuration(duration);
+			exam.setStartDateTime(startDateTime);
+			exam.setEndDateTime(endDateTime);
+			em.persist(exam);
+			em.getTransaction().commit();
+		}
+		catch(Exception e) {
+			throw e;
+		}
+		finally {
+			em.close();
+			emf.close();
+		}
+	}
+
+	public void requestAdHocExam(String[] netIds, int duration, Timestamp startDateTime, Timestamp endDateTime) {
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory("test-scheduling-system");
+		EntityManager em = emf.createEntityManager();
+		try {
+			em.getTransaction().begin();
+			Exam exam = new Exam();
+			exam.setStatus(Status.PENDING);
+			exam.setAdHoc(true);
+			Query query = em.createQuery("SELECT e FROM Exam e WHERE e.adHoc = true", Exam.class);
+			exam.setExamId("adhoc_ex" + (query.getResultList().size() + 1));
+			exam.setDuration(duration);
+			exam.setStartDateTime(startDateTime);
+			exam.setEndDateTime(endDateTime);
+			User u;
+			for (String netId : netIds) {
+				query = em.createQuery("SELECT u FROM User u WHERE u.netId = :username", User.class);
+				query.setParameter("username", netId.trim());
+				u = (User)(query.getSingleResult());
+				u.getStudent().addAdHocExam(exam);
+				exam.addStudent(u.getStudent());
+			}
+			exam.setInstructor(this);
+			this.addAdHocExam(exam);
+			em.persist(exam);
+			em.getTransaction().commit();
+		}
+		catch(Exception e) {
+			throw e;
+		}
+		finally {
+			em.close();
+			emf.close();
+		}
+	}
+
 }
