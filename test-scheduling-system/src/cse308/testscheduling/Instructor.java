@@ -1,10 +1,14 @@
 package cse308.testscheduling;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.FileHandler;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -29,6 +33,7 @@ import javax.persistence.Query;
 public class Instructor implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	private static final Logger logger = Logger.getLogger(ScheduleExamServlet.class.getName());
 
 	// primary key is Id
 	@Id
@@ -104,6 +109,19 @@ public class Instructor implements Serializable {
 	public void requestCourseExam(String courseId, int duration, Timestamp startDateTime, Timestamp endDateTime) {
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("test-scheduling-system");
 		EntityManager em = emf.createEntityManager();
+		logger.entering(getClass().getName(), "requestCourseExam");
+		File f = new File("/CourseExamRequestTest.txt");
+		FileHandler fh = null;
+		try {
+			fh = new FileHandler("CourseExamRequestTest.txt");
+		} catch (SecurityException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		logger.addHandler(fh);
 		try {
 			em.getTransaction().begin();
 			Exam exam = new Exam();
@@ -118,18 +136,38 @@ public class Instructor implements Serializable {
 			exam.setEndDateTime(endDateTime);
 			em.persist(exam);
 			em.getTransaction().commit();
+			logger.log(Level.SEVERE, "Regular Exam Sucessfully Requested for " + course.getCourseId() + 
+					" . Duration is: " + duration +
+					". StartDate is " + startDateTime +
+					". EndDate is " + endDateTime);
 		}
 		catch(Exception e) {
+			logger.log(Level.SEVERE, "Error in making Course Exam", e);
 			throw e;
+			
 		}
 		finally {
 			em.close();
 			emf.close();
+			logger.exiting(getClass().getName(), "requestCourseExam");
 		}
 	}
 
 	public void requestAdHocExam(String[] netIds, int duration, Timestamp startDateTime, Timestamp endDateTime) {
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("test-scheduling-system");
+		logger.entering(getClass().getName(), "requestAdHocExam");
+		File f = new File("/AdHocExamRequestTest.txt");
+		FileHandler fh = null;
+		try {
+			fh = new FileHandler("AdHocExamRequestTest.txt");
+		} catch (SecurityException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		logger.addHandler(fh);
 		EntityManager em = emf.createEntityManager();
 		try {
 			em.getTransaction().begin();
@@ -153,13 +191,19 @@ public class Instructor implements Serializable {
 			this.addAdHocExam(exam);
 			em.persist(exam);
 			em.getTransaction().commit();
+			logger.log(Level.SEVERE, "AdHoc Exam Sucessfully Requested" + 
+					" . Duration is: " + duration +
+					". StartDate is " + startDateTime +
+					". EndDate is " + endDateTime);
 		}
 		catch(Exception e) {
+			logger.log(Level.SEVERE, "Error in making AdHoc Exam", e);
 			throw e;
 		}
 		finally {
 			em.close();
 			emf.close();
+			logger.exiting(getClass().getName(), "requestAdHocExam");
 		}
 	}
 
