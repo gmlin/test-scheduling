@@ -22,6 +22,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Persistence;
+import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 /**
@@ -31,7 +32,7 @@ import javax.persistence.Query;
 @Entity
 
 public class Instructor implements Serializable {
-
+	
 	private static final long serialVersionUID = 1L;
 	private static final Logger logger = Logger.getLogger(ScheduleExamServlet.class.getName());
 

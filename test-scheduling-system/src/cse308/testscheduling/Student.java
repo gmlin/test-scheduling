@@ -51,7 +51,7 @@ public class Student implements Serializable {
 	public Student() {
 		super();
 		appointments = new ArrayList<Appointment>();
-		courses = new ArrayList<Course>();
+		setCourses(new ArrayList<Course>());
 		adHocExams = new ArrayList<Exam>();
 	}
 
@@ -60,7 +60,7 @@ public class Student implements Serializable {
 	}
 
 	public void addCourse(Course course) {
-		courses.add(course);
+		getCourses().add(course);
 	}
 
 	public List<Appointment> getAppointments() {
@@ -93,6 +93,14 @@ public class Student implements Serializable {
 	
 	public void addAdHocExam(Exam adHocExam) {
 		adHocExams.add(adHocExam);
+	}
+
+	public List<Course> getCourses() {
+		return courses;
+	}
+
+	public void setCourses(List<Course> courses) {
+		this.courses = courses;
 	}
 
 }

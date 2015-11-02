@@ -2,7 +2,8 @@
 	pageEncoding="UTF-8"%>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/sql" prefix="sql"%>
+
+<%@ page import="java.util.List,cse308.testscheduling.User"%>
 
 <%
 	if (session.getAttribute("user") == null)
@@ -42,40 +43,59 @@
 						<h4>Notices</h4>
 					</div>
 					<div class="panel-body">
-						<sql:setDataSource var="db" driver="com.mysql.jdbc.Driver"
-							url="jdbc:mysql://mysql2.cs.stonybrook.edu:3306/cse308mingteam"
-							user="cse308mingteam" password="changeit" />
 						<c:if test="${not empty sessionScope.user.administrator}">
-							<sql:query dataSource="${db}" var="result">
-							SELECT COUNT(*) AS count FROM exam WHERE status = 0;
-							</sql:query>
-							<p>Number of scheduled exams awaiting approval: 
-							<c:out value="${result.rows[0].count}"/>
+							<%
+								User u = (User) session.getAttribute("user");
+									session.setAttribute("numPending", u.getAdministrator().getPendingExams().size());
+							%>
+							<p>
+								Number of scheduled exams awaiting approval:
+								<c:out value="${sessionScope.numPending}" />
 							</p>
 						</c:if>
 						<c:if test="${not empty sessionScope.user.instructor}">
-						  <c:forEach var="course" items="${sessionScope.user.instructor.courses}">
-							<sql:query dataSource="${db}" var="result">
-                            SELECT * FROM exam WHERE COURSE_ID = "${course.courseId}" AND STATUS != "COMPLETED";
-                            </sql:query>
-                            <c:forEach var="row" items="${result.rows}">
-	                            <p>
-	                            <c:out value="${row.EXAM_ID}"/>: 
-	                            <c:out value="${row.status}"/>
-	                            </p>
-	                        </c:forEach>
-                          </c:forEach>
-                          <c:forEach var="adHocExam" items="${sessionScope.user.instructor.adHocExams}">
-                            <c:if test="${adHocExam.status != 'COMPLETED'}">
-                                <p>
-                                <c:out value="${adHocExam.examId}"/>: 
-                                <c:out value="${adHocExam.status}"/>
-                                </p>
-                            </c:if>
-                          </c:forEach>
+							<c:forEach var="course"
+								items="${sessionScope.user.instructor.courses}">
+								<c:forEach var="exam" items="${course.exams}">
+									<c:if test="${exam.status != 'COMPLETED'}">
+										<p>
+											<c:out value="${exam.examId}" />
+											:
+											<c:out value="${exam.status}" />
+										</p>
+									</c:if>
+								</c:forEach>
+							</c:forEach>
+							<c:forEach var="adHocExam"
+								items="${sessionScope.user.instructor.adHocExams}">
+								<c:if test="${adHocExam.status != 'COMPLETED'}">
+									<p>
+										<c:out value="${adHocExam.examId}" />
+										:
+										<c:out value="${adHocExam.status}" />
+									</p>
+								</c:if>
+							</c:forEach>
 						</c:if>
 						<c:if test="${not empty sessionScope.user.student}">
-							<%@ include file="StudentSidebar.jsp"%>
+							<c:forEach var="course"
+								items="${sessionScope.user.student.courses}">
+								<c:forEach var="exam" items="${course.exams}">
+									<c:if test="${exam.status == 'APPROVED'}">
+										<p>
+											<c:out value="${exam.examId}" />
+										</p>
+									</c:if>
+								</c:forEach>
+							</c:forEach>
+							<c:forEach var="adHocExam"
+								items="${sessionScope.user.student.adHocExams}">
+								<c:if test="${adHocExam.status == 'APPROVED'}">
+									<p>
+										<c:out value="${adHocExam.examId}" />
+									</p>
+								</c:if>
+							</c:forEach>
 						</c:if>
 					</div>
 				</div>
