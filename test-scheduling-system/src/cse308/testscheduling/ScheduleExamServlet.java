@@ -54,6 +54,7 @@ public class ScheduleExamServlet extends HttpServlet {
 				instructor.requestAdHocExam(netIds, duration, startDateTime, endDateTime);
 			}
 			request.getSession().setAttribute("message", "Successfully scheduled exam.");
+			request.getSession().setAttribute("user", instructor.getUser());
 		}
 		catch(Exception e) {
 			request.getSession().setAttribute("message", e.toString());

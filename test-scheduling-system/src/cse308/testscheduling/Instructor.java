@@ -33,7 +33,7 @@ import javax.persistence.Query;
 @Entity
 
 public class Instructor implements Serializable {
-	
+
 	private static final long serialVersionUID = 1L;
 	private static final Logger logger = Logger.getLogger(Instructor.class.getName());
 
@@ -129,7 +129,13 @@ public class Instructor implements Serializable {
 			Exam exam = new Exam();
 			exam.setStatus(Status.PENDING);
 			exam.setAdHoc(false);
-			Course course = em.find(Course.class, courseId);
+			Course course = null;
+			for (Course c : this.courses) {
+				if (c.getCourseId().equals(courseId)) {
+					course = c;
+					break;
+				}
+			}
 			exam.setCourse(course);
 			course.addExam(exam);
 			exam.setExamId(course.getCourseId() + "_ex" + String.valueOf(course.getExams().size()));
@@ -138,17 +144,13 @@ public class Instructor implements Serializable {
 			exam.setEndDateTime(endDateTime);
 			em.persist(exam);
 			em.getTransaction().commit();
-			logger.log(Level.INFO, "Regular Exam Sucessfully Requested for " + course.getCourseId() + 
-					" . Duration is: " + duration +
-					". StartDate is " + startDateTime +
-					". EndDate is " + endDateTime);
-		}
-		catch(Exception e) {
+			logger.log(Level.INFO, "Regular Exam Sucessfully Requested for " + course.getCourseId() + " . Duration is: "
+					+ duration + ". StartDate is " + startDateTime + ". EndDate is " + endDateTime);
+		} catch (Exception e) {
 			logger.log(Level.SEVERE, "Error in making Course Exam", e);
 			throw e;
-			
-		}
-		finally {
+
+		} finally {
 			em.close();
 			emf.close();
 			logger.exiting(getClass().getName(), "requestCourseExam");
@@ -185,7 +187,7 @@ public class Instructor implements Serializable {
 			for (String netId : netIds) {
 				query = em.createQuery("SELECT u FROM User u WHERE u.netId = :username", User.class);
 				query.setParameter("username", netId.trim());
-				u = (User)(query.getSingleResult());
+				u = (User) (query.getSingleResult());
 				u.getStudent().addAdHocExam(exam);
 				exam.addStudent(u.getStudent());
 			}
@@ -193,20 +195,42 @@ public class Instructor implements Serializable {
 			this.addAdHocExam(exam);
 			em.persist(exam);
 			em.getTransaction().commit();
-			logger.log(Level.INFO, "AdHoc Exam Sucessfully Requested" + 
-					" . Duration is: " + duration +
-					". StartDate is " + startDateTime +
-					". EndDate is " + endDateTime);
-		}
-		catch(Exception e) {
+			logger.log(Level.INFO, "AdHoc Exam Sucessfully Requested" + " . Duration is: " + duration
+					+ ". StartDate is " + startDateTime + ". EndDate is " + endDateTime);
+		} catch (Exception e) {
 			logger.log(Level.SEVERE, "Error in making AdHoc Exam", e);
 			throw e;
-		}
-		finally {
+		} finally {
 			em.close();
 			emf.close();
 			logger.exiting(getClass().getName(), "requestAdHocExam");
 		}
 	}
 
+	public String toString() {
+		return user.getFirstName() + " " + user.getLastName();
+	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + id;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Instructor other = (Instructor) obj;
+		if (id != other.id)
+			return false;
+		return true;
+	}
+	
 }

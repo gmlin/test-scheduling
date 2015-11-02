@@ -54,16 +54,16 @@ public class Course implements Serializable {
 
 	public Course() {
 		super();
-		students = new ArrayList<Student>();
-		instructors = new ArrayList<Instructor>();
+		setStudents(new ArrayList<Student>());
+		setInstructors(new ArrayList<Instructor>());
 	}
 
 	public void addInstructor(Instructor instructor) {
-		instructors.add(instructor);
+		getInstructors().add(instructor);
 	}
 
 	public void addStudent(Student student) {
-		students.add(student);
+		getStudents().add(student);
 	}
 
 	public String getCourseId() {
@@ -86,4 +86,23 @@ public class Course implements Serializable {
 		exams.add(exam);
 	}
 
+	public List<Student> getStudents() {
+		return students;
+	}
+
+	public void setStudents(List<Student> students) {
+		this.students = students;
+	}
+	
+	public String toString() {
+		return courseId;
+	}
+
+	public List<Instructor> getInstructors() {
+		return instructors;
+	}
+
+	public void setInstructors(List<Instructor> instructors) {
+		this.instructors = instructors;
+	}
 }

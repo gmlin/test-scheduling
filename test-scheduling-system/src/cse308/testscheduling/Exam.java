@@ -158,5 +158,17 @@ public class Exam implements Serializable {
 	public void setInstructor(Instructor instructor) {
 		this.instructor = instructor;
 	}
-	
+	public boolean hasPermissions(Instructor instructor) {
+		if (adHoc) {
+			System.out.println(this.instructor);
+			System.out.println(instructor);
+			System.out.println(this.instructor == instructor);
+			System.out.println(this.instructor.equals(instructor));
+			return this.instructor.equals(instructor);
+		}
+		else {
+			System.out.println(course.getInstructors().contains(instructor));
+			return course.getInstructors().contains(instructor);
+		}
+	}
 }

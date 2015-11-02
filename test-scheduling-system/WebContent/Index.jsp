@@ -49,30 +49,35 @@
 									session.setAttribute("numPending", u.getAdministrator().getPendingExams().size());
 							%>
 							<p>
-								Number of scheduled exams awaiting approval:
+								Number of exam requests awaiting approval:
 								<c:out value="${sessionScope.numPending}" />
 							</p>
 						</c:if>
 						<c:if test="${not empty sessionScope.user.instructor}">
+
 							<c:forEach var="course"
 								items="${sessionScope.user.instructor.courses}">
 								<c:forEach var="exam" items="${course.exams}">
-									<c:if test="${exam.status != 'COMPLETED'}">
+									<c:if
+										test="${exam.status == 'APPROVED' or exam.status == 'DENIED'}">
 										<p>
+											Exam
 											<c:out value="${exam.examId}" />
-											:
-											<c:out value="${exam.status}" />
+											has been
+											<c:out value="${exam.status}" />.
 										</p>
 									</c:if>
 								</c:forEach>
 							</c:forEach>
 							<c:forEach var="adHocExam"
 								items="${sessionScope.user.instructor.adHocExams}">
-								<c:if test="${adHocExam.status != 'COMPLETED'}">
+								<c:if
+									test="${adHocExam.status == 'APPROVED' or adHocExam.status == 'DENIED'}">
 									<p>
+										Exam
 										<c:out value="${adHocExam.examId}" />
-										:
-										<c:out value="${adHocExam.status}" />
+										has been
+										<c:out value="${adHocExam.status}" />.
 									</p>
 								</c:if>
 							</c:forEach>

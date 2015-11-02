@@ -10,7 +10,7 @@
 			<li><a href="ScheduleExam.jsp">Course Exam</a></li>
 			<li><a href="ScheduleAdHoc.jsp">Ad Hoc Exam</a>
 		</ul></li>
-	<li><a href="#">View Scheduling Requests</a></li>
+	<li><a href="ViewRequests.jsp">View Scheduling Requests</a></li>
 </ul>
 
 <hr>
