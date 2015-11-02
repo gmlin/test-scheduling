@@ -3,6 +3,7 @@ package cse308.testscheduling;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
+import java.nio.file.Files;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +35,7 @@ import javax.persistence.Query;
 public class Instructor implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
-	private static final Logger logger = Logger.getLogger(ScheduleExamServlet.class.getName());
+	private static final Logger logger = Logger.getLogger(Instructor.class.getName());
 
 	// primary key is Id
 	@Id
@@ -137,7 +138,7 @@ public class Instructor implements Serializable {
 			exam.setEndDateTime(endDateTime);
 			em.persist(exam);
 			em.getTransaction().commit();
-			logger.log(Level.SEVERE, "Regular Exam Sucessfully Requested for " + course.getCourseId() + 
+			logger.log(Level.INFO, "Regular Exam Sucessfully Requested for " + course.getCourseId() + 
 					" . Duration is: " + duration +
 					". StartDate is " + startDateTime +
 					". EndDate is " + endDateTime);
@@ -192,7 +193,7 @@ public class Instructor implements Serializable {
 			this.addAdHocExam(exam);
 			em.persist(exam);
 			em.getTransaction().commit();
-			logger.log(Level.SEVERE, "AdHoc Exam Sucessfully Requested" + 
+			logger.log(Level.INFO, "AdHoc Exam Sucessfully Requested" + 
 					" . Duration is: " + duration +
 					". StartDate is " + startDateTime +
 					". EndDate is " + endDateTime);
