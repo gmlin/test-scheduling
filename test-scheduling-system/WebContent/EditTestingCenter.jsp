@@ -50,7 +50,7 @@
 						<h4 class="text-center">Edit Testing Center Information</h4>
 					</div>
 					<div class="panel-body">
-						<form>
+						<form action="edit_testing_center_info" method="post">
 							<div class="form-group">
 								<label for="numSeats">Number of Seats</label> <input
 									type="number" class="form-control" id="numSeats">
@@ -76,8 +76,7 @@
     								$('input[name="closedDateRanges"]').daterangepicker();
 								});
 								</script>
-							</div>
-							
+							</div>							
 			<!-- TODO:We should be able to add multiple periods -->
 							<div class="form-group">
 								<label for="reservedPeriods">Reserved Periods</label> <input type="text" name="reservedPeriods" id="reservedPeriods">								
@@ -101,10 +100,6 @@
 								<label for="reminderInterval">Reminder Interval</label> <input
 									type="number" class="form-control" id="reminderInterval">
 							</div>
-							
-							
-											
-							
 							
 							<button type="submit" class="btn btn-default">Submit</button>
 						</form>
