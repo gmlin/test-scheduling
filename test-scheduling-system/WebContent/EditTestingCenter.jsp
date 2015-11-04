@@ -20,6 +20,13 @@
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script src="js/scripts.js"></script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/jquery/1/jquery.min.js"></script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap/latest/css/bootstrap.css" />
+ 
+<!-- Include Date Range Picker -->
+<script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
+<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
 </head>
 <body>
 
@@ -43,23 +50,57 @@
 						<h4 class="text-center">Edit Testing Center Information</h4>
 					</div>
 					<div class="panel-body">
-						<form>
+						<form action="edit_testing_center_info" method="post">
 							<div class="form-group">
 								<label for="numSeats">Number of Seats</label> <input
-									type="number" class="form-control" id="numSeats" required>
+									type="number" class="form-control" id="numSeats">
 							</div>
 							<div class="form-group">
 								<label for="numSetAside">Number of Set-Aside Seats</label> <input
-									type="number" class="form-control" id="numSetAside" required>
+									type="number" class="form-control" id="numSetAside">
 							</div>
 							<div class="form-group">
-								<label for="startDateTime">Start</label> <input
-									type="datetime-local" id="startDateTime" required>
+								<label>Testing Center Hours</label><br>
+								<label for="openTime">Open Time</label> <input
+									type="time" id="openTime">
 							</div>
 							<div class="form-group">
-								<label for="endDateTime">End</label><input type="datetime-local"
-									id="endDateTime" required>
+								<label for="closeTime">Close Time</label><input type="time"
+									id="closeTime">
 							</div>
+			<!-- TODO:We should be able to add multiple ranges -->
+							<div class="form-group">
+								<label for="closedDateRanges">Closing Dates</label> <input type="text" name="closedDateRanges" id="closedDateRanges">								
+								<script type="text/javascript">
+								$(function() {
+    								$('input[name="closedDateRanges"]').daterangepicker();
+								});
+								</script>
+							</div>							
+			<!-- TODO:We should be able to add multiple periods -->
+							<div class="form-group">
+								<label for="reservedPeriods">Reserved Periods</label> <input type="text" name="reservedPeriods" id="reservedPeriods">								
+								<script type="text/javascript">
+								$(function() {
+								    $('input[name="reservedPeriods"]').daterangepicker({
+								        timePicker: true,
+								        timePickerIncrement: 30,
+								        locale: {
+								            format: 'MM/DD/YYYY h:mm A'
+								        }
+								    });
+								});
+								</script>
+							</div>
+							<div class="form-group">
+								<label for="gapTime">Appointment Gap Time</label> <input
+									type="number" class="form-control" id="gapTime" max=30 min=0>
+							</div>
+							<div class="form-group">
+								<label for="reminderInterval">Reminder Interval</label> <input
+									type="number" class="form-control" id="reminderInterval">
+							</div>
+							
 							<button type="submit" class="btn btn-default">Submit</button>
 						</form>
 					</div>
