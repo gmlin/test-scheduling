@@ -45,7 +45,8 @@
                         <h4 class="text-center">Available Exams</h4>
                     </div>
                     <div class="panel-body">
-                        <form action="modify_request" method="post">
+                        <form action="make_appointment" method="post">
+                            <input type="hidden" name="exam_type" value="course" />
                             <%
                                 if (session.getAttribute("message") != null) {
                                     out.println(session.getAttribute("message"));
@@ -53,46 +54,17 @@
                                 }
                             %>
                             <div class="form-group">
-                                <table class="table">
-                                    <thead>
-                                        <th>Exam ID</th>
-                                        <th>Course/Instructor</th>
-                                        <th>Start Time</th>
-                                        <th>End Time</th>
-                                        <th>Duration</th>
-                                        <th>Number of examinees</th>
-                                        <th>Approve</th>
-                                        <th>Deny</th>
-                                    </thead>
-                                    <tbody>
-                                        <c:forEach
-                                            items="${sessionScope.user.administrator.pendingExams}"
-                                            var="exam">
-                                            <tr>
-                                                <td>${exam.examId }</td>
-                                                <td><c:if test="${exam.adHoc}">
-                                                        ${exam.instructor}
-                                                    </c:if> <c:if
-                                                        test="${not exam.adHoc}">
-                                                        ${exam.course}
-                                                    </c:if></td>
-                                                <td>${exam.startDateTime}</td>
-                                                <td>${exam.endDateTime }</td>
-                                                <td>${exam.duration }</td>
-                                                <td><c:if test="${exam.adHoc}">
-                                                        ${fn:length(exam.students)}
-                                                    </c:if> <c:if
-                                                        test="${not exam.adHoc}">
-                                                        ${fn:length(exam.course.students)}
-                                                    </c:if></td>
-                                                <td><input type="radio" name="${exam.examId }"
-                                                    value="approve" /></td>
-                                                <td><input type="radio" name="${exam.examId }"
-                                                    value="deny" /></td>
-                                            </tr>
-                                        </c:forEach>
-                                    </tbody>
-                                </table>
+                                <label for="courseId">Exam</label> <select
+                                    class="form-control" name="exam" id="exam" required>
+                                    <c:forEach items="${sessionScope.user.student.availableExams}"
+                                        var="exam">
+                                        <option value="${exam.examId}">${exam.examId} ${exam.startDateTime } to ${exam.endDateTime }</option>
+                                    </c:forEach>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="dateTime">Date/Time</label> <input
+                                    type="datetime-local" name="dateTime" id="dateTime" required>
                             </div>
                             <button type="submit" class="btn btn-default">Submit</button>
 

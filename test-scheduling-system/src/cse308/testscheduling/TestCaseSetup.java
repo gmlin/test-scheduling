@@ -108,6 +108,12 @@ public class TestCaseSetup {
 		c2.addStudent(student1);
 		c2.addStudent(student2);
 
+		Seat seat;
+		for (int i = 0; i < t.getNumSeats(); i++) {
+			seat = new Seat();
+			em.persist(seat);
+		}
+		
 		em.persist(u1);
 		em.persist(u2);
 		em.persist(u3);

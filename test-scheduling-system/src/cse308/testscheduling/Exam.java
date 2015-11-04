@@ -171,4 +171,29 @@ public class Exam implements Serializable {
 			return course.getInstructors().contains(instructor);
 		}
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((examId == null) ? 0 : examId.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Exam other = (Exam) obj;
+		if (examId == null) {
+			if (other.examId != null)
+				return false;
+		} else if (!examId.equals(other.examId))
+			return false;
+		return true;
+	}
 }

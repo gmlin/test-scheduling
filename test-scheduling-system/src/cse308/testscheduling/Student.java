@@ -103,4 +103,24 @@ public class Student implements Serializable {
 		this.courses = courses;
 	}
 
+	public List<Exam> getAvailableExams() {
+		List<Exam> availableExams = new ArrayList<Exam>();
+		List<Exam> alreadyAppointed = new ArrayList<Exam>();
+		for (Appointment a : appointments) {
+			alreadyAppointed.add(a.getExam());
+		}
+		for (Course c : courses) {
+			List<Exam> exams = c.getExams();
+			for (Exam e : exams) {
+				if (e.getStatus() == Status.APPROVED && !alreadyAppointed.contains(e))
+					availableExams.add(e);
+			}
+		}
+		for (Exam e : adHocExams) {
+			if (e.getStatus() == Status.APPROVED && !alreadyAppointed.contains(e))
+				availableExams.add(e);
+		}
+		return availableExams;
+	}
+	
 }

@@ -1,6 +1,7 @@
 package cse308.testscheduling;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.Calendar;
 
 import javax.persistence.Column;
@@ -57,9 +58,8 @@ public class Appointment implements Serializable {
 
 	// temporal must be specified for persistent fields or
 	// properties of type java.util.Date and java.util.Calendar
-	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "DATE_TIME")
-	private Calendar dateTime;
+	private Timestamp dateTime;
 
 	private boolean attendance;
 
@@ -67,7 +67,7 @@ public class Appointment implements Serializable {
 		super();
 	}
 
-	public Calendar getDateTime() {
+	public Timestamp getDateTime() {
 		return dateTime;
 	}
 
@@ -95,7 +95,7 @@ public class Appointment implements Serializable {
 		this.attendance = attendance;
 	}
 
-	public void setDateTime(Calendar dateTime) {
+	public void setDateTime(Timestamp dateTime) {
 		this.dateTime = dateTime;
 	}
 
@@ -113,6 +113,10 @@ public class Appointment implements Serializable {
 
 	public void setStudent(Student student) {
 		this.student = student;
+	}
+	
+	public Timestamp getEndDateTime() {
+		return Timestamp.valueOf(dateTime.toLocalDateTime().plusMinutes(exam.getDuration()));
 	}
 
 }
