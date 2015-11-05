@@ -2,6 +2,7 @@ package cse308.testscheduling;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Calendar;
 
 import javax.persistence.Column;
@@ -87,7 +88,7 @@ public class Appointment implements Serializable {
 		return this.student;
 	}
 
-	public boolean isAttendance() {
+	public boolean getAttendance() {
 		return attendance;
 	}
 
@@ -119,4 +120,23 @@ public class Appointment implements Serializable {
 		return Timestamp.valueOf(dateTime.toLocalDateTime().plusMinutes(exam.getDuration()));
 	}
 
+	public boolean isCancelable() {
+		if (attendance)
+			return false;
+		return dateTime.toLocalDateTime().minusDays(1).isBefore(LocalDateTime.now());
+	}
+
+	public int getId() {
+		return id;
+	}
+	
+	public String getDateString() {
+		LocalDateTime ldt = dateTime.toLocalDateTime();
+		return ldt.toLocalDate().toString();
+	}
+	
+	public String getTimeString() {
+		LocalDateTime ldt = dateTime.toLocalDateTime();
+		return ldt.toLocalTime().toString();
+	}
 }

@@ -8,7 +8,7 @@
 
 <%
     User user = (User) (session.getAttribute("user"));
-    if (user == null || user.getStudent() == null)
+    if (user == null || user.getAdministrator() == null)
         response.sendRedirect("Index.jsp");
 %>
 
@@ -46,7 +46,7 @@
                     </div>
                     <div class="panel-body">
                         <form action="make_appointment" method="post">
-                            <input type="hidden" name="appt_type" value="student" />
+                            <input type="hidden" name="appt_type" value="admin" />
                             <%
                                 if (session.getAttribute("message") != null) {
                                     out.println(session.getAttribute("message"));
@@ -54,9 +54,13 @@
                                 }
                             %>
                             <div class="form-group">
+                            <label for="student">Student (Empty for set-aside)</label>
+                                <input type="text" name="student" id="student">
+                                </div>
+                            <div class="form-group">
                                 <label for="courseId">Exam</label> <select
                                     class="form-control" name="exam" id="exam" required>
-                                    <c:forEach items="${sessionScope.user.student.availableExams}"
+                                    <c:forEach items="${sessionScope.user.administrator.approvedExams}"
                                         var="exam">
                                         <option value="${exam.examId}">${exam.examId} ${exam.startDateTime } to ${exam.endDateTime }</option>
                                     </c:forEach>

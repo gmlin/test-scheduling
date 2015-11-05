@@ -41,7 +41,8 @@ public class AppointmentServlet extends HttpServlet {
 	@SuppressWarnings("unchecked")
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession s = request.getSession();
-		Student student = ((User)(s.getAttribute("user"))).getStudent();
+		
+		Student student = null;
 		String examId = request.getParameter("exam");
 		Timestamp dateTime = Timestamp.valueOf(request.getParameter("dateTime").replace("T", " ") + ":00");
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("test-scheduling-system");
@@ -61,11 +62,34 @@ public class AppointmentServlet extends HttpServlet {
 					appt.setDateTime(dateTime);
 					appt.setExam(exam);
 					appt.setSeat(seat);
+					if (request.getParameter("appt_type").equals("student")) {
+						student = ((User)(s.getAttribute("user"))).getStudent();
+						appt.setSetAsideSeat(false);
+						appt.setExam(exam);
+						student.addAppointment(appt);
+						exam.addAppointment(appt);
+					}
+					else if (request.getParameter("appt_type").equals("admin")) {
+						if (request.getAttribute("student") == null) {
+							appt.setSetAsideSeat(true);
+							appt.setExam(null);
+						}
+						else {
+							student = em.find(Student.class, request.getAttribute("student"));
+							if (student == null)
+								throw new Exception("Student not found.");
+							if (student.getAvailableExams().contains(exam))
+								throw new Exception("Student cannot take this exam");
+							student.addAppointment(appt);
+							appt.setStudent(student);
+							exam.addAppointment(appt);
+							appt.setExam(exam);
+							appt.setSetAsideSeat(false);
+						}
+					}
 					appt.setSetAsideSeat(false);
 					appt.setStudent(student);
 					seat.addAppointment(appt);
-					student.addAppointment(appt);
-					exam.addAppointment(appt);
 					request.getSession().setAttribute("message", "Successfully scheduled appointment: Seat " +
 							seat.getSeatNumber());
 					em.persist(appt);

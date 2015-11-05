@@ -81,5 +81,22 @@ public class Administrator implements Serializable {
 		}
 		return pendingExams;
 	}
+	
+	public List<Exam> getApprovedExams() {
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory("test-scheduling-system");
+		EntityManager em = emf.createEntityManager();
+		Query query = em.createQuery("SELECT exam FROM Exam exam WHERE exam.status = :status",
+				Exam.class);
+		query.setParameter("status", Status.APPROVED);
+		List<Exam> approvedExams = null;
+		try {
+			approvedExams = query.getResultList();
+		} catch (NoResultException e) {
+		} finally {
+			em.close();
+			emf.close();
+		}
+		return approvedExams;
+	}
 
 }
