@@ -96,15 +96,15 @@ public class ModifyRequestServlet extends HttpServlet {
 		try {
 			logger.entering(getClass().getName(), "doGet");
 			File f = new File("/AcceptRejectRequest.txt");
-			FileHandler fh = null;
+			FileHandler fh2 = null;
 			try {
-				fh = new FileHandler("AcceptRejectRequest.txt");
+				fh2 = new FileHandler("AcceptRejectRequest.txt");
 			} catch (SecurityException e1) {
 				e1.printStackTrace();
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
-			logger.addHandler(fh);
+			logger.addHandler(fh2);
 			while (examIds.hasMoreElements()) {
 				String examId = examIds.nextElement();
 				query = em.createQuery("SELECT e FROM Exam e WHERE e.examId = :examId", Exam.class);
