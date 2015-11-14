@@ -70,14 +70,12 @@ public class Seat implements Serializable {
 	}
 	
 	public boolean checkAdjacent(Timestamp t, Exam e) {
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory("test-scheduling-system");
-		EntityManager em = emf.createEntityManager();
+		EntityManager em = DatabaseManager.createEntityManager();
 		Seat seat1 = em.find(Seat.class, seatNumber-1);
 		Seat seat2 = em.find(Seat.class, seatNumber+1);
 		if ((seat1 != null && e.equals(seat1.examAt(t))) ||
 				(seat2 != null && e.equals(seat2.examAt(t)))) {
 			em.close();
-			emf.close();
 			System.out.println("fasfas");
 			return false;
 		}

@@ -12,9 +12,9 @@
 		<class>cse308.testscheduling.User</class>
 		<class>cse308.testscheduling.Course</class>
 		<properties>
-			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://127.0.0.1/testing-system"/>
-			<property name="javax.persistence.jdbc.user" value="root"/>
-			<property name="javax.persistence.jdbc.password" value="123"/>
+			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://mysql2.cs.stonybrook.edu/cse308mingteam"/>
+			<property name="javax.persistence.jdbc.user" value="cse308mingteam"/>
+			<property name="javax.persistence.jdbc.password" value="changeit"/>
 			<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
 		</properties>
 	</persistence-unit>

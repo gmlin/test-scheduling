@@ -1,4 +1,4 @@
-package cse308.testscheduling;
+package cse308.testscheduling.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -9,7 +9,6 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -17,6 +16,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import cse308.testscheduling.Appointment;
+import cse308.testscheduling.DatabaseManager;
+import cse308.testscheduling.Exam;
+import cse308.testscheduling.Seat;
+import cse308.testscheduling.Student;
+import cse308.testscheduling.User;
 
 /**
  * Servlet implementation class AppointmentServlet
@@ -45,8 +51,7 @@ public class AppointmentServlet extends HttpServlet {
 		Student student = null;
 		String examId = request.getParameter("exam");
 		Timestamp dateTime = Timestamp.valueOf(request.getParameter("dateTime").replace("T", " ") + ":00");
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory("test-scheduling-system");
-		EntityManager em = emf.createEntityManager();
+		EntityManager em = DatabaseManager.createEntityManager();
 		try {
 			em.getTransaction().begin();
 			Query query = em.createQuery("SELECT s FROM Seat s",
@@ -113,7 +118,6 @@ public class AppointmentServlet extends HttpServlet {
 		finally {
 			response.sendRedirect(request.getHeader("Referer"));
 			em.close();
-			emf.close();
 			//logger.exiting(getClass().getName(), "doPost");
 		}
 	}

@@ -109,8 +109,7 @@ public class Instructor implements Serializable {
 	}
 
 	public void requestCourseExam(String courseId, int duration, Timestamp startDateTime, Timestamp endDateTime) {
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory("test-scheduling-system");
-		EntityManager em = emf.createEntityManager();
+		EntityManager em = DatabaseManager.createEntityManager();
 		logger.entering(getClass().getName(), "requestCourseExam");
 		File f = new File("/CourseExamRequestTest.txt");
 		FileHandler fh = null;
@@ -152,13 +151,12 @@ public class Instructor implements Serializable {
 
 		} finally {
 			em.close();
-			emf.close();
 			logger.exiting(getClass().getName(), "requestCourseExam");
 		}
 	}
 
 	public void requestAdHocExam(String[] netIds, int duration, Timestamp startDateTime, Timestamp endDateTime) {
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory("test-scheduling-system");
+		EntityManager em = DatabaseManager.createEntityManager();
 		logger.entering(getClass().getName(), "requestAdHocExam");
 		File f = new File("/AdHocExamRequestTest.txt");
 		FileHandler fh = null;
@@ -172,7 +170,6 @@ public class Instructor implements Serializable {
 			e1.printStackTrace();
 		}
 		logger.addHandler(fh);
-		EntityManager em = emf.createEntityManager();
 		try {
 			em.getTransaction().begin();
 			Exam exam = new Exam();
@@ -202,7 +199,6 @@ public class Instructor implements Serializable {
 			throw e;
 		} finally {
 			em.close();
-			emf.close();
 			logger.exiting(getClass().getName(), "requestAdHocExam");
 		}
 	}

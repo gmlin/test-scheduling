@@ -1,4 +1,4 @@
-package cse308.testscheduling;
+package cse308.testscheduling.servlet;
 
 import java.io.IOException;
 

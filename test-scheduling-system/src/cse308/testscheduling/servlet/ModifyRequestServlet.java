@@ -1,4 +1,4 @@
-package cse308.testscheduling;
+package cse308.testscheduling.servlet;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,6 +18,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import cse308.testscheduling.DatabaseManager;
+import cse308.testscheduling.Exam;
+import cse308.testscheduling.Instructor;
+import cse308.testscheduling.User;
+import cse308.testscheduling.Status;
+
 /**
  * Servlet implementation class ApproveRequestServlet
  */
@@ -36,8 +42,7 @@ public class ModifyRequestServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	String examId = request.getParameter("cancel");
-    	EntityManagerFactory emf = Persistence.createEntityManagerFactory("test-scheduling-system");
-		EntityManager em = emf.createEntityManager();
+    	EntityManager em = DatabaseManager.createEntityManager();
 		em.getTransaction().begin();
 		Query query;
 		HttpSession session = request.getSession();
@@ -81,7 +86,6 @@ public class ModifyRequestServlet extends HttpServlet {
 		}
 		finally {
 			em.close();
-			emf.close();
 			response.sendRedirect("ViewRequests.jsp");
 			logger.exiting(getClass().getName(), "CancelRequest");
 		}
@@ -89,8 +93,7 @@ public class ModifyRequestServlet extends HttpServlet {
     
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Enumeration<String> examIds = request.getParameterNames();
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory("test-scheduling-system");
-		EntityManager em = emf.createEntityManager();
+		EntityManager em = DatabaseManager.createEntityManager();
 		em.getTransaction().begin();
 		Query query;
 		try {
@@ -127,7 +130,6 @@ public class ModifyRequestServlet extends HttpServlet {
 		}
 		finally {
 			em.close();
-			emf.close();
 			response.sendRedirect(request.getHeader("Referer"));
 			logger.exiting(getClass().getName(), "AcceptRejectRequest");
 		}

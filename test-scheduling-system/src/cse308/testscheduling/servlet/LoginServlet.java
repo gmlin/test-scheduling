@@ -1,4 +1,4 @@
-package cse308.testscheduling;
+package cse308.testscheduling.servlet;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,6 +10,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.NoResultException;
 import javax.persistence.Persistence;
+import javax.persistence.PersistenceUnit;
 import javax.persistence.Query;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -18,11 +19,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import cse308.testscheduling.DatabaseManager;
+import cse308.testscheduling.User;
+
 /**
  * Servlet implementation class LoginServlet
  */
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
+	
 	private static final long serialVersionUID = 1L;
 	private static final Logger logger = Logger.getLogger(ScheduleExamServlet.class.getName());
 
@@ -46,8 +51,7 @@ public class LoginServlet extends HttpServlet {
 		HttpSession session = request.getSession();
 		session.setAttribute("username", request.getParameter("username"));
 		session.setAttribute("password", request.getParameter("password"));
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory("test-scheduling-system");
-		EntityManager em = emf.createEntityManager();
+		EntityManager em = DatabaseManager.createEntityManager();
 		Query query = em.createQuery("SELECT u FROM User u WHERE u.netId = :username AND u.password = :password",
 				User.class);
 		query.setParameter("username", session.getAttribute("username"));
@@ -72,7 +76,6 @@ public class LoginServlet extends HttpServlet {
 		} finally {
 			response.sendRedirect("Login.jsp");
 			em.close();
-			emf.close();
 		}
 	}
 

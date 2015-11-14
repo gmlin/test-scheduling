@@ -1,4 +1,4 @@
-package cse308.testscheduling;
+package cse308.testscheduling.servlet;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,6 +15,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import cse308.testscheduling.Instructor;
+import cse308.testscheduling.User;
 
 /**
  * Servlet implementation class ScheduleExamServlet

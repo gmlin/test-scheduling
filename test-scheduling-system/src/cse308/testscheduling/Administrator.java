@@ -66,8 +66,7 @@ public class Administrator implements Serializable {
 	
 	@SuppressWarnings("unchecked")
 	public List<Exam> getPendingExams() {
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory("test-scheduling-system");
-		EntityManager em = emf.createEntityManager();
+		EntityManager em = DatabaseManager.createEntityManager();
 		Query query = em.createQuery("SELECT exam FROM Exam exam WHERE exam.status = :status",
 				Exam.class);
 		query.setParameter("status", Status.PENDING);
@@ -77,14 +76,12 @@ public class Administrator implements Serializable {
 		} catch (NoResultException e) {
 		} finally {
 			em.close();
-			emf.close();
 		}
 		return pendingExams;
 	}
 	
 	public List<Exam> getApprovedExams() {
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory("test-scheduling-system");
-		EntityManager em = emf.createEntityManager();
+		EntityManager em = DatabaseManager.createEntityManager();
 		Query query = em.createQuery("SELECT exam FROM Exam exam WHERE exam.status = :status",
 				Exam.class);
 		query.setParameter("status", Status.APPROVED);
@@ -94,7 +91,6 @@ public class Administrator implements Serializable {
 		} catch (NoResultException e) {
 		} finally {
 			em.close();
-			emf.close();
 		}
 		return approvedExams;
 	}
