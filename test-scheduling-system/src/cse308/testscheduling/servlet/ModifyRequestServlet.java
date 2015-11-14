@@ -8,8 +8,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import javax.persistence.Query;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -21,8 +19,8 @@ import javax.servlet.http.HttpSession;
 import cse308.testscheduling.DatabaseManager;
 import cse308.testscheduling.Exam;
 import cse308.testscheduling.Instructor;
-import cse308.testscheduling.User;
 import cse308.testscheduling.Status;
+import cse308.testscheduling.User;
 
 /**
  * Servlet implementation class ApproveRequestServlet
@@ -31,18 +29,20 @@ import cse308.testscheduling.Status;
 public class ModifyRequestServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final Logger logger = Logger.getLogger(ModifyRequestServlet.class.getName());
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public ModifyRequestServlet() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    	String examId = request.getParameter("cancel");
-    	EntityManager em = DatabaseManager.createEntityManager();
+	/**
+	 * @see HttpServlet#HttpServlet()
+	 */
+	public ModifyRequestServlet() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	@Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		String examId = request.getParameter("cancel");
+		EntityManager em = DatabaseManager.createEntityManager();
 		em.getTransaction().begin();
 		Query query;
 		HttpSession session = request.getSession();
@@ -60,38 +60,37 @@ public class ModifyRequestServlet extends HttpServlet {
 			logger.addHandler(fh);
 			query = em.createQuery("SELECT e FROM Exam e WHERE e.examId = :examId", Exam.class);
 			query.setParameter("examId", examId);
-			Exam exam = (Exam)query.getSingleResult();
-			
+			Exam exam = (Exam) query.getSingleResult();
+
 			if (exam.getStatus() == Status.PENDING) {
-				Instructor instructor = ((User)session.getAttribute("user")).getInstructor();
+				Instructor instructor = ((User) session.getAttribute("user")).getInstructor();
 				if (exam.hasPermissions(instructor)) {
 					em.remove(exam);
 					request.getSession().setAttribute("message", "Successfully canceled request.");
 					em.getTransaction().commit();
-					request.getSession().setAttribute("user", em.find(User.class, ((User)session.getAttribute("user")).getNetId()));
-					logger.log(Level.INFO, instructor.getUser().getFirstName() + " " + instructor.getUser().getLastName() +
-							" has sucessfully canceled: " + exam.getExamId());
-				}
-				else {
+					request.getSession().setAttribute("user",
+							em.find(User.class, ((User) session.getAttribute("user")).getNetId()));
+					logger.log(Level.INFO, instructor.getUser().getFirstName() + " "
+							+ instructor.getUser().getLastName() + " has sucessfully canceled: " + exam.getExamId());
+				} else {
 					request.getSession().setAttribute("message", "You are not permitted to delete this exam.");
 				}
-			}
-			else {
+			} else {
 				request.getSession().setAttribute("message", "You are not permitted to delete this exam.");
 			}
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			request.getSession().setAttribute("message", e.toString());
 			logger.log(Level.SEVERE, "Error in canceling exam request", e);
-		}
-		finally {
+		} finally {
 			em.close();
 			response.sendRedirect("ViewRequests.jsp");
 			logger.exiting(getClass().getName(), "CancelRequest");
 		}
-    }
-    
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	}
+
+	@Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		Enumeration<String> examIds = request.getParameterNames();
 		EntityManager em = DatabaseManager.createEntityManager();
 		em.getTransaction().begin();
@@ -112,23 +111,20 @@ public class ModifyRequestServlet extends HttpServlet {
 				String examId = examIds.nextElement();
 				query = em.createQuery("SELECT e FROM Exam e WHERE e.examId = :examId", Exam.class);
 				query.setParameter("examId", examId);
-				Exam exam = (Exam)query.getSingleResult();
+				Exam exam = (Exam) query.getSingleResult();
 				if (request.getParameter(examId).equals("approve")) {
 					exam.setStatus(Status.APPROVED);
 					logger.log(Level.INFO, exam.getExamId() + " has been approved by admin");
-				}
-				else {
+				} else {
 					exam.setStatus(Status.DENIED);
 					logger.log(Level.INFO, exam.getExamId() + " has been denied by admin");
 				}
 			}
 			em.getTransaction().commit();
-		}
-		catch(Exception e) {
+		} catch (Exception e) {
 			request.getSession().setAttribute("message", e.toString());
 			logger.log(Level.SEVERE, "Error in approving/denying exam request", e);
-		}
-		finally {
+		} finally {
 			em.close();
 			response.sendRedirect(request.getHeader("Referer"));
 			logger.exiting(getClass().getName(), "AcceptRejectRequest");

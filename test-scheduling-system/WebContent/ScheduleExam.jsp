@@ -62,12 +62,13 @@
 							</div>
 							<div class="form-group">
 								<label for="examDuration">Duration</label> <input type="number"
-									class="form-control" name="examDuration" id="examDuration" placeholder="minutes"
-									required>
+									class="form-control" name="examDuration" id="examDuration"
+									placeholder="minutes" required>
 							</div>
 							<div class="form-group">
 								<label for="startDateTime">Start</label> <input
-									type="datetime-local" name="startDateTime" id="startDateTime" required>
+									type="datetime-local" name="startDateTime" id="startDateTime"
+									required>
 							</div>
 							<div class="form-group">
 								<label for="endDateTime">End</label><input type="datetime-local"

@@ -21,31 +21,31 @@ import javax.persistence.Id;
 public class TestingCenter implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	// primary key is id
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "TESTINGCENTER_ID")
 	private int id;
-	
+
 	@Column(name = "NUM_SEATS")
 	private int numSeats;
-	
+
 	@Column(name = "NUM_SET_ASIDE_SEATS")
 	private int numSetAsideSeats;
-	
+
 	@Column(name = "OPEN_TIME")
 	private Time openTime;
-	
+
 	@Column(name = "CLOSE_TIME")
 	private Time closeTime;
-	
+
 	@Column(name = "CLOSED_DATE_RANGES")
 	private List<Date[]> closedDateRanges;
-	
+
 	@Column(name = "RESERVED_PERIODS")
 	private List<Calendar[]> reservedPeriods;
-	
+
 	@Column(name = "GAP_TIME")
 	private int gapTime;
 

@@ -37,12 +37,12 @@ public class Student implements Serializable {
 	// a student can have multiple appointments
 	@OneToMany(mappedBy = "student")
 	private List<Appointment> appointments;
-	
+
 	// a student can take many courses
 	// a course can have many students
 	@ManyToMany(mappedBy = "students")
 	private List<Course> courses;
-	
+
 	// a many-to-many association between students,
 	// and their available ad hoc exams
 	@ManyToMany(mappedBy = "students", cascade = CascadeType.PERSIST)
@@ -55,6 +55,10 @@ public class Student implements Serializable {
 		adHocExams = new ArrayList<Exam>();
 	}
 
+	public void addAdHocExam(Exam adHocExam) {
+		adHocExams.add(adHocExam);
+	}
+
 	public void addAppointment(Appointment appointment) {
 		appointments.add(appointment);
 	}
@@ -63,44 +67,12 @@ public class Student implements Serializable {
 		getCourses().add(course);
 	}
 
-	public List<Appointment> getAppointments() {
-		return this.appointments;
-	}
-
-	public int getStudentId() {
-		return studentId;
-	}
-
-	public User getUser() {
-		return user;
-	}
-
-	public void setStudentId(int studentId) {
-		this.studentId = studentId;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
-
 	public List<Exam> getAdHocExams() {
 		return adHocExams;
 	}
 
-	public void setAdHocExams(List<Exam> adHocExams) {
-		this.adHocExams = adHocExams;
-	}
-	
-	public void addAdHocExam(Exam adHocExam) {
-		adHocExams.add(adHocExam);
-	}
-
-	public List<Course> getCourses() {
-		return courses;
-	}
-
-	public void setCourses(List<Course> courses) {
-		this.courses = courses;
+	public List<Appointment> getAppointments() {
+		return this.appointments;
 	}
 
 	public List<Exam> getAvailableExams() {
@@ -122,5 +94,33 @@ public class Student implements Serializable {
 		}
 		return availableExams;
 	}
-	
+
+	public List<Course> getCourses() {
+		return courses;
+	}
+
+	public int getStudentId() {
+		return studentId;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setAdHocExams(List<Exam> adHocExams) {
+		this.adHocExams = adHocExams;
+	}
+
+	public void setCourses(List<Course> courses) {
+		this.courses = courses;
+	}
+
+	public void setStudentId(int studentId) {
+		this.studentId = studentId;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
 }

@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"%>
 <%@ page import="cse308.testscheduling.User"%>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -25,58 +25,60 @@
 </head>
 <body>
 
-    <div class="container-fluid">
-        <%@ include file="Header.jsp"%>
-        <div class="row">
-            <div class="col-sm-4">
-                <c:if test="${not empty sessionScope.user.administrator}">
-                    <%@ include file="AdminSidebar.jsp"%>
-                </c:if>
-                <c:if test="${not empty sessionScope.user.instructor}">
-                    <%@ include file="InstructorSidebar.jsp"%>
-                </c:if>
-                <c:if test="${not empty sessionScope.user.student}">
-                    <%@ include file="StudentSidebar.jsp"%>
-                </c:if>
-            </div>
-            <div class="col-sm-7">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="text-center">Available Exams</h4>
-                    </div>
-                    <div class="panel-body">
-                        <form action="make_appointment" method="post">
-                            <input type="hidden" name="appt_type" value="admin" />
-                            <%
+	<div class="container-fluid">
+		<%@ include file="Header.jsp"%>
+		<div class="row">
+			<div class="col-sm-4">
+				<c:if test="${not empty sessionScope.user.administrator}">
+					<%@ include file="AdminSidebar.jsp"%>
+				</c:if>
+				<c:if test="${not empty sessionScope.user.instructor}">
+					<%@ include file="InstructorSidebar.jsp"%>
+				</c:if>
+				<c:if test="${not empty sessionScope.user.student}">
+					<%@ include file="StudentSidebar.jsp"%>
+				</c:if>
+			</div>
+			<div class="col-sm-7">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h4 class="text-center">Available Exams</h4>
+					</div>
+					<div class="panel-body">
+						<form action="make_appointment" method="post">
+							<input type="hidden" name="appt_type" value="admin" />
+							<%
                                 if (session.getAttribute("message") != null) {
                                     out.println(session.getAttribute("message"));
                                     session.removeAttribute("message");
                                 }
                             %>
-                            <div class="form-group">
-                            <label for="student">Student (Empty for set-aside)</label>
-                                <input type="text" name="student" id="student">
-                                </div>
-                            <div class="form-group">
-                                <label for="courseId">Exam</label> <select
-                                    class="form-control" name="exam" id="exam" required>
-                                    <c:forEach items="${sessionScope.user.administrator.approvedExams}"
-                                        var="exam">
-                                        <option value="${exam.examId}">${exam.examId} ${exam.startDateTime } to ${exam.endDateTime }</option>
-                                    </c:forEach>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="dateTime">Date/Time</label> <input
-                                    type="datetime-local" name="dateTime" id="dateTime" required>
-                            </div>
-                            <button type="submit" class="btn btn-default">Submit</button>
+							<div class="form-group">
+								<label for="student">Student (Empty for set-aside)</label> <input
+									type="text" name="student" id="student">
+							</div>
+							<div class="form-group">
+								<label for="courseId">Exam</label> <select class="form-control"
+									name="exam" id="exam" required>
+									<c:forEach
+										items="${sessionScope.user.administrator.approvedExams}"
+										var="exam">
+										<option value="${exam.examId}">${exam.examId}
+											${exam.startDateTime } to ${exam.endDateTime }</option>
+									</c:forEach>
+								</select>
+							</div>
+							<div class="form-group">
+								<label for="dateTime">Date/Time</label> <input
+									type="datetime-local" name="dateTime" id="dateTime" required>
+							</div>
+							<button type="submit" class="btn btn-default">Submit</button>
 
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </body>
 </html>

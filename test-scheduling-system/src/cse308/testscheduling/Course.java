@@ -45,7 +45,7 @@ public class Course implements Serializable {
 			@JoinColumn(name = "COURSE_ID", referencedColumnName = "course_ID") }, inverseJoinColumns = {
 					@JoinColumn(name = "NET_ID", referencedColumnName = "NET_ID") })
 	private List<Instructor> instructors;
-	
+
 	// a course can have multiple exam, so it is one-to-many
 	// the mappedBy element indicates that this is the nonowning side of
 	// the association.
@@ -56,6 +56,10 @@ public class Course implements Serializable {
 		super();
 		setStudents(new ArrayList<Student>());
 		setInstructors(new ArrayList<Instructor>());
+	}
+
+	public void addExam(Exam exam) {
+		exams.add(exam);
 	}
 
 	public void addInstructor(Instructor instructor) {
@@ -70,39 +74,36 @@ public class Course implements Serializable {
 		return this.courseId;
 	}
 
-	public void setCourseId(String courseId) {
-		this.courseId = courseId;
-	}
-
 	public List<Exam> getExams() {
 		return exams;
-	}
-
-	public void setExams(List<Exam> exams) {
-		this.exams = exams;
-	}
-	
-	public void addExam(Exam exam) {
-		exams.add(exam);
-	}
-
-	public List<Student> getStudents() {
-		return students;
-	}
-
-	public void setStudents(List<Student> students) {
-		this.students = students;
-	}
-	
-	public String toString() {
-		return courseId;
 	}
 
 	public List<Instructor> getInstructors() {
 		return instructors;
 	}
 
+	public List<Student> getStudents() {
+		return students;
+	}
+
+	public void setCourseId(String courseId) {
+		this.courseId = courseId;
+	}
+
+	public void setExams(List<Exam> exams) {
+		this.exams = exams;
+	}
+
 	public void setInstructors(List<Instructor> instructors) {
 		this.instructors = instructors;
+	}
+
+	public void setStudents(List<Student> students) {
+		this.students = students;
+	}
+
+	@Override
+	public String toString() {
+		return courseId;
 	}
 }

@@ -8,12 +8,10 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.Persistence;
 
 /**
  * Entity implementation class for Entity: Seat
@@ -30,11 +28,11 @@ public class Seat implements Serializable {
 	@Column(name = "SEAT_NUMBER")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int seatNumber;
-	
+
 	// a seat can be assigned to multiple appointments
 	@OneToMany(mappedBy = "seat")
 	private List<Appointment> appointments;
-	
+
 	@Column(name = "SET_ASIDE")
 	private boolean setAside;
 
@@ -47,6 +45,27 @@ public class Seat implements Serializable {
 		appointments.add(appointment);
 	}
 
+	public boolean checkAdjacent(Timestamp t, Exam e) {
+		EntityManager em = DatabaseManager.createEntityManager();
+		Seat seat1 = em.find(Seat.class, seatNumber - 1);
+		Seat seat2 = em.find(Seat.class, seatNumber + 1);
+		if ((seat1 != null && e.equals(seat1.examAt(t))) || (seat2 != null && e.equals(seat2.examAt(t)))) {
+			em.close();
+			System.out.println("fasfas");
+			return false;
+		}
+		return true;
+	}
+
+	public Exam examAt(Timestamp t) {
+		for (Appointment appt : appointments) {
+			if (appt.getDateTime().compareTo(t) <= 0 || appt.getEndDateTime().compareTo(t) >= 0) {
+				return appt.getExam();
+			}
+		}
+		return null;
+	}
+
 	public int getSeatNumber() {
 		return this.seatNumber;
 	}
@@ -55,33 +74,6 @@ public class Seat implements Serializable {
 		return this.setAside;
 	}
 
-	public void setSetAside(boolean setAside) {
-		this.setAside = setAside;
-	}
-	
-	public Exam examAt(Timestamp t) {
-		for (Appointment appt : appointments) {
-			if (appt.getDateTime().compareTo(t) <= 0 ||
-					appt.getEndDateTime().compareTo(t) >= 0) {
-				return appt.getExam();
-			}
-		}
-		return null;
-	}
-	
-	public boolean checkAdjacent(Timestamp t, Exam e) {
-		EntityManager em = DatabaseManager.createEntityManager();
-		Seat seat1 = em.find(Seat.class, seatNumber-1);
-		Seat seat2 = em.find(Seat.class, seatNumber+1);
-		if ((seat1 != null && e.equals(seat1.examAt(t))) ||
-				(seat2 != null && e.equals(seat2.examAt(t)))) {
-			em.close();
-			System.out.println("fasfas");
-			return false;
-		}
-		return true;
-	}
-	
 	@SuppressWarnings("deprecation")
 	public boolean isAppointable(Timestamp t, Exam e) {
 		if (t.getMinutes() % 30 != 0) {
@@ -94,9 +86,8 @@ public class Seat implements Serializable {
 			return true;
 		}
 		for (Appointment appt : appointments) {
-			if (appt.getDateTime().compareTo(t) > 0 ||
-					appt.getEndDateTime().compareTo(t) < 0) {
-				if (checkAdjacent(t,e)) {
+			if (appt.getDateTime().compareTo(t) > 0 || appt.getEndDateTime().compareTo(t) < 0) {
+				if (checkAdjacent(t, e)) {
 					return true;
 				}
 			}
@@ -104,5 +95,9 @@ public class Seat implements Serializable {
 		System.out.println("fadsds434234sfas");
 
 		return false;
+	}
+
+	public void setSetAside(boolean setAside) {
+		this.setAside = setAside;
 	}
 }

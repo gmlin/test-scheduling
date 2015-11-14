@@ -3,7 +3,6 @@ package cse308.testscheduling;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.Calendar;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,8 +12,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 /**
  * Entity implementation class for Entity: Appointment
@@ -25,12 +22,12 @@ import javax.persistence.TemporalType;
 public class Appointment implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	// primary key is id
 	private int id;
-	
+
 	@Column(name = "SET_ASIDE_SEAT")
 	private boolean setAsideSeat;
 
@@ -68,12 +65,29 @@ public class Appointment implements Serializable {
 		super();
 	}
 
+	public boolean getAttendance() {
+		return attendance;
+	}
+
+	public String getDateString() {
+		LocalDateTime ldt = dateTime.toLocalDateTime();
+		return ldt.toLocalDate().toString();
+	}
+
 	public Timestamp getDateTime() {
 		return dateTime;
 	}
 
+	public Timestamp getEndDateTime() {
+		return Timestamp.valueOf(dateTime.toLocalDateTime().plusMinutes(exam.getDuration()));
+	}
+
 	public Exam getExam() {
 		return this.exam;
+	}
+
+	public int getId() {
+		return id;
 	}
 
 	public Seat getSeat() {
@@ -88,8 +102,15 @@ public class Appointment implements Serializable {
 		return this.student;
 	}
 
-	public boolean getAttendance() {
-		return attendance;
+	public String getTimeString() {
+		LocalDateTime ldt = dateTime.toLocalDateTime();
+		return ldt.toLocalTime().toString();
+	}
+
+	public boolean isCancelable() {
+		if (attendance)
+			return false;
+		return dateTime.toLocalDateTime().minusDays(1).isBefore(LocalDateTime.now());
 	}
 
 	public void setAttendance(boolean attendance) {
@@ -114,29 +135,5 @@ public class Appointment implements Serializable {
 
 	public void setStudent(Student student) {
 		this.student = student;
-	}
-	
-	public Timestamp getEndDateTime() {
-		return Timestamp.valueOf(dateTime.toLocalDateTime().plusMinutes(exam.getDuration()));
-	}
-
-	public boolean isCancelable() {
-		if (attendance)
-			return false;
-		return dateTime.toLocalDateTime().minusDays(1).isBefore(LocalDateTime.now());
-	}
-
-	public int getId() {
-		return id;
-	}
-	
-	public String getDateString() {
-		LocalDateTime ldt = dateTime.toLocalDateTime();
-		return ldt.toLocalDate().toString();
-	}
-	
-	public String getTimeString() {
-		LocalDateTime ldt = dateTime.toLocalDateTime();
-		return ldt.toLocalTime().toString();
 	}
 }

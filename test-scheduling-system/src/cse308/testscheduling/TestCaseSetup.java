@@ -78,7 +78,7 @@ public class TestCaseSetup {
 		student1.setStudentId(100000000);
 		u3.setStudent(student1);
 		student1.setUser(u3);
-		
+
 		User u4 = new User();
 		u4.setNetId("student2");
 		u4.setPassword("123");
@@ -113,7 +113,7 @@ public class TestCaseSetup {
 			seat = new Seat();
 			em.persist(seat);
 		}
-		
+
 		em.persist(u1);
 		em.persist(u2);
 		em.persist(u3);

@@ -64,7 +64,8 @@
 											Exam
 											<c:out value="${exam.examId}" />
 											has been
-											<c:out value="${exam.status}" />.
+											<c:out value="${exam.status}" />
+											.
 										</p>
 									</c:if>
 								</c:forEach>
@@ -77,7 +78,8 @@
 										Exam
 										<c:out value="${adHocExam.examId}" />
 										has been
-										<c:out value="${adHocExam.status}" />.
+										<c:out value="${adHocExam.status}" />
+										.
 									</p>
 								</c:if>
 							</c:forEach>

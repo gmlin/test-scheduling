@@ -5,7 +5,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -17,8 +16,6 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-
-import cse308.testscheduling.Instructor;
 
 /**
  * Entity implementation class for Entity: Exam
@@ -34,17 +31,17 @@ public class Exam implements Serializable {
 	@Id
 	@Column(name = "EXAM_ID")
 	private String examId;
-	
+
 	//// a course can have multiple exams.
 	// "COURSE_ID" is the column name corresponding to course
 	// in the exam table
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "COURSE_ID")
 	private Course course;
-	
+
 	@Column(name = "AD_HOC")
 	private boolean adHoc;
-	
+
 	private int duration;
 
 	@Enumerated(EnumType.STRING)
@@ -61,7 +58,7 @@ public class Exam implements Serializable {
 	// the association.
 	@OneToMany(mappedBy = "exam")
 	private List<Appointment> appointments;
-	
+
 	// for adhoc exam only
 	@ManyToMany
 	@JoinTable(name = "AD_HOC_EXAM_STUDENT", joinColumns = {
@@ -69,10 +66,10 @@ public class Exam implements Serializable {
 					@JoinColumn(name = "NET_ID", referencedColumnName = "NET_ID") })
 	private List<Student> students;
 
-	//for adhoc exam only
-		@ManyToOne
-		private Instructor instructor;
-	
+	// for adhoc exam only
+	@ManyToOne
+	private Instructor instructor;
+
 	public Exam() {
 		super();
 		appointments = new ArrayList<Appointment>();
@@ -81,6 +78,27 @@ public class Exam implements Serializable {
 
 	public void addAppointment(Appointment appointment) {
 		appointments.add(appointment);
+	}
+
+	public void addStudent(Student student) {
+		students.add(student);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Exam other = (Exam) obj;
+		if (examId == null) {
+			if (other.examId != null)
+				return false;
+		} else if (!examId.equals(other.examId))
+			return false;
+		return true;
 	}
 
 	public boolean getAdHoc() {
@@ -103,12 +121,41 @@ public class Exam implements Serializable {
 		return this.examId;
 	}
 
+	public Instructor getInstructor() {
+		return instructor;
+	}
+
 	public Timestamp getStartDateTime() {
 		return startDateTime;
 	}
 
 	public Status getStatus() {
 		return status;
+	}
+
+	public List<Student> getStudents() {
+		return students;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((examId == null) ? 0 : examId.hashCode());
+		return result;
+	}
+
+	public boolean hasPermissions(Instructor instructor) {
+		if (adHoc) {
+			System.out.println(this.instructor);
+			System.out.println(instructor);
+			System.out.println(this.instructor == instructor);
+			System.out.println(this.instructor.equals(instructor));
+			return this.instructor.equals(instructor);
+		} else {
+			System.out.println(course.getInstructors().contains(instructor));
+			return course.getInstructors().contains(instructor);
+		}
 	}
 
 	public void setAdHoc(boolean adHoc) {
@@ -131,6 +178,10 @@ public class Exam implements Serializable {
 		this.examId = examId;
 	}
 
+	public void setInstructor(Instructor instructor) {
+		this.instructor = instructor;
+	}
+
 	public void setStartDateTime(Timestamp startDateTime) {
 		this.startDateTime = startDateTime;
 	}
@@ -139,61 +190,7 @@ public class Exam implements Serializable {
 		this.status = status;
 	}
 
-	public List<Student> getStudents() {
-		return students;
-	}
-
 	public void setStudents(List<Student> students) {
 		this.students = students;
-	}
-	
-	public void addStudent(Student student) {
-		students.add(student);
-	}
-	
-	public Instructor getInstructor() {
-		return instructor;
-	}
-
-	public void setInstructor(Instructor instructor) {
-		this.instructor = instructor;
-	}
-	public boolean hasPermissions(Instructor instructor) {
-		if (adHoc) {
-			System.out.println(this.instructor);
-			System.out.println(instructor);
-			System.out.println(this.instructor == instructor);
-			System.out.println(this.instructor.equals(instructor));
-			return this.instructor.equals(instructor);
-		}
-		else {
-			System.out.println(course.getInstructors().contains(instructor));
-			return course.getInstructors().contains(instructor);
-		}
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((examId == null) ? 0 : examId.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Exam other = (Exam) obj;
-		if (examId == null) {
-			if (other.examId != null)
-				return false;
-		} else if (!examId.equals(other.examId))
-			return false;
-		return true;
 	}
 }

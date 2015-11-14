@@ -8,16 +8,18 @@ import javax.servlet.ServletContextListener;
 
 public class DatabaseManager implements ServletContextListener {
 	private static EntityManagerFactory emf;
-	
+
 	public static EntityManager createEntityManager() {
 		return emf.createEntityManager();
 	}
-	
-    public void contextDestroyed(ServletContextEvent arg0)  { 
-    	emf.close();
-    }
 
-    public void contextInitialized(ServletContextEvent arg0)  { 
-    	emf = Persistence.createEntityManagerFactory("test-scheduling-system");
-    }
+	@Override
+	public void contextDestroyed(ServletContextEvent arg0) {
+		emf.close();
+	}
+
+	@Override
+	public void contextInitialized(ServletContextEvent arg0) {
+		emf = Persistence.createEntityManagerFactory("test-scheduling-system");
+	}
 }

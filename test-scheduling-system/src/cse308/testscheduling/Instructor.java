@@ -3,7 +3,6 @@ package cse308.testscheduling;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
-import java.nio.file.Files;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +13,6 @@ import java.util.logging.Logger;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -22,8 +20,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.Persistence;
-import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 /**
@@ -68,17 +64,31 @@ public class Instructor implements Serializable {
 		adHocExams = new ArrayList<Exam>();
 	}
 
+	public void addAdHocExam(Exam adHocExam) {
+		adHocExams.add(adHocExam);
+	}
+
 	public void addCourse(Course course) {
 		getCourses().add(course);
 	}
-	/*
-	 * public List<Request> getRequests() { return requests; } public void
-	 * setRequests(List<Request> requests) { this.requests = requests; }
-	 */
-	/*
-	 * public List<Exam> getExams() { return exams; } public void
-	 * setExams(List<Exam> exams) { this.exams = exams; }
-	 */
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Instructor other = (Instructor) obj;
+		if (id != other.id)
+			return false;
+		return true;
+	}
+
+	public List<Exam> getAdHocExams() {
+		return adHocExams;
+	}
 
 	public List<Course> getCourses() {
 		return courses;
@@ -88,71 +98,12 @@ public class Instructor implements Serializable {
 		return user;
 	}
 
-	public void setCourses(List<Course> courses) {
-		this.courses = courses;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
-
-	public List<Exam> getAdHocExams() {
-		return adHocExams;
-	}
-
-	public void setAdHocExams(List<Exam> adHocExams) {
-		this.adHocExams = adHocExams;
-	}
-
-	public void addAdHocExam(Exam adHocExam) {
-		adHocExams.add(adHocExam);
-	}
-
-	public void requestCourseExam(String courseId, int duration, Timestamp startDateTime, Timestamp endDateTime) {
-		EntityManager em = DatabaseManager.createEntityManager();
-		logger.entering(getClass().getName(), "requestCourseExam");
-		File f = new File("/CourseExamRequestTest.txt");
-		FileHandler fh = null;
-		try {
-			fh = new FileHandler("CourseExamRequestTest.txt");
-		} catch (SecurityException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		logger.addHandler(fh);
-		try {
-			em.getTransaction().begin();
-			Exam exam = new Exam();
-			exam.setStatus(Status.PENDING);
-			exam.setAdHoc(false);
-			Course course = null;
-			for (Course c : this.courses) {
-				if (c.getCourseId().equals(courseId)) {
-					course = c;
-					break;
-				}
-			}
-			exam.setCourse(course);
-			course.addExam(exam);
-			exam.setExamId(course.getCourseId() + "_ex" + String.valueOf(course.getExams().size()));
-			exam.setDuration(duration);
-			exam.setStartDateTime(startDateTime);
-			exam.setEndDateTime(endDateTime);
-			em.persist(exam);
-			em.getTransaction().commit();
-			logger.log(Level.INFO, "Regular Exam Sucessfully Requested for " + course.getCourseId() + " . Duration is: "
-					+ duration + ". StartDate is " + startDateTime + ". EndDate is " + endDateTime);
-		} catch (Exception e) {
-			logger.log(Level.SEVERE, "Error in making Course Exam", e);
-			throw e;
-
-		} finally {
-			em.close();
-			logger.exiting(getClass().getName(), "requestCourseExam");
-		}
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + id;
+		return result;
 	}
 
 	public void requestAdHocExam(String[] netIds, int duration, Timestamp startDateTime, Timestamp endDateTime) {
@@ -203,30 +154,68 @@ public class Instructor implements Serializable {
 		}
 	}
 
-	public String toString() {
-		return user.getFirstName() + " " + user.getLastName();
+	public void requestCourseExam(String courseId, int duration, Timestamp startDateTime, Timestamp endDateTime) {
+		EntityManager em = DatabaseManager.createEntityManager();
+		logger.entering(getClass().getName(), "requestCourseExam");
+		File f = new File("/CourseExamRequestTest.txt");
+		FileHandler fh = null;
+		try {
+			fh = new FileHandler("CourseExamRequestTest.txt");
+		} catch (SecurityException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		logger.addHandler(fh);
+		try {
+			em.getTransaction().begin();
+			Exam exam = new Exam();
+			exam.setStatus(Status.PENDING);
+			exam.setAdHoc(false);
+			Course course = null;
+			for (Course c : this.courses) {
+				if (c.getCourseId().equals(courseId)) {
+					course = c;
+					break;
+				}
+			}
+			exam.setCourse(course);
+			course.addExam(exam);
+			exam.setExamId(course.getCourseId() + "_ex" + String.valueOf(course.getExams().size()));
+			exam.setDuration(duration);
+			exam.setStartDateTime(startDateTime);
+			exam.setEndDateTime(endDateTime);
+			em.persist(exam);
+			em.getTransaction().commit();
+			logger.log(Level.INFO, "Regular Exam Sucessfully Requested for " + course.getCourseId() + " . Duration is: "
+					+ duration + ". StartDate is " + startDateTime + ". EndDate is " + endDateTime);
+		} catch (Exception e) {
+			logger.log(Level.SEVERE, "Error in making Course Exam", e);
+			throw e;
+
+		} finally {
+			em.close();
+			logger.exiting(getClass().getName(), "requestCourseExam");
+		}
 	}
-	
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + id;
-		return result;
+
+	public void setAdHocExams(List<Exam> adHocExams) {
+		this.adHocExams = adHocExams;
+	}
+
+	public void setCourses(List<Course> courses) {
+		this.courses = courses;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Instructor other = (Instructor) obj;
-		if (id != other.id)
-			return false;
-		return true;
+	public String toString() {
+		return user.getFirstName() + " " + user.getLastName();
 	}
-	
+
 }

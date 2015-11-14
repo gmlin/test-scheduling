@@ -1,13 +1,10 @@
 package cse308.testscheduling;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,7 +13,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NoResultException;
 import javax.persistence.OneToOne;
-import javax.persistence.Persistence;
 import javax.persistence.Query;
 
 /**
@@ -48,6 +44,35 @@ public class Administrator implements Serializable {
 		super();
 	}
 
+	public List<Exam> getApprovedExams() {
+		EntityManager em = DatabaseManager.createEntityManager();
+		Query query = em.createQuery("SELECT exam FROM Exam exam WHERE exam.status = :status", Exam.class);
+		query.setParameter("status", Status.APPROVED);
+		List<Exam> approvedExams = null;
+		try {
+			approvedExams = query.getResultList();
+		} catch (NoResultException e) {
+		} finally {
+			em.close();
+		}
+		return approvedExams;
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<Exam> getPendingExams() {
+		EntityManager em = DatabaseManager.createEntityManager();
+		Query query = em.createQuery("SELECT exam FROM Exam exam WHERE exam.status = :status", Exam.class);
+		query.setParameter("status", Status.PENDING);
+		List<Exam> pendingExams = null;
+		try {
+			pendingExams = query.getResultList();
+		} catch (NoResultException e) {
+		} finally {
+			em.close();
+		}
+		return pendingExams;
+	}
+
 	public TestingCenter getTestingCenter() {
 		return testingCenter;
 	}
@@ -62,37 +87,6 @@ public class Administrator implements Serializable {
 
 	public void setUser(User user) {
 		this.user = user;
-	}
-	
-	@SuppressWarnings("unchecked")
-	public List<Exam> getPendingExams() {
-		EntityManager em = DatabaseManager.createEntityManager();
-		Query query = em.createQuery("SELECT exam FROM Exam exam WHERE exam.status = :status",
-				Exam.class);
-		query.setParameter("status", Status.PENDING);
-		List<Exam> pendingExams = null;
-		try {
-			pendingExams = query.getResultList();
-		} catch (NoResultException e) {
-		} finally {
-			em.close();
-		}
-		return pendingExams;
-	}
-	
-	public List<Exam> getApprovedExams() {
-		EntityManager em = DatabaseManager.createEntityManager();
-		Query query = em.createQuery("SELECT exam FROM Exam exam WHERE exam.status = :status",
-				Exam.class);
-		query.setParameter("status", Status.APPROVED);
-		List<Exam> approvedExams = null;
-		try {
-			approvedExams = query.getResultList();
-		} catch (NoResultException e) {
-		} finally {
-			em.close();
-		}
-		return approvedExams;
 	}
 
 }
