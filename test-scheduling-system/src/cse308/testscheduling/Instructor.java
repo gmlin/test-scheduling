@@ -109,10 +109,10 @@ public class Instructor implements Serializable {
 	public void requestAdHocExam(String[] netIds, int duration, Timestamp startDateTime, Timestamp endDateTime) {
 		EntityManager em = DatabaseManager.createEntityManager();
 		logger.entering(getClass().getName(), "requestAdHocExam");
-		File f = new File("/AdHocExamRequestTest.txt");
+		File f = new File("/AdHocExamRequestTest.log");
 		FileHandler fh = null;
 		try {
-			fh = new FileHandler("AdHocExamRequestTest.txt");
+			fh = new FileHandler("AdHocExamRequestTest.log");
 		} catch (SecurityException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -157,10 +157,10 @@ public class Instructor implements Serializable {
 	public void requestCourseExam(String courseId, int duration, Timestamp startDateTime, Timestamp endDateTime) {
 		EntityManager em = DatabaseManager.createEntityManager();
 		logger.entering(getClass().getName(), "requestCourseExam");
-		File f = new File("/CourseExamRequestTest.txt");
+		File f = new File("/CourseExamRequestTest.log");
 		FileHandler fh = null;
 		try {
-			fh = new FileHandler("CourseExamRequestTest.txt");
+			fh = new FileHandler("CourseExamRequestTest.log");
 		} catch (SecurityException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

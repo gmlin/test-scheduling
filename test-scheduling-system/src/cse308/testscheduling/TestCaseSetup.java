@@ -89,24 +89,50 @@ public class TestCaseSetup {
 		student2.setStudentId(100000001);
 		u4.setStudent(student2);
 		student2.setUser(u4);
+		
+		User u5 = new User();
+		u5.setNetId("all");
+		u5.setPassword("123");
+		u5.setFirstName("All");
+		u5.setLastName("All");
+		u5.setEmail("test@test.com");
+		Student student3 = new Student();
+		student3.setStudentId(100000002);
+		u5.setStudent(student3);
+		student3.setUser(u5);
+		Instructor instructor2 = new Instructor();
+		u5.setInstructor(instructor2);
+		instructor2.setUser(u5);
+		Administrator admin2 = new Administrator();
+		u5.setAdministrator(admin2);
+		admin2.setUser(u5);
+		admin2.setTestingCenter(t);
 
 		Course c1 = new Course();
 		c1.setCourseId("CSE308-01_1158");
 		student1.addCourse(c1);
 		student2.addCourse(c1);
+		student3.addCourse(c1);
 		instructor.addCourse(c1);
+		instructor2.addCourse(c1);
 		c1.addInstructor(instructor);
+		c1.addInstructor(instructor2);
 		c1.addStudent(student1);
 		c1.addStudent(student2);
+		c1.addStudent(student3);
 
 		Course c2 = new Course();
 		c2.setCourseId("CSE310-01_1158");
 		student1.addCourse(c2);
 		student2.addCourse(c2);
+		student3.addCourse(c2);
 		instructor.addCourse(c2);
+		instructor2.addCourse(c2);
 		c2.addInstructor(instructor);
+		c2.addInstructor(instructor2);
 		c2.addStudent(student1);
 		c2.addStudent(student2);
+		c2.addStudent(student3);
 
 		Seat seat;
 		for (int i = 0; i < t.getNumSeats(); i++) {
@@ -118,6 +144,7 @@ public class TestCaseSetup {
 		em.persist(u2);
 		em.persist(u3);
 		em.persist(u4);
+		em.persist(u5);
 		em.persist(c1);
 		em.persist(c2);
 		em.persist(t);

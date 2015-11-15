@@ -44,23 +44,20 @@ public class ModifyRequestServlet extends HttpServlet {
 		String examId = request.getParameter("cancel");
 		EntityManager em = DatabaseManager.createEntityManager();
 		em.getTransaction().begin();
-		Query query;
 		HttpSession session = request.getSession();
 		try {
 			logger.entering(getClass().getName(), "doGet");
-			File f = new File("/CancelRequest.txt");
+			File f = new File("/CancelRequest.log");
 			FileHandler fh = null;
 			try {
-				fh = new FileHandler("CancelRequest.txt");
+				fh = new FileHandler("CancelRequest.log");
 			} catch (SecurityException e1) {
 				e1.printStackTrace();
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
 			logger.addHandler(fh);
-			query = em.createQuery("SELECT e FROM Exam e WHERE e.examId = :examId", Exam.class);
-			query.setParameter("examId", examId);
-			Exam exam = (Exam) query.getSingleResult();
+			Exam exam = em.find(Exam.class, examId);
 
 			if (exam.getStatus() == Status.PENDING) {
 				Instructor instructor = ((User) session.getAttribute("user")).getInstructor();
@@ -94,13 +91,12 @@ public class ModifyRequestServlet extends HttpServlet {
 		Enumeration<String> examIds = request.getParameterNames();
 		EntityManager em = DatabaseManager.createEntityManager();
 		em.getTransaction().begin();
-		Query query;
 		try {
 			logger.entering(getClass().getName(), "doGet");
-			File f = new File("/AcceptRejectRequest.txt");
+			File f = new File("/AcceptRejectRequest.log");
 			FileHandler fh2 = null;
 			try {
-				fh2 = new FileHandler("AcceptRejectRequest.txt");
+				fh2 = new FileHandler("AcceptRejectRequest.log");
 			} catch (SecurityException e1) {
 				e1.printStackTrace();
 			} catch (IOException e1) {
@@ -109,9 +105,7 @@ public class ModifyRequestServlet extends HttpServlet {
 			logger.addHandler(fh2);
 			while (examIds.hasMoreElements()) {
 				String examId = examIds.nextElement();
-				query = em.createQuery("SELECT e FROM Exam e WHERE e.examId = :examId", Exam.class);
-				query.setParameter("examId", examId);
-				Exam exam = (Exam) query.getSingleResult();
+				Exam exam = em.find(Exam.class, examId);
 				if (request.getParameter(examId).equals("approve")) {
 					exam.setStatus(Status.APPROVED);
 					logger.log(Level.INFO, exam.getExamId() + " has been approved by admin");

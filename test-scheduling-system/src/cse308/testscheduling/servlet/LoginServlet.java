@@ -42,28 +42,30 @@ public class LoginServlet extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		File f = new File("/loginTest.txt");
-		FileHandler fh = new FileHandler("loginTest.txt");
+		File f = new File("/loginTest.log");
+		FileHandler fh = new FileHandler("loginTest.log");
 		logger.addHandler(fh);
 		HttpSession session = request.getSession();
 		session.setAttribute("username", request.getParameter("username"));
 		session.setAttribute("password", request.getParameter("password"));
 		EntityManager em = DatabaseManager.createEntityManager();
-		Query query = em.createQuery("SELECT u FROM User u WHERE u.netId = :username AND u.password = :password",
-				User.class);
-		query.setParameter("username", session.getAttribute("username"));
-		query.setParameter("password", session.getAttribute("password"));
+
 		try {
-			User user = (User) query.getSingleResult();
-			session.setAttribute("user", user);
-			if (user.getAdministrator() != null) {
-				logger.log(Level.SEVERE, "Login sucesfully as a Administrator: " + session.getAttribute("username"));
+			User user = em.find(User.class, session.getAttribute("username"));
+			if (user != null && user.getPassword().equals(session.getAttribute("password"))) {
+				session.setAttribute("user", user);
+				if (user.getAdministrator() != null) {
+					logger.log(Level.INFO, "Login sucesfully as a Administrator: " + session.getAttribute("username"));
+				}
+				if (user.getStudent() != null) {
+					logger.log(Level.INFO, "Login sucesfully as a Student: " + session.getAttribute("username"));
+				}
+				if (user.getInstructor() != null) {
+					logger.log(Level.INFO, "Login sucesfully as a Instructor: " + session.getAttribute("username"));
+				}
 			}
-			if (user.getStudent() != null) {
-				logger.log(Level.SEVERE, "Login sucesfully as a Student: " + session.getAttribute("username"));
-			}
-			if (user.getInstructor() != null) {
-				logger.log(Level.SEVERE, "Login sucesfully as a Instructor: " + session.getAttribute("username"));
+			else {
+				session.setAttribute("incorrect", true);
 			}
 		} catch (NoResultException e) {
 			session.setAttribute("incorrect", true);

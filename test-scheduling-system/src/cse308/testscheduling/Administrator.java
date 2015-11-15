@@ -1,6 +1,7 @@
 package cse308.testscheduling;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -55,7 +56,7 @@ public class Administrator implements Serializable {
 		} finally {
 			em.close();
 		}
-		return approvedExams;
+		return approvedExams ;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -87,6 +88,20 @@ public class Administrator implements Serializable {
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	public Appointment makeAppointment(String studentId, String examId, Timestamp dateTime, Boolean setAside) {
+		EntityManager em = DatabaseManager.createEntityManager();
+		try {
+			Student student = em.find(Student.class, studentId);
+			return student.makeAppointment(examId, dateTime, setAside);
+		}
+		catch(Exception e) {
+			throw e;
+		}
+		finally {
+			em.close();
+		}
 	}
 
 }

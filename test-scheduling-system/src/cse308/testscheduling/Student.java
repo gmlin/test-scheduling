@@ -1,17 +1,22 @@
 package cse308.testscheduling;
 
+import java.io.PrintWriter;
 import java.io.Serializable;
+import java.io.StringWriter;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityManager;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Query;
 
 /**
  * Entity implementation class for Entity: Student
@@ -107,6 +112,49 @@ public class Student implements Serializable {
 		return user;
 	}
 
+	@SuppressWarnings("unchecked")
+	public Appointment makeAppointment(String examId, Timestamp dateTime, boolean setAside) {
+		EntityManager em = DatabaseManager.createEntityManager();
+		try {
+			em.getTransaction().begin();
+			Query query;
+			if (setAside) {
+				query = em.createQuery("SELECT s FROM Seat s WHERE s.setAside = true", Seat.class);
+			}
+			else {
+				query = em.createQuery("SELECT s FROM Seat s WHERE s.setAside = false", Seat.class);
+			}
+			List<Seat> seats = query.getResultList();
+			Exam exam = em.find(Exam.class, examId);
+			Appointment appt = null;
+			for (Seat seat : seats) {
+				if (seat.isAppointable(dateTime, exam)) {
+					appt = new Appointment();
+					appt.setAttendance(false);
+					appt.setDateTime(dateTime);
+					appt.setExam(exam);
+					appt.setSeat(seat);
+					appt.setSetAsideSeat(setAside);
+					appt.setExam(exam);
+					this.addAppointment(appt);
+					exam.addAppointment(appt);
+					appt.setStudent(this);
+					seat.addAppointment(appt);
+					em.persist(appt);
+					break;
+				}
+			}
+			if (appt != null) {
+				em.getTransaction().commit();
+			}
+			return appt;
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			em.close();
+		}
+	}
+	
 	public void setAdHocExams(List<Exam> adHocExams) {
 		this.adHocExams = adHocExams;
 	}

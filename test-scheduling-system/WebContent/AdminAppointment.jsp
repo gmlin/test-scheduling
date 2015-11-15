@@ -7,9 +7,9 @@
 
 
 <%
-    User user = (User) (session.getAttribute("user"));
-    if (user == null || user.getAdministrator() == null)
-        response.sendRedirect("Index.jsp");
+	User user = (User) (session.getAttribute("user"));
+	if (user == null || user.getAdministrator() == null)
+		response.sendRedirect("Index.jsp");
 %>
 
 <!doctype html>
@@ -48,14 +48,14 @@
 						<form action="make_appointment" method="post">
 							<input type="hidden" name="appt_type" value="admin" />
 							<%
-                                if (session.getAttribute("message") != null) {
-                                    out.println(session.getAttribute("message"));
-                                    session.removeAttribute("message");
-                                }
-                            %>
+								if (session.getAttribute("message") != null) {
+									out.println(session.getAttribute("message"));
+									session.removeAttribute("message");
+								}
+							%>
 							<div class="form-group">
-								<label for="student">Student (Empty for set-aside)</label> <input
-									type="text" name="student" id="student">
+								<label for="student">Student</label> <input type="text"
+									name="student" id="student">
 							</div>
 							<div class="form-group">
 								<label for="courseId">Exam</label> <select class="form-control"
@@ -71,6 +71,11 @@
 							<div class="form-group">
 								<label for="dateTime">Date/Time</label> <input
 									type="datetime-local" name="dateTime" id="dateTime" required>
+							</div>
+							<div class="form-group">
+								<label for="setAside">Set aside</label> <input type="radio"
+									name="setAside" value="yes" /><input type="radio"
+									name="setAside" value="no" />
 							</div>
 							<button type="submit" class="btn btn-default">Submit</button>
 

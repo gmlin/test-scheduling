@@ -77,12 +77,9 @@ public class Seat implements Serializable {
 	@SuppressWarnings("deprecation")
 	public boolean isAppointable(Timestamp t, Exam e) {
 		if (t.getMinutes() % 30 != 0) {
-			System.out.println("fasfasdsdss");
-
 			return false;
 		}
 		if (appointments.isEmpty()) {
-			System.out.println("yaaay");
 			return true;
 		}
 		for (Appointment appt : appointments) {
@@ -92,8 +89,6 @@ public class Seat implements Serializable {
 				}
 			}
 		}
-		System.out.println("fadsds434234sfas");
-
 		return false;
 	}
 
