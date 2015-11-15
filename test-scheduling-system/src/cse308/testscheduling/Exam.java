@@ -105,6 +105,15 @@ public class Exam implements Serializable {
 		return this.adHoc;
 	}
 
+	public int getAttendance() {
+		int attended = 0;
+		for (Appointment appt : appointments) {
+			if (appt.getAttendance())
+				attended++;
+		}
+		return attended;
+	}
+	
 	public Course getCourse() {
 		return this.course;
 	}

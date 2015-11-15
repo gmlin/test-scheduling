@@ -65,7 +65,7 @@
 								</thead>
 								<tbody>
 									<c:forEach var="appt"
-										items="${sessionScope.user.student.appointments}">
+										items="${sessionScope.user.student.sortedAppointments}">
 										<tr>
 											<td>${appt.id}</td>
 											<td>${appt.exam.examId }

@@ -7,9 +7,9 @@
 
 
 <%
-    User user = (User) (session.getAttribute("user"));
-    if (user == null || user.getInstructor() == null)
-        response.sendRedirect("Index.jsp");
+	User user = (User) (session.getAttribute("user"));
+	if (user == null || user.getInstructor() == null)
+		response.sendRedirect("Index.jsp");
 %>
 
 <!doctype html>
@@ -46,11 +46,11 @@
 					</div>
 					<div class="panel-body">
 						<%
-                                if (session.getAttribute("message") != null) {
-                                    out.println(session.getAttribute("message"));
-                                    session.removeAttribute("message");
-                                }
-                            %>
+							if (session.getAttribute("message") != null) {
+								out.println(session.getAttribute("message"));
+								session.removeAttribute("message");
+							}
+						%>
 						<table class="table">
 							<thead>
 								<th>Exam ID</th>
@@ -63,40 +63,25 @@
 								<th>Cancel</th>
 							</thead>
 							<tbody>
-								<c:forEach var="course"
-									items="${sessionScope.user.instructor.courses}">
-									<c:forEach var="exam" items="${course.exams}">
-										<tr>
-											<td>${exam.examId}</td>
-											<td>${exam.startDateTime }</td>
-											<td>${exam.endDateTime }</td>
-											<td>${exam.duration }</td>
-											<td>${fn:length(exam.course.students) }</td>
-											<td>0</td>
-											<td>${exam.status }</td>
-											<c:if test="${exam.status == 'PENDING' }">
-												<td><a href="modify_request?cancel=${exam.examId }">Cancel</a></td>
-											</c:if>
-											<c:if test="${exam.status != 'PENDING' }">
-												<td>N/A</td>
-											</c:if>
-										</tr>
-									</c:forEach>
-								</c:forEach>
 								<c:forEach var="exam"
-									items="${sessionScope.user.instructor.adHocExams}">
+									items="${sessionScope.user.instructor.sortedExams}">
 									<tr>
 										<td>${exam.examId}</td>
 										<td>${exam.startDateTime }</td>
 										<td>${exam.endDateTime }</td>
 										<td>${exam.duration }</td>
-										<td>${fn:length(exam.students) }</td>
-										<td>0</td>
+										<c:if test="${exam.adHoc}">
+										    <td>${fn:length(exam.students)}</td>
+										</c:if>
+										<c:if test="${not exam.adHoc}">
+											<td>${fn:length(exam.course.students)}</td>
+										</c:if>
+										<td>${exam.attendance}</td>
 										<td>${exam.status }</td>
-										<c:if test="${exam.status == 'PENDING' }">
+										<c:if test="${exam.status == 'PENDING' or exam.status == 'DENIED'}">
 											<td><a href="modify_request?cancel=${exam.examId }">Cancel</a></td>
 										</c:if>
-										<c:if test="${exam.status != 'PENDING' }">
+										<c:if test="${exam.status != 'PENDING' and exam.status != 'DENIED'}">
 											<td>N/A</td>
 										</c:if>
 									</tr>

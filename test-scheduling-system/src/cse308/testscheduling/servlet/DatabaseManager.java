@@ -1,4 +1,4 @@
-package cse308.testscheduling;
+package cse308.testscheduling.servlet;
 
 import java.util.List;
 
@@ -8,20 +8,31 @@ import javax.persistence.Persistence;
 import javax.persistence.Query;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import javax.servlet.annotation.WebListener;
 
+/**
+ * Application Lifecycle Listener implementation class DatabaseManager
+ *
+ */
+@WebListener
 public class DatabaseManager implements ServletContextListener {
-	private static EntityManagerFactory emf;
 
-	public static EntityManager createEntityManager() {
+	private static EntityManagerFactory emf;
+	
+    /**
+     * Default constructor. 
+     */
+    public DatabaseManager() {
+    }
+
+    public static EntityManager createEntityManager() {
 		return emf.createEntityManager();
 	}
 
-	@Override
 	public void contextDestroyed(ServletContextEvent arg0) {
 		emf.close();
 	}
 
-	@Override
 	public void contextInitialized(ServletContextEvent arg0) {
 		emf = Persistence.createEntityManagerFactory("test-scheduling-system");
 	}

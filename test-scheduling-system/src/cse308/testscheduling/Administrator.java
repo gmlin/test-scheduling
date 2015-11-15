@@ -16,6 +16,8 @@ import javax.persistence.NoResultException;
 import javax.persistence.OneToOne;
 import javax.persistence.Query;
 
+import cse308.testscheduling.servlet.DatabaseManager;
+
 /**
  * Entity implementation class for Entity: Administrator
  */

@@ -16,7 +16,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import cse308.testscheduling.DatabaseManager;
 import cse308.testscheduling.User;
 
 /**

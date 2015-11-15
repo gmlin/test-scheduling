@@ -18,9 +18,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
+import javax.persistence.NoResultException;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Query;
+
+import cse308.testscheduling.servlet.DatabaseManager;
 
 /**
  * Entity implementation class for Entity: Instructor
@@ -93,7 +96,48 @@ public class Instructor implements Serializable {
 	public List<Course> getCourses() {
 		return courses;
 	}
-
+	
+	@SuppressWarnings("unchecked")
+	public List<Exam> getCurrentRequests() {
+		EntityManager em = DatabaseManager.createEntityManager();
+		Query query = em.createQuery("SELECT exam FROM Exam exam "
+				+ "WHERE (exam.instructor = :instructor "
+				+ "OR exam.course IN :courses) "
+				+ "AND (exam.status = :approved "
+				+ "OR exam.status = :denied)", Exam.class);
+		query.setParameter("approved", Status.APPROVED);
+		query.setParameter("denied", Status.DENIED);
+		query.setParameter("instructor", this);
+		query.setParameter("courses", this.courses);
+		List<Exam> examRequests = null;
+		try {
+			examRequests = query.getResultList();
+		} catch (Exception e) {
+		} finally {
+			em.close();
+		}
+		return examRequests;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Exam> getSortedExams() {
+		EntityManager em = DatabaseManager.createEntityManager();
+		Query query = em.createQuery("SELECT exam FROM Exam exam "
+				+ "WHERE exam.instructor = :instructor "
+				+ "OR exam.course IN :courses "
+				+ "ORDER BY exam.examId DESC", Exam.class);
+		query.setParameter("instructor", this);
+		query.setParameter("courses", this.courses);
+		List<Exam> sortedExams = null;
+		try {
+			sortedExams = query.getResultList();
+		} catch (Exception e) {
+		} finally {
+			em.close();
+		}
+		return sortedExams;
+	}
+	
 	public User getUser() {
 		return user;
 	}

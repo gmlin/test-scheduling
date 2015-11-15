@@ -16,7 +16,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import cse308.testscheduling.DatabaseManager;
 import cse308.testscheduling.Exam;
 import cse308.testscheduling.Instructor;
 import cse308.testscheduling.Status;
@@ -59,7 +58,7 @@ public class ModifyRequestServlet extends HttpServlet {
 			logger.addHandler(fh);
 			Exam exam = em.find(Exam.class, examId);
 
-			if (exam.getStatus() == Status.PENDING) {
+			if (exam.getStatus() == Status.PENDING || exam.getStatus() == Status.DENIED) {
 				Instructor instructor = ((User) session.getAttribute("user")).getInstructor();
 				if (exam.hasPermissions(instructor)) {
 					em.remove(exam);

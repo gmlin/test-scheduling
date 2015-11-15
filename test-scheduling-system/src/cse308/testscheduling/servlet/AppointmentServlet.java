@@ -17,7 +17,6 @@ import javax.servlet.http.HttpSession;
 
 import cse308.testscheduling.Administrator;
 import cse308.testscheduling.Appointment;
-import cse308.testscheduling.DatabaseManager;
 import cse308.testscheduling.Exam;
 import cse308.testscheduling.Seat;
 import cse308.testscheduling.Student;

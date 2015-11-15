@@ -18,6 +18,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Query;
 
+import cse308.testscheduling.servlet.DatabaseManager;
+
 /**
  * Entity implementation class for Entity: Student
  *
@@ -78,6 +80,22 @@ public class Student implements Serializable {
 
 	public List<Appointment> getAppointments() {
 		return this.appointments;
+	}
+	
+	public List<Appointment> getSortedAppointments() {
+		EntityManager em = DatabaseManager.createEntityManager();
+		Query query = em.createQuery("SELECT appt FROM Appointment appt "
+				+ "WHERE appt.student = :student "
+				+ "ORDER BY appt.id DESC", Appointment.class);
+		query.setParameter("student", this);
+		List<Appointment> sortedAppointments = null;
+		try {
+			sortedAppointments = query.getResultList();
+		} catch (Exception e) {
+		} finally {
+			em.close();
+		}
+		return sortedAppointments;
 	}
 
 	public List<Exam> getAvailableExams() {

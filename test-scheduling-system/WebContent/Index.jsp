@@ -54,54 +54,23 @@
 							</p>
 						</c:if>
 						<c:if test="${not empty sessionScope.user.instructor}">
-
-							<c:forEach var="course"
-								items="${sessionScope.user.instructor.courses}">
-								<c:forEach var="exam" items="${course.exams}">
-									<c:if
-										test="${exam.status == 'APPROVED' or exam.status == 'DENIED'}">
-										<p>
-											Exam
-											<c:out value="${exam.examId}" />
-											has been
-											<c:out value="${exam.status}" />
-											.
-										</p>
-									</c:if>
-								</c:forEach>
-							</c:forEach>
-							<c:forEach var="adHocExam"
-								items="${sessionScope.user.instructor.adHocExams}">
-								<c:if
-									test="${adHocExam.status == 'APPROVED' or adHocExam.status == 'DENIED'}">
-									<p>
-										Exam
-										<c:out value="${adHocExam.examId}" />
-										has been
-										<c:out value="${adHocExam.status}" />
-										.
-									</p>
-								</c:if>
+							<c:forEach var="exam"
+								items="${sessionScope.user.instructor.currentRequests}">
+								<p>
+									<c:out value="${exam.examId}" />
+									has been
+									<c:out value="${exam.status}" />
+									.
+								</p>
 							</c:forEach>
 						</c:if>
 						<c:if test="${not empty sessionScope.user.student}">
-							<c:forEach var="course"
-								items="${sessionScope.user.student.courses}">
-								<c:forEach var="exam" items="${course.exams}">
-									<c:if test="${exam.status == 'APPROVED'}">
-										<p>
-											<c:out value="${exam.examId}" />
-										</p>
-									</c:if>
-								</c:forEach>
-							</c:forEach>
-							<c:forEach var="adHocExam"
-								items="${sessionScope.user.student.adHocExams}">
-								<c:if test="${adHocExam.status == 'APPROVED'}">
-									<p>
-										<c:out value="${adHocExam.examId}" />
-									</p>
-								</c:if>
+							<c:forEach var="exam"
+								items="${sessionScope.user.student.availableExams}">
+								<p>
+									<c:out value="${exam.examId}" />
+									is available for appointment.
+								</p>
 							</c:forEach>
 						</c:if>
 					</div>
