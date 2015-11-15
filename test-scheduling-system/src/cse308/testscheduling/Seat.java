@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.CascadeType;
 
 import cse308.testscheduling.servlet.DatabaseManager;
 
@@ -32,7 +33,7 @@ public class Seat implements Serializable {
 	private int seatNumber;
 
 	// a seat can be assigned to multiple appointments
-	@OneToMany(mappedBy = "seat")
+	@OneToMany(mappedBy = "seat", cascade = CascadeType.ALL)
 	private List<Appointment> appointments;
 
 	@Column(name = "SET_ASIDE")
