@@ -1,12 +1,20 @@
 package cse308.testscheduling;
 
+import java.io.File;
 import java.io.Serializable;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityManager;
 import javax.persistence.Id;
+import javax.persistence.NoResultException;
 import javax.persistence.OneToOne;
+import javax.servlet.http.HttpSession;
+
+import cse308.testscheduling.servlet.DatabaseManager;
 
 /**
  * Entity implementation class for Entity: User

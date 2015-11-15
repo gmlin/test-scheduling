@@ -51,7 +51,7 @@ public class Course implements Serializable {
 	// the association.
 	@OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
 	private List<Exam> exams;
-
+	
 	public Course() {
 		super();
 		setStudents(new ArrayList<Student>());
@@ -85,7 +85,7 @@ public class Course implements Serializable {
 	public List<Student> getStudents() {
 		return students;
 	}
-
+	
 	public void setCourseId(String courseId) {
 		this.courseId = courseId;
 	}
@@ -101,7 +101,7 @@ public class Course implements Serializable {
 	public void setStudents(List<Student> students) {
 		this.students = students;
 	}
-
+	
 	@Override
 	public String toString() {
 		return courseId;
