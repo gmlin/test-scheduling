@@ -17,7 +17,7 @@ import cse308.testscheduling.User;
  * Servlet implementation class ScheduleExamServlet
  */
 @WebServlet("/schedule_exam")
-public class ScheduleExamServlet extends HttpServlet {
+public class MakeRequestServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	// private static final Logger logger =
 	// Logger.getLogger(ScheduleExamServlet.class.getName());
@@ -25,7 +25,7 @@ public class ScheduleExamServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public ScheduleExamServlet() {
+	public MakeRequestServlet() {
 		super();
 	}
 

@@ -25,7 +25,7 @@ import cse308.testscheduling.User;
 public class LoginServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private static final Logger logger = Logger.getLogger(ScheduleExamServlet.class.getName());
+	private static final Logger logger = Logger.getLogger(MakeRequestServlet.class.getName());
 
 	/**
 	 * @see HttpServlet#HttpServlet()

@@ -74,6 +74,28 @@ public class Student implements Serializable {
 		getCourses().add(course);
 	}
 
+	public boolean cancelAppointment(String apptId) {
+		EntityManager em = DatabaseManager.createEntityManager();
+		em.getTransaction().begin();
+		try {
+			Appointment appt = em.find(Appointment.class, apptId);
+			if (appt == null || !appt.getStudent().equals(this))
+				return false;
+			if (appt.isCancelable())
+				em.remove(appt);
+			else
+				return false;
+			em.getTransaction().commit();
+		}
+		catch(Exception e) {
+			throw e;
+		}
+		finally {
+			em.close();
+		}
+		return true;
+	}
+	
 	public List<Exam> getAdHocExams() {
 		return adHocExams;
 	}
@@ -82,6 +104,7 @@ public class Student implements Serializable {
 		return this.appointments;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public List<Appointment> getSortedAppointments() {
 		EntityManager em = DatabaseManager.createEntityManager();
 		Query query = em.createQuery("SELECT appt FROM Appointment appt "
@@ -188,5 +211,28 @@ public class Student implements Serializable {
 	public void setUser(User user) {
 		this.user = user;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + studentId;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Student other = (Student) obj;
+		if (studentId != other.studentId)
+			return false;
+		return true;
+	}
+
 
 }

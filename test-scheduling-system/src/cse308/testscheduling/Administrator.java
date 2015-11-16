@@ -46,7 +46,8 @@ public class Administrator implements Serializable {
 	public Administrator() {
 		super();
 	}
-
+	
+	@SuppressWarnings("unchecked")
 	public List<Exam> getApprovedExams() {
 		EntityManager em = DatabaseManager.createEntityManager();
 		Query query = em.createQuery("SELECT exam FROM Exam exam WHERE exam.status = :status", Exam.class);
@@ -84,6 +85,22 @@ public class Administrator implements Serializable {
 		return user;
 	}
 
+	public void modifyRequest(String examId, Status status) {
+		EntityManager em = DatabaseManager.createEntityManager();
+		try {
+			em.getTransaction().begin();
+			Exam exam = em.find(Exam.class, examId);
+			exam.setStatus(status);
+			em.getTransaction().commit();
+		}
+		catch(Exception e) {
+			throw e;
+		}
+		finally {
+			em.close();
+		}
+	}
+	
 	public void setTestingCenter(TestingCenter testingCenter) {
 		this.testingCenter = testingCenter;
 	}
@@ -92,7 +109,7 @@ public class Administrator implements Serializable {
 		this.user = user;
 	}
 
-	public Appointment makeAppointment(String studentId, String examId, Timestamp dateTime, Boolean setAside) {
+	public Appointment makeAppointment(String studentId, String examId, Timestamp dateTime, boolean setAside) {
 		EntityManager em = DatabaseManager.createEntityManager();
 		try {
 			Student student = em.find(Student.class, studentId);

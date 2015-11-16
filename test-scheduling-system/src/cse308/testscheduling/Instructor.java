@@ -22,6 +22,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Query;
+import javax.servlet.http.HttpSession;
 
 import cse308.testscheduling.servlet.DatabaseManager;
 
@@ -89,6 +90,28 @@ public class Instructor implements Serializable {
 		return true;
 	}
 
+	public boolean cancelRequest(String examId) {
+		EntityManager em = DatabaseManager.createEntityManager();
+		em.getTransaction().begin();
+		try {
+			Exam exam = em.find(Exam.class, examId);
+			if (exam == null || !this.hasPermission(exam))
+				return false;
+			if (exam.getStatus() == Status.PENDING || exam.getStatus() == Status.DENIED)
+				em.remove(exam);
+			else
+				return false;
+			em.getTransaction().commit();
+		}
+		catch(Exception e) {
+			throw e;
+		}
+		finally {
+			em.close();
+		}
+		return true;
+	}
+	
 	public List<Exam> getAdHocExams() {
 		return adHocExams;
 	}
@@ -142,6 +165,14 @@ public class Instructor implements Serializable {
 		return user;
 	}
 
+	public boolean hasPermission(Exam exam) {
+		if (exam.getAdHoc()){
+			return this.equals(exam.getInstructor());
+		} else {
+			return exam.getCourse().getInstructors().contains(this);
+		}
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

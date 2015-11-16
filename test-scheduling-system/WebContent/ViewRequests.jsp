@@ -79,7 +79,7 @@
 										<td>${exam.attendance}</td>
 										<td>${exam.status }</td>
 										<c:if test="${exam.status == 'PENDING' or exam.status == 'DENIED'}">
-											<td><a href="modify_request?cancel=${exam.examId }">Cancel</a></td>
+											<td><a href="cancel_request?cancel=${exam.examId }">Cancel</a></td>
 										</c:if>
 										<c:if test="${exam.status != 'PENDING' and exam.status != 'DENIED'}">
 											<td>N/A</td>

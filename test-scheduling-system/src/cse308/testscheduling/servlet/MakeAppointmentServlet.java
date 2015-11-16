@@ -26,14 +26,14 @@ import cse308.testscheduling.User;
  * Servlet implementation class AppointmentServlet
  */
 @WebServlet("/make_appointment")
-public class AppointmentServlet extends HttpServlet {
+public class MakeAppointmentServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public AppointmentServlet() {
+	public MakeAppointmentServlet() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
