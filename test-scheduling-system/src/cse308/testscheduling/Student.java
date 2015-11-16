@@ -42,7 +42,7 @@ public class Student implements Serializable {
 	private User user;
 
 	// a student can have multiple appointments
-	@OneToMany(mappedBy = "student")
+	@OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
 	private List<Appointment> appointments;
 
 	// a student can take many courses

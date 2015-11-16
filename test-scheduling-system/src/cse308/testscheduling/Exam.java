@@ -11,6 +11,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.CascadeType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -56,7 +57,7 @@ public class Exam implements Serializable {
 	// a exam can have multiple appointments, so it is one-to-many
 	// the mappedBy element indicates that this is the non owning side of
 	// the association.
-	@OneToMany(mappedBy = "exam")
+	@OneToMany(mappedBy = "exam", cascade = CascadeType.ALL)
 	private List<Appointment> appointments;
 
 	// for adhoc exam only
