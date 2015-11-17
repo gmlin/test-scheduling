@@ -110,7 +110,7 @@ public class Appointment implements Serializable {
 	public boolean isCancelable() {
 		if (attendance)
 			return false;
-		return dateTime.toLocalDateTime().minusDays(1).isBefore(LocalDateTime.now());
+		return LocalDateTime.now().minusDays(1).isBefore(dateTime.toLocalDateTime());
 	}
 
 	public void setAttendance(boolean attendance) {

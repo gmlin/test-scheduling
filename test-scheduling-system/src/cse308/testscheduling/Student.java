@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.io.StringWriter;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -81,8 +82,12 @@ public class Student implements Serializable {
 			Appointment appt = em.find(Appointment.class, apptId);
 			if (appt == null || !appt.getStudent().equals(this))
 				return false;
-			if (appt.isCancelable())
+			if (appt.isCancelable()) {
+				appt.getExam().getAppointments().remove(appt);
+				appt.getSeat().getAppointments().remove(appt);
+				this.getAppointments().remove(appt);
 				em.remove(appt);
+			}
 			else
 				return false;
 			em.getTransaction().commit();
@@ -121,22 +126,23 @@ public class Student implements Serializable {
 		return sortedAppointments;
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<Exam> getAvailableExams() {
-		List<Exam> availableExams = new ArrayList<Exam>();
-		List<Exam> alreadyAppointed = new ArrayList<Exam>();
-		for (Appointment a : appointments) {
-			alreadyAppointed.add(a.getExam());
-		}
-		for (Course c : courses) {
-			List<Exam> exams = c.getExams();
-			for (Exam e : exams) {
-				if (e.getStatus() == Status.APPROVED && !alreadyAppointed.contains(e))
-					availableExams.add(e);
-			}
-		}
-		for (Exam e : adHocExams) {
-			if (e.getStatus() == Status.APPROVED && !alreadyAppointed.contains(e))
-				availableExams.add(e);
+		EntityManager em = DatabaseManager.createEntityManager();
+		Query query = em.createQuery("SELECT exam FROM Exam exam "
+				+ "WHERE exam.status = :status "
+				+ "AND (exam.course IN :courses "
+				+ "OR :student MEMBER OF exam.students)"
+				, Exam.class);
+		query.setParameter("status", Status.APPROVED);
+		query.setParameter("courses", this.getCourses());
+		query.setParameter("student", this);
+		List<Exam> availableExams = null;
+		try {
+			availableExams = query.getResultList();
+		} catch (Exception e) {
+		} finally {
+			em.close();
 		}
 		return availableExams;
 	}
@@ -157,8 +163,14 @@ public class Student implements Serializable {
 	public Appointment makeAppointment(String examId, Timestamp dateTime, boolean setAside) {
 		EntityManager em = DatabaseManager.createEntityManager();
 		try {
+			Query query = em.createQuery("SELECT appt FROM Appointment appt "
+					+ "WHERE appt.student = :student AND appt.exam =:exam");
+			Exam exam = em.find(Exam.class, examId);
+			query.setParameter("student", this);
+			query.setParameter("exam", exam);
+			if (!query.getResultList().isEmpty())
+				return null;
 			em.getTransaction().begin();
-			Query query;
 			if (setAside) {
 				query = em.createQuery("SELECT s FROM Seat s WHERE s.setAside = true", Seat.class);
 			}
@@ -166,7 +178,6 @@ public class Student implements Serializable {
 				query = em.createQuery("SELECT s FROM Seat s WHERE s.setAside = false", Seat.class);
 			}
 			List<Seat> seats = query.getResultList();
-			Exam exam = em.find(Exam.class, examId);
 			Appointment appt = null;
 			for (Seat seat : seats) {
 				if (seat.isAppointable(dateTime, exam)) {
@@ -176,7 +187,6 @@ public class Student implements Serializable {
 					appt.setExam(exam);
 					appt.setSeat(seat);
 					appt.setSetAsideSeat(setAside);
-					appt.setExam(exam);
 					this.addAppointment(appt);
 					exam.addAppointment(appt);
 					appt.setStudent(this);

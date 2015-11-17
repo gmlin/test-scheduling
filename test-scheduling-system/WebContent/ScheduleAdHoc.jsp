@@ -17,9 +17,13 @@
 <title>Schedule Ad Hoc Exam</title>
 <link rel="stylesheet" href="css/bootstrap.min.css">
 <link href="css/styles.css" rel="stylesheet">
+<link href="css/bootstrap-datetimepicker.min.css" rel="stylesheet">
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script src="js/scripts.js"></script>
+<script src="js/bootstrap-datetimepicker.min.js"></script>
+
+
 </head>
 <body>
 
@@ -57,14 +61,14 @@
 									placeholder="minutes" required>
 							</div>
 							<div class="form-group">
-								<label for="startDateTime">Start</label> <input
-									type="datetime-local" class="form-control" name="startDateTime"
-									id="startDateTime" required>
+								<label for="startDateTime">Start</label> <input value=""
+									type="text" name="startDateTime" id="startDateTime"
+									class="dateTime" readonly required>
 							</div>
 							<div class="form-group">
-								<label for="endDateTime">End</label> <input
-									type="datetime-local" class="form-control" name="endDateTime"
-									id="endDateTime" required>
+								<label for="endDateTime">End</label> <input value="" type="text"
+									name="endDateTime" id="endDateTime" class="dateTime" readonly
+									required>
 							</div>
 							<div class="form-group">
 								<label for="netids">Examinee NetIDs</label>
@@ -78,5 +82,13 @@
 			</div>
 		</div>
 	</div>
+	<script type="text/javascript">
+        $(".dateTime").datetimepicker({
+            format : 'yyyy-mm-dd hh:ii:00',
+            startDate : new Date(),
+            minuteStep : 30,
+            autoclose: true
+        });
+    </script>
 </body>
 </html>

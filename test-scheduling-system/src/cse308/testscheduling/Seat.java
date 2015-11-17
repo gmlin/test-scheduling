@@ -54,9 +54,9 @@ public class Seat implements Serializable {
 		Seat seat2 = em.find(Seat.class, seatNumber + 1);
 		if ((seat1 != null && e.equals(seat1.examAt(t))) || (seat2 != null && e.equals(seat2.examAt(t)))) {
 			em.close();
-			System.out.println("fasfas");
 			return false;
 		}
+		em.close();
 		return true;
 	}
 
@@ -69,6 +69,10 @@ public class Seat implements Serializable {
 		return null;
 	}
 
+	public List<Appointment> getAppointments() {
+		return appointments;
+	}
+	
 	public int getSeatNumber() {
 		return this.seatNumber;
 	}
@@ -85,14 +89,12 @@ public class Seat implements Serializable {
 		if (appointments.isEmpty()) {
 			return true;
 		}
-		for (Appointment appt : appointments) {
-			if (appt.getDateTime().compareTo(t) > 0 || appt.getEndDateTime().compareTo(t) < 0) {
-				if (checkAdjacent(t, e)) {
-					return true;
-				}
-			}
+		if (examAt(t) != null) {
+			return false;
 		}
-		return false;
+		else {
+			return checkAdjacent(t, e);
+		}
 	}
 
 	public void setSetAside(boolean setAside) {

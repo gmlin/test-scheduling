@@ -19,9 +19,12 @@
 <title>Make appointment</title>
 <link rel="stylesheet" href="css/bootstrap.min.css">
 <link href="css/styles.css" rel="stylesheet">
+<link href="css/bootstrap-datetimepicker.min.css" rel="stylesheet">
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script src="js/scripts.js"></script>
+<script src="js/bootstrap-datetimepicker.min.js"></script>
+
 </head>
 <body>
 
@@ -64,8 +67,9 @@
 								</select>
 							</div>
 							<div class="form-group">
-								<label for="dateTime">Date/Time</label> <input
-									type="datetime-local" name="dateTime" id="dateTime" required>
+								<label for="dateTime">Date/Time</label> <input value=""
+									type="text" name="dateTime" id="dateTime" class="dateTime"
+									readonly required>
 							</div>
 							<button type="submit" class="btn btn-default">Submit</button>
 
@@ -75,5 +79,13 @@
 			</div>
 		</div>
 	</div>
+	<script type="text/javascript">
+        $(".dateTime").datetimepicker({
+            format : 'yyyy-mm-dd hh:ii:00',
+            startDate : new Date(),
+            minuteStep : 30,
+            autoclose: true
+        });
+    </script>
 </body>
 </html>

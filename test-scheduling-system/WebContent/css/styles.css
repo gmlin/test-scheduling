@@ -1,3 +1,8 @@
+a {
+    color: #900;
+    text-decoration: none;
+}
+
 .navbar-static-top {
   margin-bottom:20px;
 }
@@ -9,7 +14,20 @@ i {
 .nav > li > a {
   color:#787878;
 }
-  
+
+.navbar-inverse {
+    background-color: #900;
+    border-color: #080808;
+}
+
+.navbar-inverse .navbar-nav>li>a {
+    color: #FFFFFF;
+}
+
+.navbar-inverse .navbar-brand {
+	color: #FFFFFF;
+}
+
 footer {
   margin-top:20px;
   padding-top:20px;
@@ -33,3 +51,5 @@ footer {
   -o-border-radius: 10px;
   border-radius: 10px;
 }
+
+

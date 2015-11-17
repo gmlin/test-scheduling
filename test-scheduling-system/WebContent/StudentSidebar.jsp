@@ -1,4 +1,4 @@
-<a href="#"><strong><i class="glyphicon glyphicon-list"></i>
+<a href="#"><strong>
 		Student</strong></a>
 
 <hr>

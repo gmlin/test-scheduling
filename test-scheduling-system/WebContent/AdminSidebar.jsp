@@ -1,4 +1,4 @@
-<a href="#"><strong><i class="glyphicon glyphicon-list"></i>
+<a href="#"><strong>
 		Administrator</strong></a>
 
 <hr>

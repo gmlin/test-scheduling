@@ -48,7 +48,7 @@ public class MakeAppointmentServlet extends HttpServlet {
 		HttpSession s = request.getSession();
 
 		String examId = request.getParameter("exam");
-		Timestamp dateTime = Timestamp.valueOf(request.getParameter("dateTime").replace("T", " ") + ":00");
+		Timestamp dateTime = Timestamp.valueOf(request.getParameter("dateTime"));
 		Appointment appt = null;
 		try {
 			if (request.getParameter("appt_type").equals("admin")) {

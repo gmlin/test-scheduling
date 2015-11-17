@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.FileHandler;
@@ -97,8 +98,10 @@ public class Instructor implements Serializable {
 			Exam exam = em.find(Exam.class, examId);
 			if (exam == null || !this.hasPermission(exam))
 				return false;
-			if (exam.getStatus() == Status.PENDING || exam.getStatus() == Status.DENIED)
+			if (exam.getStatus() == Status.PENDING || exam.getStatus() == Status.DENIED) {
+				exam.getCourse().getExams().remove(exam);
 				em.remove(exam);
+			}
 			else
 				return false;
 			em.getTransaction().commit();
@@ -181,8 +184,7 @@ public class Instructor implements Serializable {
 		return result;
 	}
 
-	public void requestAdHocExam(String[] netIds, int duration, Timestamp startDateTime, Timestamp endDateTime) {
-		EntityManager em = DatabaseManager.createEntityManager();
+	public boolean requestAdHocExam(String[] netIds, int duration, Timestamp startDateTime, Timestamp endDateTime) {
 		logger.entering(getClass().getName(), "requestAdHocExam");
 		File f = new File("/AdHocExamRequestTest.log");
 		FileHandler fh = null;
@@ -196,6 +198,9 @@ public class Instructor implements Serializable {
 			e1.printStackTrace();
 		}
 		logger.addHandler(fh);
+		if (endDateTime.before(startDateTime) || startDateTime.toLocalDateTime().isBefore(LocalDateTime.now()))
+			return false;
+		EntityManager em = DatabaseManager.createEntityManager();
 		try {
 			em.getTransaction().begin();
 			Exam exam = new Exam();
@@ -220,6 +225,7 @@ public class Instructor implements Serializable {
 			em.getTransaction().commit();
 			logger.log(Level.INFO, "AdHoc Exam Sucessfully Requested" + " . Duration is: " + duration
 					+ ". StartDate is " + startDateTime + ". EndDate is " + endDateTime);
+			return true;
 		} catch (Exception e) {
 			logger.log(Level.SEVERE, "Error in making AdHoc Exam", e);
 			throw e;
@@ -229,8 +235,7 @@ public class Instructor implements Serializable {
 		}
 	}
 
-	public void requestCourseExam(String courseId, int duration, Timestamp startDateTime, Timestamp endDateTime) {
-		EntityManager em = DatabaseManager.createEntityManager();
+	public boolean requestCourseExam(String courseId, int duration, Timestamp startDateTime, Timestamp endDateTime) {
 		logger.entering(getClass().getName(), "requestCourseExam");
 		File f = new File("/CourseExamRequestTest.log");
 		FileHandler fh = null;
@@ -244,18 +249,15 @@ public class Instructor implements Serializable {
 			e1.printStackTrace();
 		}
 		logger.addHandler(fh);
+		if (endDateTime.before(startDateTime) || startDateTime.toLocalDateTime().isBefore(LocalDateTime.now()))
+			return false;
+		EntityManager em = DatabaseManager.createEntityManager();
 		try {
 			em.getTransaction().begin();
 			Exam exam = new Exam();
 			exam.setStatus(Status.PENDING);
 			exam.setAdHoc(false);
-			Course course = null;
-			for (Course c : this.courses) {
-				if (c.getCourseId().equals(courseId)) {
-					course = c;
-					break;
-				}
-			}
+			Course course = em.find(Course.class, courseId);
 			exam.setCourse(course);
 			course.addExam(exam);
 			exam.setExamId(course.getCourseId() + "_ex" + String.valueOf(course.getExams().size()));
@@ -266,6 +268,7 @@ public class Instructor implements Serializable {
 			em.getTransaction().commit();
 			logger.log(Level.INFO, "Regular Exam Sucessfully Requested for " + course.getCourseId() + " . Duration is: "
 					+ duration + ". StartDate is " + startDateTime + ". EndDate is " + endDateTime);
+			return true;
 		} catch (Exception e) {
 			logger.log(Level.SEVERE, "Error in making Course Exam", e);
 			throw e;

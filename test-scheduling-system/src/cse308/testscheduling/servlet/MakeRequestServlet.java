@@ -39,18 +39,24 @@ public class MakeRequestServlet extends HttpServlet {
 		HttpSession s = request.getSession();
 		Instructor instructor = ((User) (s.getAttribute("user"))).getInstructor();
 		int duration = Integer.parseInt(request.getParameter("examDuration"));
-		Timestamp startDateTime = Timestamp.valueOf(request.getParameter("startDateTime").replace("T", " ") + ":00");
-		Timestamp endDateTime = Timestamp.valueOf(request.getParameter("endDateTime").replace("T", " ") + ":00");
+		Timestamp startDateTime = Timestamp.valueOf(request.getParameter("startDateTime"));
+		Timestamp endDateTime = Timestamp.valueOf(request.getParameter("endDateTime"));
 		try {
+			boolean success = false;
 			if (request.getParameter("exam_type").equals("course")) {
 				String courseId = request.getParameter("courseId");
-				instructor.requestCourseExam(courseId, duration, startDateTime, endDateTime);
+				success = instructor.requestCourseExam(courseId, duration, startDateTime, endDateTime);
 			} else if (request.getParameter("exam_type").equals("adhoc")) {
 				String[] netIds = request.getParameter("netids").split("\n");
-				instructor.requestAdHocExam(netIds, duration, startDateTime, endDateTime);
+				success = instructor.requestAdHocExam(netIds, duration, startDateTime, endDateTime);
 			}
-			request.getSession().setAttribute("message", "Successfully scheduled exam.");
-			request.getSession().setAttribute("user", instructor.getUser());
+			if (success) {
+				request.getSession().setAttribute("message", "Successfully scheduled exam.");
+				request.getSession().setAttribute("user", instructor.getUser());
+			}
+			else {
+				request.getSession().setAttribute("message", "Cannot schedule exam.");
+			}
 		} catch (Exception e) {
 			request.getSession().setAttribute("message", e.toString());
 			// logger.log(Level.SEVERE, "Error in making Exam", e);

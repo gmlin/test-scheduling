@@ -115,6 +115,10 @@ public class Exam implements Serializable {
 		return attended;
 	}
 	
+	public List<Appointment> getAppointments() {
+		return appointments;
+	}
+	
 	public Course getCourse() {
 		return this.course;
 	}
