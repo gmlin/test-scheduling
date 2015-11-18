@@ -2,6 +2,7 @@ package cse308.testscheduling;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -86,14 +87,22 @@ public class Seat implements Serializable {
 		if (t.getMinutes() % 30 != 0) {
 			return false;
 		}
-		if (appointments.isEmpty()) {
-			return true;
-		}
-		if (examAt(t) != null) {
+		LocalDateTime apptEnd = t.toLocalDateTime().plusMinutes(e.getDuration());
+		if (t.before(e.getStartDateTime())
+				|| apptEnd.isAfter(e.getEndDateTime().toLocalDateTime())) {
 			return false;
 		}
+		if (checkAdjacent(t, e)) {
+			if (appointments.isEmpty()) {
+				return true;
+			}
+			if (examAt(t) != null) {
+				return false;
+			}
+			return true;
+		}
 		else {
-			return checkAdjacent(t, e);
+			return false;
 		}
 	}
 

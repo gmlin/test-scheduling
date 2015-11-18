@@ -45,7 +45,6 @@
 						<h4 class="text-center">Appointments</h4>
 					</div>
 					<div class="panel-body">
-						<form action="make_appointment" method="post">
 							<%
                                 if (session.getAttribute("message") != null) {
                                     out.println(session.getAttribute("message"));
@@ -79,7 +78,7 @@
 											 No
                                              </c:if></td>
 											<c:if test="${appt.cancelable }">
-												<td><a href="modify_appt?cancel=${appt.id }">Cancel</a></td>
+												<td><a href="cancel_appt?cancel=${appt.id }">Cancel</a></td>
 											</c:if>
 											<c:if test="${not appt.cancelable }">
 												<td>N/A</td>
@@ -88,7 +87,6 @@
 									</c:forEach>
 								</tbody>
 							</table>
-						</form>
 					</div>
 				</div>
 			</div>

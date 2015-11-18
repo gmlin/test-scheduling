@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.io.StringWriter;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -75,8 +76,8 @@ public class Student implements Serializable {
 		getCourses().add(course);
 	}
 
-	public boolean cancelAppointment(String apptId) {
-		EntityManager em = DatabaseManager.createEntityManager();
+	public boolean cancelAppointment(EntityManager em, int apptId) {
+		//EntityManager em = DatabaseManager.createEntityManager();
 		em.getTransaction().begin();
 		try {
 			Appointment appt = em.find(Appointment.class, apptId);
@@ -87,20 +88,20 @@ public class Student implements Serializable {
 				appt.getSeat().getAppointments().remove(appt);
 				this.getAppointments().remove(appt);
 				em.remove(appt);
+				em.getTransaction().commit();
 			}
 			else
 				return false;
-			em.getTransaction().commit();
 		}
 		catch(Exception e) {
 			throw e;
 		}
 		finally {
-			em.close();
+			//em.close();
 		}
 		return true;
 	}
-	
+
 	public List<Exam> getAdHocExams() {
 		return adHocExams;
 	}
@@ -108,42 +109,32 @@ public class Student implements Serializable {
 	public List<Appointment> getAppointments() {
 		return this.appointments;
 	}
-	
-	@SuppressWarnings("unchecked")
+
 	public List<Appointment> getSortedAppointments() {
-		EntityManager em = DatabaseManager.createEntityManager();
-		Query query = em.createQuery("SELECT appt FROM Appointment appt "
-				+ "WHERE appt.student = :student "
-				+ "ORDER BY appt.id DESC", Appointment.class);
-		query.setParameter("student", this);
-		List<Appointment> sortedAppointments = null;
-		try {
-			sortedAppointments = query.getResultList();
-		} catch (Exception e) {
-		} finally {
-			em.close();
-		}
-		return sortedAppointments;
+		Collections.sort(appointments);
+		System.out.println(appointments.size());
+		return appointments;
 	}
 
-	@SuppressWarnings("unchecked")
 	public List<Exam> getAvailableExams() {
-		EntityManager em = DatabaseManager.createEntityManager();
-		Query query = em.createQuery("SELECT exam FROM Exam exam "
-				+ "WHERE exam.status = :status "
-				+ "AND (exam.course IN :courses "
-				+ "OR :student MEMBER OF exam.students)"
-				, Exam.class);
-		query.setParameter("status", Status.APPROVED);
-		query.setParameter("courses", this.getCourses());
-		query.setParameter("student", this);
-		List<Exam> availableExams = null;
-		try {
-			availableExams = query.getResultList();
-		} catch (Exception e) {
-		} finally {
-			em.close();
+		List<Exam> availableExams = new ArrayList<Exam>();
+		List<Exam> appointmentMade = new ArrayList<Exam>();
+		for (Appointment appt : appointments) {
+			appointmentMade.add(appt.getExam());
 		}
+		for (Course course : this.getCourses()) {
+			for (Exam exam : course.getExams()) {
+				if (exam.getStatus() == Status.APPROVED && !appointmentMade.contains(exam)) {
+					availableExams.add(exam);
+				}
+			}
+		}
+		for (Exam exam : adHocExams) {
+			if (exam.getStatus() == Status.APPROVED && !appointmentMade.contains(exam)) {
+				availableExams.add(exam);
+			}
+		}
+		Collections.sort(availableExams);
 		return availableExams;
 	}
 
@@ -160,8 +151,8 @@ public class Student implements Serializable {
 	}
 
 	@SuppressWarnings("unchecked")
-	public Appointment makeAppointment(String examId, Timestamp dateTime, boolean setAside) {
-		EntityManager em = DatabaseManager.createEntityManager();
+	public Appointment makeAppointment(EntityManager em, String examId, Timestamp dateTime, boolean setAside) {
+		//EntityManager em = DatabaseManager.createEntityManager();
 		try {
 			Query query = em.createQuery("SELECT appt FROM Appointment appt "
 					+ "WHERE appt.student = :student AND appt.exam =:exam");
@@ -202,10 +193,10 @@ public class Student implements Serializable {
 		} catch (Exception e) {
 			throw e;
 		} finally {
-			em.close();
+			//em.close();
 		}
 	}
-	
+
 	public void setAdHocExams(List<Exam> adHocExams) {
 		this.adHocExams = adHocExams;
 	}

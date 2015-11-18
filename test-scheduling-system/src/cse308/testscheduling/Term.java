@@ -5,8 +5,6 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Column;
 
-@Entity
-
 public class Term implements Serializable{
 
 	private static final long serialVersionUID = 1L;

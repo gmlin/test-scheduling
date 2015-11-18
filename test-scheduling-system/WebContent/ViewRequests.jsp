@@ -64,7 +64,7 @@
 							</thead>
 							<tbody>
 								<c:forEach var="exam"
-									items="${sessionScope.user.instructor.sortedExams}">
+									items="${sessionScope.user.instructor.allExams}">
 									<tr>
 										<td>${exam.examId}</td>
 										<td>${exam.startDateTime }</td>

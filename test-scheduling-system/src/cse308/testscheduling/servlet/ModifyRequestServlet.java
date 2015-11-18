@@ -43,7 +43,8 @@ public class ModifyRequestServlet extends HttpServlet {
 			throws ServletException, IOException {
 		Enumeration<String> examIds = request.getParameterNames();
 		HttpSession session = request.getSession();
-		Administrator admin = ((User)session.getAttribute("user")).getAdministrator();
+		String userId = (String) session.getAttribute("userid");
+		EntityManager em = DatabaseManager.createEntityManager();
 		try {
 			logger.entering(getClass().getName(), "doGet");
 			File f = new File("/AcceptRejectRequest.log");
@@ -56,20 +57,25 @@ public class ModifyRequestServlet extends HttpServlet {
 				e1.printStackTrace();
 			}
 			logger.addHandler(fh2);
+			User user = em.find(User.class, userId);
+			Administrator admin = user.getAdministrator();
 			while (examIds.hasMoreElements()) {
 				String examId = examIds.nextElement();
 				if (request.getParameter(examId).equals("approve")) {
-					admin.modifyRequest(examId, Status.APPROVED);
+					admin.modifyRequest(em, examId, Status.APPROVED);
 					logger.log(Level.INFO, examId + " has been approved by admin");
 				} else {
-					admin.modifyRequest(examId, Status.DENIED);
+					admin.modifyRequest(em, examId, Status.DENIED);
 					logger.log(Level.INFO, examId + " has been denied by admin");
 				}
 			}
+			session.setAttribute("user", user);
+			request.getSession().setAttribute("message", "Exams successfully approved/denied.");
 		} catch (Exception e) {
 			request.getSession().setAttribute("message", e.toString());
 			logger.log(Level.SEVERE, "Error in approving/denying exam request", e);
 		} finally {
+			em.close();
 			response.sendRedirect(request.getHeader("Referer"));
 			logger.exiting(getClass().getName(), "AcceptRejectRequest");
 		}

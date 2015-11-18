@@ -1,6 +1,8 @@
 package cse308.testscheduling.servlet;
 
 import java.io.IOException;
+
+import javax.persistence.EntityManager;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -30,11 +32,16 @@ public class CancelRequestServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String examId = request.getParameter("cancel");
 		HttpSession session = request.getSession();
-		Instructor instructor = ((User) session.getAttribute("user")).getInstructor();
+
+		String examId = request.getParameter("cancel");
+		String userId = (String) session.getAttribute("userid");
+		EntityManager em = DatabaseManager.createEntityManager();
 		try {
-			if (instructor.cancelRequest(examId)) {
+			User user = em.find(User.class, userId);
+			Instructor instructor = user.getInstructor();
+			if (instructor.cancelRequest(em, examId)) {
+				session.setAttribute("user", user);
 				request.getSession().setAttribute("message", "Successfully canceled exam.");
 			}
 			else {
@@ -43,6 +50,7 @@ public class CancelRequestServlet extends HttpServlet {
 		} catch (Exception e) {
 			request.getSession().setAttribute("message", e);
 		} finally {
+			em.close();
 			response.sendRedirect("ViewRequests.jsp");
 		}
 	}

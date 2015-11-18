@@ -24,7 +24,7 @@ import javax.persistence.OneToMany;
  */
 @Entity
 
-public class Exam implements Serializable {
+public class Exam implements Serializable, Comparable<Exam> {
 
 	private static final long serialVersionUID = 1L;
 
@@ -193,5 +193,10 @@ public class Exam implements Serializable {
 
 	public void setStudents(List<Student> students) {
 		this.students = students;
+	}
+
+	@Override
+	public int compareTo(Exam o) {
+		return o.getStartDateTime().compareTo(this.getStartDateTime());
 	}
 }

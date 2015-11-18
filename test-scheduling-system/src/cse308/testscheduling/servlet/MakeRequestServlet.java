@@ -3,6 +3,7 @@ package cse308.testscheduling.servlet;
 import java.io.IOException;
 import java.sql.Timestamp;
 
+import javax.persistence.EntityManager;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -36,31 +37,35 @@ public class MakeRequestServlet extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		HttpSession s = request.getSession();
-		Instructor instructor = ((User) (s.getAttribute("user"))).getInstructor();
+		HttpSession session = request.getSession();
+		String userId = (String) session.getAttribute("userid");
+		EntityManager em = DatabaseManager.createEntityManager();
 		int duration = Integer.parseInt(request.getParameter("examDuration"));
 		Timestamp startDateTime = Timestamp.valueOf(request.getParameter("startDateTime"));
 		Timestamp endDateTime = Timestamp.valueOf(request.getParameter("endDateTime"));
 		try {
+			User user = em.find(User.class, userId);
+			Instructor instructor = user.getInstructor();
 			boolean success = false;
 			if (request.getParameter("exam_type").equals("course")) {
 				String courseId = request.getParameter("courseId");
-				success = instructor.requestCourseExam(courseId, duration, startDateTime, endDateTime);
+				success = instructor.requestCourseExam(em, courseId, duration, startDateTime, endDateTime);
 			} else if (request.getParameter("exam_type").equals("adhoc")) {
 				String[] netIds = request.getParameter("netids").split("\n");
-				success = instructor.requestAdHocExam(netIds, duration, startDateTime, endDateTime);
+				success = instructor.requestAdHocExam(em, netIds, duration, startDateTime, endDateTime);
 			}
 			if (success) {
-				request.getSession().setAttribute("message", "Successfully scheduled exam.");
-				request.getSession().setAttribute("user", instructor.getUser());
+				session.setAttribute("message", "Successfully scheduled exam.");
+				session.setAttribute("user", user);
 			}
 			else {
-				request.getSession().setAttribute("message", "Cannot schedule exam.");
+				session.setAttribute("message", "Cannot schedule exam.");
 			}
 		} catch (Exception e) {
-			request.getSession().setAttribute("message", e.toString());
+			session.setAttribute("message", e.toString());
 			// logger.log(Level.SEVERE, "Error in making Exam", e);
 		} finally {
+			em.close();
 			response.sendRedirect(request.getHeader("Referer"));
 			// logger.exiting(getClass().getName(), "doPost");
 		}

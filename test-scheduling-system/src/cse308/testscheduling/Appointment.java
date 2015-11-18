@@ -19,7 +19,7 @@ import javax.persistence.ManyToOne;
  */
 @Entity
 
-public class Appointment implements Serializable {
+public class Appointment implements Serializable, Comparable<Appointment> {
 
 	private static final long serialVersionUID = 1L;
 
@@ -136,4 +136,10 @@ public class Appointment implements Serializable {
 	public void setStudent(Student student) {
 		this.student = student;
 	}
+	
+	@Override
+	public int compareTo(Appointment o) {
+		return o.getDateTime().compareTo(this.getDateTime());
+	}
+	
 }

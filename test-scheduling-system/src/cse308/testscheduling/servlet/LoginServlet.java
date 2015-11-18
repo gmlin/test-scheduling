@@ -53,6 +53,7 @@ public class LoginServlet extends HttpServlet {
 			User user = em.find(User.class, session.getAttribute("username"));
 			if (user != null && user.getPassword().equals(session.getAttribute("password"))) {
 				session.setAttribute("user", user);
+				session.setAttribute("userid", user.getNetId());
 				if (user.getAdministrator() != null) {
 					logger.log(Level.INFO, "Login sucesfully as a Administrator: " + session.getAttribute("username"));
 				}

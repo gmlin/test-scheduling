@@ -45,33 +45,37 @@ public class MakeAppointmentServlet extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		HttpSession s = request.getSession();
-
+		HttpSession session = request.getSession();
+		String userId = (String) session.getAttribute("userid");
 		String examId = request.getParameter("exam");
 		Timestamp dateTime = Timestamp.valueOf(request.getParameter("dateTime"));
 		Appointment appt = null;
+		EntityManager em = DatabaseManager.createEntityManager();
 		try {
+			User user = em.find(User.class, userId);
 			if (request.getParameter("appt_type").equals("admin")) {
-				Administrator admin = ((User)(s.getAttribute("user"))).getAdministrator();
-				String studentId = (String) request.getAttribute("student");
+				Administrator admin = user.getAdministrator();
+				String studentId = (String) request.getParameter("student");
 				boolean setAside;
-				if (request.getAttribute("setAside").equals("yes"))
+				if (request.getParameter("setAside").equals("yes"))
 					setAside = true;
 				else
 					setAside = false;
-				appt = admin.makeAppointment(studentId, examId, dateTime, setAside);
+				appt = admin.makeAppointment(em, studentId, examId, dateTime, setAside);
 			} else if (request.getParameter("appt_type").equals("student")) {
-				Student student = ((User)(s.getAttribute("user"))).getStudent();
-				appt = student.makeAppointment(examId, dateTime, false);
+				Student student = user.getStudent();
+				appt = student.makeAppointment(em, examId, dateTime, false);
 			}	
 			if (appt == null) {
-				request.getSession().setAttribute("message", "Failed to schedule appointment.");
+				session.setAttribute("message", "Cannot schedule appointment.");
 			} else {
-				request.getSession().setAttribute("message", "Successfully scheduled appointment.");
+				session.setAttribute("user", user);
+				session.setAttribute("message", "Successfully scheduled appointment.");
 			}
 		} catch (Exception e) {
-			request.getSession().setAttribute("message", e);
+			session.setAttribute("message", e);
 		} finally {
+			em.close();
 			response.sendRedirect(request.getHeader("Referer"));
 		}
 	}

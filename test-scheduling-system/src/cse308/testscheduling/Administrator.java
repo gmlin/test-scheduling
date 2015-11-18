@@ -85,8 +85,8 @@ public class Administrator implements Serializable {
 		return user;
 	}
 
-	public void modifyRequest(String examId, Status status) {
-		EntityManager em = DatabaseManager.createEntityManager();
+	public void modifyRequest(EntityManager em, String examId, Status status) {
+		//EntityManager em = DatabaseManager.createEntityManager();
 		try {
 			em.getTransaction().begin();
 			Exam exam = em.find(Exam.class, examId);
@@ -97,7 +97,7 @@ public class Administrator implements Serializable {
 			throw e;
 		}
 		finally {
-			em.close();
+			//em.close();
 		}
 	}
 	
@@ -109,17 +109,18 @@ public class Administrator implements Serializable {
 		this.user = user;
 	}
 
-	public Appointment makeAppointment(String studentId, String examId, Timestamp dateTime, boolean setAside) {
-		EntityManager em = DatabaseManager.createEntityManager();
+	public Appointment makeAppointment(EntityManager em, String studentId, String examId, Timestamp dateTime, boolean setAside) {
+		//EntityManager em = DatabaseManager.createEntityManager();
 		try {
-			Student student = em.find(Student.class, studentId);
-			return student.makeAppointment(examId, dateTime, setAside);
+			User user = em.find(User.class, studentId);
+			Student student = user.getStudent();
+			return student.makeAppointment(em, examId, dateTime, setAside);
 		}
 		catch(Exception e) {
 			throw e;
 		}
 		finally {
-			em.close();
+			//em.close();
 		}
 	}
 

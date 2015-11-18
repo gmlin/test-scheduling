@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
@@ -91,8 +92,8 @@ public class Instructor implements Serializable {
 		return true;
 	}
 
-	public boolean cancelRequest(String examId) {
-		EntityManager em = DatabaseManager.createEntityManager();
+	public boolean cancelRequest(EntityManager em, String examId) {
+		//EntityManager em = DatabaseManager.createEntityManager();
 		em.getTransaction().begin();
 		try {
 			Exam exam = em.find(Exam.class, examId);
@@ -110,7 +111,7 @@ public class Instructor implements Serializable {
 			throw e;
 		}
 		finally {
-			em.close();
+			//em.close();
 		}
 		return true;
 	}
@@ -119,49 +120,38 @@ public class Instructor implements Serializable {
 		return adHocExams;
 	}
 
+	public List<Exam> getAllExams() {
+		List<Exam> exams = new ArrayList<Exam>();
+		for (Course course : this.getCourses()) {
+			for (Exam exam : course.getExams()) {
+				exams.add(exam);
+			}
+		}
+		for (Exam exam : this.getAdHocExams()) {
+			exams.add(exam);
+		}
+		Collections.sort(exams);
+		return exams;
+	}
+	
 	public List<Course> getCourses() {
 		return courses;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public List<Exam> getCurrentRequests() {
-		EntityManager em = DatabaseManager.createEntityManager();
-		Query query = em.createQuery("SELECT exam FROM Exam exam "
-				+ "WHERE (exam.instructor = :instructor "
-				+ "OR exam.course IN :courses) "
-				+ "AND (exam.status = :approved "
-				+ "OR exam.status = :denied)", Exam.class);
-		query.setParameter("approved", Status.APPROVED);
-		query.setParameter("denied", Status.DENIED);
-		query.setParameter("instructor", this);
-		query.setParameter("courses", this.courses);
-		List<Exam> examRequests = null;
-		try {
-			examRequests = query.getResultList();
-		} catch (Exception e) {
-		} finally {
-			em.close();
+		List<Exam> examRequests = new ArrayList<Exam>();
+		for (Course course : this.getCourses()) {
+			for (Exam exam : course.getExams()) {
+				if (exam.getStatus() == Status.APPROVED || exam.getStatus() == Status.DENIED) {
+					examRequests.add(exam);
+				}
+			}
 		}
+		for (Exam exam : this.getAdHocExams()) {
+			examRequests.add(exam);
+		}
+		Collections.sort(examRequests);
 		return examRequests;
-	}
-	
-	@SuppressWarnings("unchecked")
-	public List<Exam> getSortedExams() {
-		EntityManager em = DatabaseManager.createEntityManager();
-		Query query = em.createQuery("SELECT exam FROM Exam exam "
-				+ "WHERE exam.instructor = :instructor "
-				+ "OR exam.course IN :courses "
-				+ "ORDER BY exam.examId DESC", Exam.class);
-		query.setParameter("instructor", this);
-		query.setParameter("courses", this.courses);
-		List<Exam> sortedExams = null;
-		try {
-			sortedExams = query.getResultList();
-		} catch (Exception e) {
-		} finally {
-			em.close();
-		}
-		return sortedExams;
 	}
 	
 	public User getUser() {
@@ -184,7 +174,7 @@ public class Instructor implements Serializable {
 		return result;
 	}
 
-	public boolean requestAdHocExam(String[] netIds, int duration, Timestamp startDateTime, Timestamp endDateTime) {
+	public boolean requestAdHocExam(EntityManager em, String[] netIds, int duration, Timestamp startDateTime, Timestamp endDateTime) {
 		logger.entering(getClass().getName(), "requestAdHocExam");
 		File f = new File("/AdHocExamRequestTest.log");
 		FileHandler fh = null;
@@ -198,20 +188,22 @@ public class Instructor implements Serializable {
 			e1.printStackTrace();
 		}
 		logger.addHandler(fh);
-		if (endDateTime.before(startDateTime) || startDateTime.toLocalDateTime().isBefore(LocalDateTime.now()))
+		if (endDateTime.before(startDateTime) 
+				|| startDateTime.toLocalDateTime().isBefore(LocalDateTime.now())
+				|| startDateTime.toLocalDateTime().plusMinutes(duration).isAfter(endDateTime.toLocalDateTime()))
 			return false;
-		EntityManager em = DatabaseManager.createEntityManager();
+		//EntityManager em = DatabaseManager.createEntityManager();
+		em.getTransaction().begin();
 		try {
-			em.getTransaction().begin();
 			Exam exam = new Exam();
 			exam.setStatus(Status.PENDING);
 			exam.setAdHoc(true);
-			Query query = em.createQuery("SELECT e FROM Exam e WHERE e.adHoc = true", Exam.class);
-			exam.setExamId("adhoc_ex" + (query.getResultList().size() + 1));
+			exam.setExamId("adhoc_" + this.getUser().getNetId() + "_ex" + (this.getAdHocExams().size() + 1));
 			exam.setDuration(duration);
 			exam.setStartDateTime(startDateTime);
 			exam.setEndDateTime(endDateTime);
 			User u;
+			Query query;
 			for (String netId : netIds) {
 				query = em.createQuery("SELECT u FROM User u WHERE u.netId = :username", User.class);
 				query.setParameter("username", netId.trim());
@@ -230,12 +222,12 @@ public class Instructor implements Serializable {
 			logger.log(Level.SEVERE, "Error in making AdHoc Exam", e);
 			throw e;
 		} finally {
-			em.close();
+			//em.close();
 			logger.exiting(getClass().getName(), "requestAdHocExam");
 		}
 	}
 
-	public boolean requestCourseExam(String courseId, int duration, Timestamp startDateTime, Timestamp endDateTime) {
+	public boolean requestCourseExam(EntityManager em, String courseId, int duration, Timestamp startDateTime, Timestamp endDateTime) {
 		logger.entering(getClass().getName(), "requestCourseExam");
 		File f = new File("/CourseExamRequestTest.log");
 		FileHandler fh = null;
@@ -249,9 +241,11 @@ public class Instructor implements Serializable {
 			e1.printStackTrace();
 		}
 		logger.addHandler(fh);
-		if (endDateTime.before(startDateTime) || startDateTime.toLocalDateTime().isBefore(LocalDateTime.now()))
+		if (endDateTime.before(startDateTime) 
+				|| startDateTime.toLocalDateTime().isBefore(LocalDateTime.now())
+				|| startDateTime.toLocalDateTime().plusMinutes(duration).isAfter(endDateTime.toLocalDateTime()))
 			return false;
-		EntityManager em = DatabaseManager.createEntityManager();
+		//EntityManager em = DatabaseManager.createEntityManager();
 		try {
 			em.getTransaction().begin();
 			Exam exam = new Exam();
@@ -274,7 +268,7 @@ public class Instructor implements Serializable {
 			throw e;
 
 		} finally {
-			em.close();
+			//em.close();
 			logger.exiting(getClass().getName(), "requestCourseExam");
 		}
 	}
