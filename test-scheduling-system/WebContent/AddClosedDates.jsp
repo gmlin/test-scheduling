@@ -14,7 +14,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Edit Testing Center Information</title>
+<title>Add Closed Dates and Reserved Periods</title>
 <link rel="stylesheet" href="css/bootstrap.min.css">
 <link href="css/styles.css" rel="stylesheet">
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
@@ -52,7 +52,7 @@
 			<div class="col-sm-7">
 				<div class="panel panel-default">
 					<div class="panel-heading">
-						<h4 class="text-center">Edit Testing Center Information</h4>
+						<h4 class="text-center">Add Closed Dates and Reserved Periods</h4>
 					</div>
 					<div class="panel-body">
 						<form action="edit_testing_center_info" method="post">
@@ -62,34 +62,31 @@
 									session.removeAttribute("message");
 								}
 							%>
+							<!-- TODO:We should be able to add multiple ranges -->
 							<div class="form-group">
-								<label for="numSeats">Number of Seats</label> <input
-									type="number" class="form-control" value=${user.administrator.testingCenter.numSeats} id="numSeats"
-									name="numSeats">
+								<label for="closedDateRanges">Closing Dates</label> <input
+									type="text" name="closedDateRanges" id="closedDateRanges">
+								<script type="text/javascript">
+								$(function() {
+    								$('input[name="closedDateRanges"]').daterangepicker();
+								});
+								</script>
 							</div>
+							<!-- TODO:We should be able to add multiple periods -->
 							<div class="form-group">
-								<label for="numSetAside">Number of Set-Aside Seats</label> <input
-									type="number" class="form-control" value=${sessionScope.user.administrator.testingCenter.numSetAsideSeats} id="numSetAside"
-									name="numSetAside">
-							</div>
-							<div class="form-group">
-								<label>Testing Center Hours</label><br> <label
-									for="openTime">Open Time</label> <input type="time" value=${sessionScope.user.administrator.testingCenter.openTimeString}
-									id="openTime" name="openTime">
-							</div>
-							<div class="form-group">
-								<label for="closeTime">Close Time</label><input type="time" value=${sessionScope.user.administrator.testingCenter.closeTimeString}
-									id="closeTime" name="closeTime">
-							</div>	
-							<div class="form-group">
-								<label for="gapTime">Appointment Gap Time</label> <input
-									type="number" class="form-control" id="gapTime" max=30 min=0 value=${sessionScope.user.administrator.testingCenter.gapTime}
-									name="gapTime"> 
-							</div>
-							<div class="form-group">
-								<label for="reminderInterval">Reminder Interval</label> <input
-									type="number" class="form-control" id="reminderInterval" value=${sessionScope.user.administrator.testingCenter.reminderInterval}
-									name="reminderInterval">
+								<label for="reservedPeriods">Reserved Periods</label> <input
+									type="text" name="reservedPeriods" id="reservedPeriods">
+								<script type="text/javascript">
+								$(function() {
+								    $('input[name="reservedPeriods"]').daterangepicker({
+								        timePicker: true,
+								        timePickerIncrement: 30,
+								        locale: {
+								            format: 'MM/DD/YYYY h:mm A'
+								        }
+								    });
+								});
+								</script>
 							</div>
 							<button type="submit" class="btn btn-default">Submit</button>
 						</form>

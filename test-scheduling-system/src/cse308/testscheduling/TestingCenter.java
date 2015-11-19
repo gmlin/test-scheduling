@@ -3,6 +3,7 @@ package cse308.testscheduling;
 import java.io.Serializable;
 import java.sql.Date;
 import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -35,10 +36,10 @@ public class TestingCenter implements Serializable {
 	private int numSetAsideSeats;
 
 	@Column(name = "OPEN_TIME")
-	private Time openTime;
+	private Timestamp openTime;
 
 	@Column(name = "CLOSE_TIME")
-	private Time closeTime;
+	private Timestamp closeTime;
 
 	@Column(name = "CLOSED_DATE_RANGES")
 	private List<Date[]> closedDateRanges;
@@ -66,8 +67,15 @@ public class TestingCenter implements Serializable {
 		return closedDateRanges;
 	}
 
-	public Time getCloseTime() {
+	public Timestamp getCloseTime() {
 		return closeTime;
+	}
+	
+	public Time getCloseTimeString(){
+		return new Time(closeTime.getHours(), closeTime.getMinutes(), closeTime.getSeconds());
+	}
+	public Time getOpenTimeString(){
+		return new Time(openTime.getHours(), openTime.getMinutes(), openTime.getSeconds());
 	}
 
 	public int getGapTime() {
@@ -86,7 +94,7 @@ public class TestingCenter implements Serializable {
 		return numSetAsideSeats;
 	}
 
-	public Time getOpenTime() {
+	public Timestamp getOpenTime() {
 		return openTime;
 	}
 
@@ -102,7 +110,7 @@ public class TestingCenter implements Serializable {
 		this.closedDateRanges = closedDateRanges;
 	}
 
-	public void setCloseTime(Time closeTime) {
+	public void setCloseTime(Timestamp closeTime) {
 		this.closeTime = closeTime;
 	}
 
@@ -122,7 +130,7 @@ public class TestingCenter implements Serializable {
 		this.numSetAsideSeats = numSetAsideSeats;
 	}
 
-	public void setOpenTime(Time openTime) {
+	public void setOpenTime(Timestamp openTime) {
 		this.openTime = openTime;
 	}
 

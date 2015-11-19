@@ -1,12 +1,19 @@
 package cse308.testscheduling.servlet;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 
+import javax.persistence.EntityManager;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import cse308.testscheduling.Administrator;
+import cse308.testscheduling.TestingCenter;
+import cse308.testscheduling.User;
 
 /**
  * Servlet implementation class EditTestingCenterServlet
@@ -38,11 +45,42 @@ public class EditTestingCenterServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
+		
+		HttpSession session = request.getSession();
+		EntityManager em = DatabaseManager.createEntityManager();
+		String userId = (String) session.getAttribute("userid");
+		try{
+			User user = em.find(User.class, userId);
+			Administrator admin = user.getAdministrator();
+			TestingCenter tc = admin.getTestingCenter();
+			tc.setNumSeats(Integer.parseInt(request.getParameter("numSeats")));
+			tc.setNumSetAsideSeats(Integer.parseInt(request.getParameter("numSetAside")));
+			String timestring = request.getParameter("openTime");
+			String[] ts = timestring.split(":");
+			String timestring2 = request.getParameter("closeTime");
+			String[] ts2 = timestring2.split(":");
+			tc.setOpenTime(new Timestamp(0, 0, 0, Integer.parseInt(ts[0]), Integer.parseInt(ts[1]), 0, 0));
+			tc.setCloseTime(new Timestamp(0, 0, 0, Integer.parseInt(ts2[0]), Integer.parseInt(ts2[1]), 0, 0));
+			
+			tc.setGapTime(Integer.parseInt(request.getParameter("gapTime")));
+			tc.setReminderInterval(Integer.parseInt(request.getParameter("reminderInterval")));
+			
+			
+			admin.modifyTestingCenter(em, tc);
+			session.setAttribute("user", user);
+			session.setAttribute("message", "Testing Center has been updated");
+		} catch (Exception e) {
+			session.setAttribute("message", e);
+		} finally {
+			em.close();
+			response.sendRedirect(request.getHeader("Referer"));
+		}
+		
+		
 	}
 
 }

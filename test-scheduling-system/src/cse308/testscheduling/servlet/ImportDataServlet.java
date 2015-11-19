@@ -46,6 +46,7 @@ public class ImportDataServlet extends HttpServlet{
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException{
 		HttpSession s = request.getSession();
+		int currentid = 100000000;
 		
 		Part filePart = request.getPart("file1");
 		InputStream fileContent = filePart.getInputStream();
@@ -79,7 +80,6 @@ public class ImportDataServlet extends HttpServlet{
 		Query queryz = em.createQuery("SELECT student FROM Student student");
 		List<Student> currentStudentList = null;
 		currentStudentList = queryz.getResultList();
-		int currentid = 100000000;
 		try{
 			for(Student student : currentStudentList){
 				if(student.getStudentId() >= currentid){
@@ -164,6 +164,13 @@ public class ImportDataServlet extends HttpServlet{
 			
 			em.persist(newCourse);
 		}
+		
+		//add roster
+		while ((line3 = reader3.readLine()) != null) {
+			parts = line3.split(",");
+			String a = parts[0];
+			String b = parts[1]; 
+		 
 		**/
 		
 		
