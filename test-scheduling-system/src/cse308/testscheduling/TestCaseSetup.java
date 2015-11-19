@@ -94,8 +94,8 @@ public class TestCaseSetup {
 		User u5 = new User();
 		u5.setNetId("all");
 		u5.setPassword("123");
-		u5.setFirstName("All");
-		u5.setLastName("All");
+		u5.setFirstName("Test");
+		u5.setLastName("User");
 		u5.setEmail("test@test.com");
 		Student student3 = new Student();
 		student3.setStudentId(100000002);

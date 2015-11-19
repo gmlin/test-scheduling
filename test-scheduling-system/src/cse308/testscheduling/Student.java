@@ -76,14 +76,14 @@ public class Student implements Serializable {
 		getCourses().add(course);
 	}
 
-	public boolean cancelAppointment(EntityManager em, int apptId) {
+	public boolean cancelAppointment(EntityManager em, int apptId, boolean admin) {
 		//EntityManager em = DatabaseManager.createEntityManager();
 		em.getTransaction().begin();
 		try {
 			Appointment appt = em.find(Appointment.class, apptId);
 			if (appt == null || !appt.getStudent().equals(this))
 				return false;
-			if (appt.isCancelable()) {
+			if (admin || appt.isCancelable()) {
 				appt.getExam().getAppointments().remove(appt);
 				appt.getSeat().getAppointments().remove(appt);
 				this.getAppointments().remove(appt);
