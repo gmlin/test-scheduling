@@ -80,33 +80,7 @@
 							<div class="form-group">
 								<label for="closeTime">Close Time</label><input type="time" value=${sessionScope.user.administrator.testingCenter.closeTimeString}
 									id="closeTime" name="closeTime">
-							</div>
-							<!-- TODO:We should be able to add multiple ranges -->
-							<div class="form-group">
-								<label for="closedDateRanges">Closing Dates</label> <input
-									type="text" name="closedDateRanges" id="closedDateRanges">
-								<script type="text/javascript">
-								$(function() {
-    								$('input[name="closedDateRanges"]').daterangepicker();
-								});
-								</script>
-							</div>
-							<!-- TODO:We should be able to add multiple periods -->
-							<div class="form-group">
-								<label for="reservedPeriods">Reserved Periods</label> <input
-									type="text" name="reservedPeriods" id="reservedPeriods">
-								<script type="text/javascript">
-								$(function() {
-								    $('input[name="reservedPeriods"]').daterangepicker({
-								        timePicker: true,
-								        timePickerIncrement: 30,
-								        locale: {
-								            format: 'MM/DD/YYYY h:mm A'
-								        }
-								    });
-								});
-								</script>
-							</div>
+							</div>	
 							<div class="form-group">
 								<label for="gapTime">Appointment Gap Time</label> <input
 									type="number" class="form-control" id="gapTime" max=30 min=0 value=${sessionScope.user.administrator.testingCenter.gapTime}

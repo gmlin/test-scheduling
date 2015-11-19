@@ -53,9 +53,13 @@
 								}
 							%>
 							<label>User</label><input type="file" name="file1" size="100" required/>
+							<br>
 							<label>Class</label><input type="file" name="file2" size="100" required/>
+							<br>
 							<label>Roster</label><input type="file" name="file3" size="100" required/>
+							<br>
 							<label>Instructor</label><input type="file" name="file4" size="100" required/>
+							<br>
 							<button type="submit" class="btn btn-default">Submit</button>
 						</form>
 					</div>
