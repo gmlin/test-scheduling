@@ -68,10 +68,11 @@ public class EditTestingCenterServlet extends HttpServlet {
 			
 			tc.setGapTime(Integer.parseInt(request.getParameter("gapTime")));
 			tc.setReminderInterval(Integer.parseInt(request.getParameter("reminderInterval")));
-			session.setAttribute("message", request.getParameter("openTime"));
+			
 			
 			admin.modifyTestingCenter(em, tc);
-			//session.setAttribute("message", "Testing Center has been updated");
+			session.setAttribute("user", user);
+			session.setAttribute("message", "Testing Center has been updated");
 		} catch (Exception e) {
 			session.setAttribute("message", e);
 		} finally {
