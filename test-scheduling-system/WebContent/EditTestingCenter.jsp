@@ -56,22 +56,30 @@
 					</div>
 					<div class="panel-body">
 						<form action="edit_testing_center_info" method="post">
+						<%
+								if (session.getAttribute("message") != null) {
+									out.println(session.getAttribute("message"));
+									session.removeAttribute("message");
+								}
+							%>
 							<div class="form-group">
 								<label for="numSeats">Number of Seats</label> <input
-									type="number" class="form-control" id="numSeats">
+									type="number" class="form-control" value=${user.administrator.testingCenter.numSeats} id="numSeats"
+									name="numSeats">
 							</div>
 							<div class="form-group">
 								<label for="numSetAside">Number of Set-Aside Seats</label> <input
-									type="number" class="form-control" id="numSetAside">
+									type="number" class="form-control" value=${sessionScope.user.administrator.testingCenter.numSetAsideSeats} id="numSetAside"
+									name="numSetAside">
 							</div>
 							<div class="form-group">
 								<label>Testing Center Hours</label><br> <label
-									for="openTime">Open Time</label> <input type="time"
-									id="openTime">
+									for="openTime">Open Time</label> <input type="time" value=${sessionScope.user.administrator.testingCenter.openTimeString}
+									id="openTime" name="openTime">
 							</div>
 							<div class="form-group">
-								<label for="closeTime">Close Time</label><input type="time"
-									id="closeTime">
+								<label for="closeTime">Close Time</label><input type="time" value=${sessionScope.user.administrator.testingCenter.closeTimeString}
+									id="closeTime" name="closeTime">
 							</div>
 							<!-- TODO:We should be able to add multiple ranges -->
 							<div class="form-group">
@@ -101,13 +109,14 @@
 							</div>
 							<div class="form-group">
 								<label for="gapTime">Appointment Gap Time</label> <input
-									type="number" class="form-control" id="gapTime" max=30 min=0>
+									type="number" class="form-control" id="gapTime" max=30 min=0 value=${sessionScope.user.administrator.testingCenter.gapTime}
+									name="gapTime"> 
 							</div>
 							<div class="form-group">
 								<label for="reminderInterval">Reminder Interval</label> <input
-									type="number" class="form-control" id="reminderInterval">
+									type="number" class="form-control" id="reminderInterval" value=${sessionScope.user.administrator.testingCenter.reminderInterval}
+									name="reminderInterval">
 							</div>
-
 							<button type="submit" class="btn btn-default">Submit</button>
 						</form>
 					</div>

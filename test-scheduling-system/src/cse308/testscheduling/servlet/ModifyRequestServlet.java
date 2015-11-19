@@ -46,7 +46,7 @@ public class ModifyRequestServlet extends HttpServlet {
 		String userId = (String) session.getAttribute("userid");
 		EntityManager em = DatabaseManager.createEntityManager();
 		try {
-			logger.entering(getClass().getName(), "doGet");
+			logger.entering(getClass().getName(), "doPost");
 			File f = new File("/AcceptRejectRequest.log");
 			FileHandler fh2 = null;
 			try {

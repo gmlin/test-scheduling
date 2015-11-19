@@ -1,6 +1,7 @@
 package cse308.testscheduling;
 
 import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,8 +53,8 @@ public class TestCaseSetup {
 		TestingCenter t = new TestingCenter();
 		t.setNumSeats(64);
 		t.setNumSetAsideSeats(4);
-		t.setOpenTime(new Time(8, 0, 0));
-		t.setCloseTime(new Time(20, 0, 0));
+		t.setOpenTime(new Timestamp(0, 0, 0, 8, 0, 0, 0));
+		t.setCloseTime(new Timestamp(0, 0, 0, 20, 0, 0, 0));
 		t.setGapTime(10);
 		t.setReminderInterval(30);
 		admin.setTestingCenter(t);

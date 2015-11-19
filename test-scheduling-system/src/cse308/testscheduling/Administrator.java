@@ -104,6 +104,24 @@ public class Administrator implements Serializable {
 	public void setTestingCenter(TestingCenter testingCenter) {
 		this.testingCenter = testingCenter;
 	}
+	
+	public void modifyTestingCenter(EntityManager em, TestingCenter testingCenter){
+		try{
+			em.getTransaction().begin();
+			TestingCenter tc = em.find(TestingCenter.class, testingCenter.getId());
+			//tc.setNumSeats(testingCenter.getNumSeats());
+			tc = testingCenter;
+			em.persist(tc);
+			em.getTransaction().commit();
+		}
+		catch(Exception e){
+			throw e;
+		}
+		finally{
+			
+		}
+		
+	}
 
 	public void setUser(User user) {
 		this.user = user;
