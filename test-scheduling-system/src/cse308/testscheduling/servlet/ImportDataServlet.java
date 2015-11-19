@@ -101,7 +101,7 @@ public class ImportDataServlet extends HttpServlet{
 		em.getTransaction().commit();
 		em.getTransaction().begin();
 		
-		//add users
+		//add users (FirstName,LastName,NetID,Email)
 		while ((line = reader.readLine()) != null) {
 			parts = line.split(",");
 			String a = parts[0];
@@ -125,7 +125,7 @@ public class ImportDataServlet extends HttpServlet{
         }
 		
 		
-		//add instructors
+		//add instructors (Last Name,First Name,User Id,Email)
 		while ((line4 = reader4.readLine()) != null) {
 			parts = line4.split(",");
 			String a = parts[0];
@@ -147,31 +147,76 @@ public class ImportDataServlet extends HttpServlet{
 		}
 		
 		
-		/**
-		//add classes ... have to add class ID to table
+		
+		//add classes (ClassID,Subject,CatalogNumber,Section,InstructorNetID)
+		Query queryy = em.createQuery("SELECT instructor FROM Instructor instructor");
+		List<Instructor> currentInstructorList = null;
+		currentInstructorList = queryy.getResultList();
 		while ((line2 = reader2.readLine()) != null) {
 			parts = line2.split(",");
 			String a = parts[0];
 			String b = parts[1];
 			String c = parts[2];
 			String d = parts[3];
-			String e = parts[4];
+			String f = parts[4];
 			
 			Course newCourse = new Course();
 			newCourse.setCourseId(a);
+			newCourse.setSubject(b);
+			newCourse.setCatalogNumber(c);
+			newCourse.setSection(d);
+			
+			
+			try{
+				for(Instructor instructor : currentInstructorList){
+					if(instructor.getUser().getNetId().equals(f)){
+						instructor.addCourse(newCourse);
+						newCourse.addInstructor(instructor);
+						em.persist(instructor);
+					}
+				}
+			} catch(Exception e){
+				
+			}
 			
 			
 			
 			em.persist(newCourse);
 		}
 		
-		//add roster
+		
+		//add roster(NetId, ClassID)
+		Query queryx = em.createQuery("SELECT student FROM Student student");
+		List<Student> updatedStudentList = null;
+		updatedStudentList = queryx.getResultList();
+		Query query = em.createQuery("SELECT course FROM Course course");
+		List<Course> courseList = null;
 		while ((line3 = reader3.readLine()) != null) {
 			parts = line3.split(",");
 			String a = parts[0];
 			String b = parts[1]; 
+			
+			try{
+				for(Student student : updatedStudentList){
+					if(student.getUser().getNetId().equals(a)){
+						for(Course course : courseList){
+							if(course.getCourseId().equals(b)){
+								course.addStudent(student);
+								student.addCourse(course);
+								em.persist(course);
+								em.persist(student);
+							}
+						}
+						
+					}
+				}
+				
+			} catch (Exception e){
+				
+			}
+			
 		 
-		**/
+		}
 		
 		
 		
