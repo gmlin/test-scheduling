@@ -72,8 +72,7 @@ public class ImportDataServlet extends HttpServlet{
 		
 		
 		
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory("test-scheduling-system");
-		EntityManager em = emf.createEntityManager();
+		EntityManager em = DatabaseManager.createEntityManager();
 		List<Query> addStudents = new ArrayList<Query>();
 		em.getTransaction().begin();
 		
@@ -171,7 +170,6 @@ public class ImportDataServlet extends HttpServlet{
 		
 		em.getTransaction().commit();
 		em.close();
-		emf.close();
 		
 	
 		

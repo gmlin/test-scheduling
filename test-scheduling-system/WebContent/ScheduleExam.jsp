@@ -59,7 +59,7 @@
 									class="form-control" name="courseId" id="courseId" required>
 									<c:forEach items="${sessionScope.user.instructor.courses}"
 										var="course">
-										<option>${course.courseId}</option>
+										<option value="${course.courseId}">${course}</option>
 									</c:forEach>
 								</select>
 							</div>

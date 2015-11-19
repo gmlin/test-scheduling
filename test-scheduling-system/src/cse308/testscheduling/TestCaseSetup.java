@@ -109,7 +109,10 @@ public class TestCaseSetup {
 		admin2.setTestingCenter(t);
 
 		Course c1 = new Course();
-		c1.setCourseId("CSE308-01_1158");
+		c1.setCourseId("11111-1158");
+		c1.setSubject("CSE");
+		c1.setCatalogNumber("308");
+		c1.setSection("01");
 		student1.addCourse(c1);
 		student2.addCourse(c1);
 		student3.addCourse(c1);
@@ -122,7 +125,10 @@ public class TestCaseSetup {
 		c1.addStudent(student3);
 
 		Course c2 = new Course();
-		c2.setCourseId("CSE310-01_1158");
+		c2.setCourseId("22222-1158");
+		c2.setSubject("CSE");
+		c2.setCatalogNumber("310");
+		c2.setSection("02");
 		student1.addCourse(c2);
 		student2.addCourse(c2);
 		student3.addCourse(c2);

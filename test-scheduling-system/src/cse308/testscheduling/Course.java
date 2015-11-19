@@ -27,6 +27,15 @@ public class Course implements Serializable {
 	@Id
 	@Column(name = "COURSE_ID")
 	private String courseId;
+	
+	@Column
+	private String subject;
+	
+	@Column
+	private String catalogNumber;
+	
+	@Column
+	private String section;
 
 	// a course has multiple students, student can have multiple courses
 	// generate new table contains the course id column and student net id
@@ -101,9 +110,33 @@ public class Course implements Serializable {
 	public void setStudents(List<Student> students) {
 		this.students = students;
 	}
+
+	public String getSubject() {
+		return subject;
+	}
+
+	public void setSubject(String subject) {
+		this.subject = subject;
+	}
+
 	
-	@Override
 	public String toString() {
-		return courseId;
+		return subject + getCatalogNumber() + "-" + getSection();
+	}
+
+	public String getCatalogNumber() {
+		return catalogNumber;
+	}
+
+	public void setCatalogNumber(String catalogNumber) {
+		this.catalogNumber = catalogNumber;
+	}
+
+	public String getSection() {
+		return section;
+	}
+
+	public void setSection(String section) {
+		this.section = section;
 	}
 }

@@ -61,7 +61,7 @@
 									name="student" id="student">
 							</div>
 							<div class="form-group">
-								<label for="courseId">Exam</label> <select class="form-control"
+								<label for="exam">Exam</label> <select class="form-control"
 									name="exam" id="exam" required>
 									<c:forEach
 										items="${sessionScope.user.administrator.approvedExams}"

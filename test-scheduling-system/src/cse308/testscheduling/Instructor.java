@@ -254,7 +254,7 @@ public class Instructor implements Serializable {
 			Course course = em.find(Course.class, courseId);
 			exam.setCourse(course);
 			course.addExam(exam);
-			exam.setExamId(course.getCourseId() + "_ex" + String.valueOf(course.getExams().size()));
+			exam.setExamId(course + "_ex" + String.valueOf(course.getExams().size()));
 			exam.setDuration(duration);
 			exam.setStartDateTime(startDateTime);
 			exam.setEndDateTime(endDateTime);
