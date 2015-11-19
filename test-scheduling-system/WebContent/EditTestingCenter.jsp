@@ -15,6 +15,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Edit Testing Center Information</title>
+<link rel="stylesheet" type="text/css"
+    href="//cdn.jsdelivr.net/bootstrap/latest/css/bootstrap.css" />
 <link rel="stylesheet" href="css/bootstrap.min.css">
 <link href="css/styles.css" rel="stylesheet">
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
@@ -24,8 +26,6 @@
 	src="//cdn.jsdelivr.net/jquery/1/jquery.min.js"></script>
 <script type="text/javascript"
 	src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-<link rel="stylesheet" type="text/css"
-	href="//cdn.jsdelivr.net/bootstrap/latest/css/bootstrap.css" />
 
 <!-- Include Date Range Picker -->
 <script type="text/javascript"

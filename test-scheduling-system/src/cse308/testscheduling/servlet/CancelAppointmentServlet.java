@@ -40,7 +40,7 @@ public class CancelAppointmentServlet extends HttpServlet {
 		try {
 			User user = em.find(User.class, userId);
 			Student student = user.getStudent();
-			if (student.cancelAppointment(em, apptId)) {
+			if (student.cancelAppointment(em, apptId, false)) {
 				session.setAttribute("user", user);
 				request.getSession().setAttribute("message", "Successfully canceled appointment.");
 			}

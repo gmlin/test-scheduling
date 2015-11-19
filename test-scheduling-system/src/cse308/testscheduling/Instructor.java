@@ -100,8 +100,7 @@ public class Instructor implements Serializable {
 			if (exam == null || !this.hasPermission(exam))
 				return false;
 			if (exam.getStatus() == Status.PENDING || exam.getStatus() == Status.DENIED) {
-				exam.getCourse().getExams().remove(exam);
-				em.remove(exam);
+				exam.setStatus(Status.CANCELED);
 			}
 			else
 				return false;
@@ -148,7 +147,9 @@ public class Instructor implements Serializable {
 			}
 		}
 		for (Exam exam : this.getAdHocExams()) {
-			examRequests.add(exam);
+			if (exam.getStatus() == Status.APPROVED || exam.getStatus() == Status.DENIED) {
+				examRequests.add(exam);
+			}
 		}
 		Collections.sort(examRequests);
 		return examRequests;
@@ -205,9 +206,8 @@ public class Instructor implements Serializable {
 			User u;
 			Query query;
 			for (String netId : netIds) {
-				query = em.createQuery("SELECT u FROM User u WHERE u.netId = :username", User.class);
-				query.setParameter("username", netId.trim());
-				u = (User) (query.getSingleResult());
+				System.out.println(netId);
+				u = em.find(User.class, netId.trim());
 				u.getStudent().addAdHocExam(exam);
 				exam.addStudent(u.getStudent());
 			}

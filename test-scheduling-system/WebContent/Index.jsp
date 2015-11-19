@@ -59,8 +59,7 @@
 								<p>
 									<c:out value="${exam.examId}" />
 									has been
-									<c:out value="${exam.status}" />
-									.
+									<c:out value="${exam.status}" />.
 								</p>
 							</c:forEach>
 						</c:if>

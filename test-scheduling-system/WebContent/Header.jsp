@@ -10,10 +10,8 @@
 		</div>
 		<div class="navbar-collapse collapse">
 			<ul class="nav navbar-nav navbar-right">
-				<li class="dropdown"><a class="dropdown-toggle" role="button"
-					data-toggle="dropdown" href="#"><i
-						class="glyphicon glyphicon-user"></i> ${sessionScope.user.netId}</a>
-					</li>
+				<li><a href="#"><i class="glyphicon glyphicon-user"></i>
+						${sessionScope.user.netId}</a></li>
 				<li><a href="Index.jsp">Home</a></li>
 				<li><a href="logout"><i class="glyphicon glyphicon-lock"></i>
 						Logout</a></li>

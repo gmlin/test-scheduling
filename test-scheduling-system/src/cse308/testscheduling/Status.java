@@ -1,5 +1,5 @@
 package cse308.testscheduling;
 
 public enum Status {
-	PENDING, APPROVED, DENIED, COMPLETED;
+	PENDING, APPROVED, DENIED, CANCELED, ONGOING, COMPLETED;
 }

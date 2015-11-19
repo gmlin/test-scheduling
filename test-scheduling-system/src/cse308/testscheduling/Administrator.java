@@ -50,7 +50,8 @@ public class Administrator implements Serializable {
 	@SuppressWarnings("unchecked")
 	public List<Exam> getApprovedExams() {
 		EntityManager em = DatabaseManager.createEntityManager();
-		Query query = em.createQuery("SELECT exam FROM Exam exam WHERE exam.status = :status", Exam.class);
+		Query query = em.createQuery("SELECT exam FROM Exam exam "
+				+ "WHERE exam.status = :status", Exam.class);
 		query.setParameter("status", Status.APPROVED);
 		List<Exam> approvedExams = null;
 		try {
@@ -63,14 +64,33 @@ public class Administrator implements Serializable {
 	}
 
 	@SuppressWarnings("unchecked")
+	public List<Exam> getFutureAppointments() {
+		EntityManager em = DatabaseManager.createEntityManager();
+		Query query = em.createQuery("SELECT appt FROM Appointment appt "
+				+ "WHERE appt.dateTime > CURRENT_TIMESTAMP");
+		List<Exam> futureAppointments = null;
+		try {
+			futureAppointments = query.getResultList();
+		} catch (Exception e) {
+			throw e;
+		}
+		finally {
+			em.close();
+		}
+		return futureAppointments;
+	}
+	
+	@SuppressWarnings("unchecked")
 	public List<Exam> getPendingExams() {
 		EntityManager em = DatabaseManager.createEntityManager();
-		Query query = em.createQuery("SELECT exam FROM Exam exam WHERE exam.status = :status", Exam.class);
+		Query query = em.createQuery("SELECT exam FROM Exam exam "
+				+ "WHERE exam.status = :status", Exam.class);
 		query.setParameter("status", Status.PENDING);
 		List<Exam> pendingExams = null;
 		try {
 			pendingExams = query.getResultList();
-		} catch (NoResultException e) {
+		} catch (Exception e) {
+			 throw e;
 		} finally {
 			em.close();
 		}
@@ -139,6 +159,19 @@ public class Administrator implements Serializable {
 		}
 		finally {
 			//em.close();
+		}
+	}
+
+	public boolean cancelAppointment(EntityManager em, int apptId) {
+		try {
+			Appointment appt = em.find(Appointment.class, apptId);
+			return appt.getStudent().cancelAppointment(em, apptId, true);
+		}
+		catch(Exception e) {
+			throw e;
+		}
+		finally {
+			
 		}
 	}
 
