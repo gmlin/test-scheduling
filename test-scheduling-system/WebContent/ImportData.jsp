@@ -52,6 +52,7 @@
 									session.removeAttribute("message");
 								}
 							%>
+							<br>
 							<label>User</label><input type="file" name="file1" size="100" required/>
 							<br>
 							<label>Class</label><input type="file" name="file2" size="100" required/>

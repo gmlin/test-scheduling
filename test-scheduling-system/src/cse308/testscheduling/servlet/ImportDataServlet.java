@@ -70,11 +70,8 @@ public class ImportDataServlet extends HttpServlet{
 		String line3 = reader3.readLine();
 		String line4 = reader4.readLine();
 		
-		
-		
-		
+
 		EntityManager em = DatabaseManager.createEntityManager();
-		List<Query> addStudents = new ArrayList<Query>();
 		em.getTransaction().begin();
 		
 		Query queryz = em.createQuery("SELECT student FROM Student student");
@@ -87,17 +84,11 @@ public class ImportDataServlet extends HttpServlet{
 				}
 			}
 		}
-		catch(Exception e){
-			
+		catch(Exception e){		
 		}
 		currentid++;
 		
-		try {
-			for (Query query : addStudents)
-				query.executeUpdate();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		
 		em.getTransaction().commit();
 		em.getTransaction().begin();
 		
@@ -165,8 +156,7 @@ public class ImportDataServlet extends HttpServlet{
 			newCourse.setSubject(b);
 			newCourse.setCatalogNumber(c);
 			newCourse.setSection(d);
-			
-			
+						
 			try{
 				for(Instructor instructor : currentInstructorList){
 					if(instructor.getUser().getNetId().equals(f)){
@@ -175,7 +165,7 @@ public class ImportDataServlet extends HttpServlet{
 						em.persist(instructor);
 					}
 				}
-			} catch(Exception e){
+			} catch(Exception e) {
 				
 			}
 			
@@ -191,6 +181,7 @@ public class ImportDataServlet extends HttpServlet{
 		updatedStudentList = queryx.getResultList();
 		Query query = em.createQuery("SELECT course FROM Course course");
 		List<Course> courseList = null;
+		courseList = query.getResultList();
 		while ((line3 = reader3.readLine()) != null) {
 			parts = line3.split(",");
 			String a = parts[0];
@@ -214,20 +205,15 @@ public class ImportDataServlet extends HttpServlet{
 			} catch (Exception e){
 				
 			}
-			
-		 
+	 
 		}
-		
 		
 		
 		em.getTransaction().commit();
 		em.close();
-		
-	
-		
+		s.setAttribute("message", "Data Imported");
 		
 		reader.close();
-		
 		response.sendRedirect(request.getHeader("Referer"));
 	}
 
