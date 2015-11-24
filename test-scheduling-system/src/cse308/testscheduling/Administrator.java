@@ -2,6 +2,7 @@ package cse308.testscheduling;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -168,6 +169,58 @@ public class Administrator implements Serializable {
 			return appt.getStudent().cancelAppointment(em, apptId, true);
 		}
 		catch(Exception e) {
+			throw e;
+		}
+		finally {
+			
+		}
+	}
+
+	public boolean modifyAppointment(EntityManager em, int apptId, Timestamp dateTime, int seatNumber, boolean attendance) {
+		try {
+			Appointment appt = em.find(Appointment.class, apptId);
+			Seat seat = em.find(Seat.class, seatNumber);
+			LocalDateTime apptEnd = dateTime.toLocalDateTime().plusMinutes(appt.getExam().getDuration());
+			if (dateTime.before(appt.getExam().getStartDateTime())
+				|| apptEnd.isAfter(appt.getExam().getEndDateTime().toLocalDateTime())) {
+				return false;
+			}
+			if ((appt.getSeat().equals(seat) || seat.examAt(dateTime) == null)) {
+				em.getTransaction().begin();
+				appt.getSeat().getAppointments().remove(appt);
+				appt.setSeat(seat);
+				appt.setDateTime(dateTime);
+				appt.setAttendance(attendance);
+				seat.addAppointment(appt);
+				em.getTransaction().commit();
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+		catch(Exception e) {
+			throw e;
+		}
+		finally {
+			
+		}
+	}
+
+	public int checkIn(EntityManager em, String studentId) {
+		try {
+			User user = em.find(User.class, studentId);
+			Student student = user.getStudent();
+			for (Appointment appt : student.getAppointments()) {
+				if (appt.getDateTime().toLocalDateTime().isBefore(LocalDateTime.now())
+						&& appt.getEndDateTime().toLocalDateTime().isAfter(LocalDateTime.now())) {
+					appt.setAttendance(true);
+					return appt.getSeat().getSeatNumber();
+				}
+			}
+			return -1;
+		}
+		catch (Exception e) {
 			throw e;
 		}
 		finally {

@@ -92,6 +92,7 @@ public class ImportDataServlet extends HttpServlet{
 		em.getTransaction().commit();
 		em.getTransaction().begin();
 		
+		
 		//add users (FirstName,LastName,NetID,Email)
 		while ((line = reader.readLine()) != null) {
 			parts = line.split(",");

@@ -84,9 +84,6 @@ public class Seat implements Serializable {
 
 	@SuppressWarnings("deprecation")
 	public boolean isAppointable(Timestamp t, Exam e) {
-		if (t.getMinutes() % 30 != 0) {
-			return false;
-		}
 		LocalDateTime apptEnd = t.toLocalDateTime().plusMinutes(e.getDuration());
 		if (t.before(e.getStartDateTime())
 				|| apptEnd.isAfter(e.getEndDateTime().toLocalDateTime())) {
@@ -108,5 +105,27 @@ public class Seat implements Serializable {
 
 	public void setSetAside(boolean setAside) {
 		this.setAside = setAside;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + seatNumber;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Seat other = (Seat) obj;
+		if (seatNumber != other.seatNumber)
+			return false;
+		return true;
 	}
 }

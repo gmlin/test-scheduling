@@ -11,7 +11,7 @@
 	<li><a href="PendingRequests.jsp">View Requests</a></li>
 	<li><a href="AdminAppointment.jsp">Make Appointment</a></li>
 	<li><a href="AdminViewAppointments.jsp">View Appointments</a></li>
-	<li><a href="#">Check-In Student</a></li>
+	<li><a href="CheckIn.jsp">Check-In Student</a></li>
 	<li><a href="#">Generate Report</a></li>
 </ul>
 

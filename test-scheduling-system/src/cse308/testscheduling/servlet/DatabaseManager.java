@@ -25,16 +25,16 @@ public class DatabaseManager implements ServletContextListener {
     public DatabaseManager() {
     }
 
-    public static EntityManager createEntityManager() {
-		return emf.createEntityManager();
-	}
-
-	public void contextDestroyed(ServletContextEvent arg0) {
+    public void contextDestroyed(ServletContextEvent arg0) {
 		emf.close();
 	}
 
 	public void contextInitialized(ServletContextEvent arg0) {
 		emf = Persistence.createEntityManagerFactory("test-scheduling-system");
+	}
+	
+    public static EntityManager createEntityManager() {
+		return emf.createEntityManager();
 	}
 	
 	@SuppressWarnings("unchecked")
