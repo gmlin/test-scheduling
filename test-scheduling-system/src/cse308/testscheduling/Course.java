@@ -12,6 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.FetchType;
 
 /**
  * Entity implementation class for Entity: Course
@@ -36,6 +38,10 @@ public class Course implements Serializable {
 	
 	@Column
 	private String section;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "TERM_ID")
+	private Term term;
 
 	// a course has multiple students, student can have multiple courses
 	// generate new table contains the course id column and student net id
@@ -138,5 +144,9 @@ public class Course implements Serializable {
 
 	public void setSection(String section) {
 		this.section = section;
+	}
+	
+	public void setTerm(Term term) {
+		this.term = term;
 	}
 }

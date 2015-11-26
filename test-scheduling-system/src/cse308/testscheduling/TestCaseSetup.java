@@ -28,6 +28,7 @@ public class TestCaseSetup {
 		clearTableQueries.add(em.createNativeQuery("DELETE FROM student"));
 		clearTableQueries.add(em.createNativeQuery("DELETE FROM testingcenter"));
 		clearTableQueries.add(em.createNativeQuery("DELETE FROM user"));
+		clearTableQueries.add(em.createNativeQuery("DELETE FROM term"));
 		em.getTransaction().begin();
 		try {
 			for (Query query : clearTableQueries)
@@ -50,6 +51,11 @@ public class TestCaseSetup {
 		u1.setAdministrator(admin);
 		admin.setUser(u1);
 
+		Term te = new Term();
+		te.setTermID(1158);
+		te.setSeason("Fall");
+		te.setYear(2015);
+		
 		TestingCenter t = new TestingCenter();
 		t.setNumSeats(64);
 		t.setNumSetAsideSeats(4);
@@ -58,6 +64,8 @@ public class TestCaseSetup {
 		t.setGapTime(10);
 		t.setReminderInterval(30);
 		admin.setTestingCenter(t);
+		t.setTerm(te);
+		te.setTestingCenter(t);
 
 		User u2 = new User();
 		u2.setNetId("instructor");
@@ -124,6 +132,8 @@ public class TestCaseSetup {
 		c1.addStudent(student1);
 		c1.addStudent(student2);
 		c1.addStudent(student3);
+		c1.setTerm(te);
+		te.addCourse(c1);
 
 		Course c2 = new Course();
 		c2.setCourseId("22222-1158");
@@ -140,6 +150,8 @@ public class TestCaseSetup {
 		c2.addStudent(student1);
 		c2.addStudent(student2);
 		c2.addStudent(student3);
+		c2.setTerm(te);
+		te.addCourse(c2);
 
 		Seat seat;
 		for (int i = 0; i < t.getNumSeats(); i++) {
@@ -155,6 +167,7 @@ public class TestCaseSetup {
 		em.persist(c1);
 		em.persist(c2);
 		em.persist(t);
+		em.persist(te);
 
 		em.getTransaction().commit();
 

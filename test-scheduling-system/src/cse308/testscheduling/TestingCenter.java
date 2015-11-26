@@ -13,6 +13,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 
 /**
  * Entity implementation class for Entity: TestingCenter
@@ -52,6 +54,10 @@ public class TestingCenter implements Serializable {
 
 	@Column(name = "REMINDER_INTERVAL")
 	private int reminderInterval;
+	
+	@OneToOne
+	@JoinColumn(name = "TERM_ID")
+	private Term term;
 
 	public TestingCenter() {
 		super();
@@ -140,5 +146,9 @@ public class TestingCenter implements Serializable {
 
 	public void setReservedPeriods(List<Calendar[]> reservedPeriods) {
 		this.reservedPeriods = reservedPeriods;
+	}
+	
+	public void setTerm(Term term) {
+		this.term = term;
 	}
 }
