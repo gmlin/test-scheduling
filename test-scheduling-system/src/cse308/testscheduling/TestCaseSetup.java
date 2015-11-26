@@ -20,6 +20,7 @@ public class TestCaseSetup {
 		clearTableQueries.add(em.createNativeQuery("DELETE FROM appointment"));
 		clearTableQueries.add(em.createNativeQuery("DELETE FROM course_instructor"));
 		clearTableQueries.add(em.createNativeQuery("DELETE FROM course_student"));
+		clearTableQueries.add(em.createNativeQuery("DELETE FROM term"));
 		clearTableQueries.add(em.createNativeQuery("DELETE FROM course"));
 		clearTableQueries.add(em.createNativeQuery("DELETE FROM administrator"));
 		clearTableQueries.add(em.createNativeQuery("DELETE FROM exam"));
@@ -28,7 +29,7 @@ public class TestCaseSetup {
 		clearTableQueries.add(em.createNativeQuery("DELETE FROM student"));
 		clearTableQueries.add(em.createNativeQuery("DELETE FROM testingcenter"));
 		clearTableQueries.add(em.createNativeQuery("DELETE FROM user"));
-		clearTableQueries.add(em.createNativeQuery("DELETE FROM term"));
+		
 		em.getTransaction().begin();
 		try {
 			for (Query query : clearTableQueries)

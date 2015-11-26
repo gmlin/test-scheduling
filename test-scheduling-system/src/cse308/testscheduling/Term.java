@@ -40,6 +40,10 @@ public class Term implements Serializable{
 	public void setTermID(int id) {
 		termid = id;
 	}
+	
+	public int getTermID () {
+		return termid;
+	}
 	public String getSeason() {
 		return season;
 	}

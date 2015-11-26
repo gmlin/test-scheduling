@@ -59,8 +59,12 @@ public class ModifyRequestServlet extends HttpServlet {
 			logger.addHandler(fh2);
 			User user = em.find(User.class, userId);
 			Administrator admin = user.getAdministrator();
+			if (examIds.hasMoreElements()) {
+				examIds.nextElement();
+			}
 			while (examIds.hasMoreElements()) {
 				String examId = examIds.nextElement();
+				System.out.println("Exam id is (" + examId + ")");
 				if (request.getParameter(examId).equals("approve")) {
 					admin.modifyRequest(em, examId, Status.APPROVED);
 					logger.log(Level.INFO, examId + " has been approved by admin");
@@ -72,6 +76,7 @@ public class ModifyRequestServlet extends HttpServlet {
 			session.setAttribute("user", user);
 			request.getSession().setAttribute("message", "Exams successfully approved/denied.");
 		} catch (Exception e) {
+			e.printStackTrace();
 			request.getSession().setAttribute("message", e.toString());
 			logger.log(Level.SEVERE, "Error in approving/denying exam request", e);
 		} finally {

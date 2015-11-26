@@ -127,7 +127,7 @@ public class Course implements Serializable {
 
 	
 	public String toString() {
-		return subject + getCatalogNumber() + "-" + getSection();
+		return subject + getCatalogNumber() + "-" + getSection() + "_" + getTerm().getTermID();
 	}
 
 	public String getCatalogNumber() {
@@ -148,5 +148,9 @@ public class Course implements Serializable {
 	
 	public void setTerm(Term term) {
 		this.term = term;
+	}
+	
+	public Term getTerm() {
+		return term;
 	}
 }
