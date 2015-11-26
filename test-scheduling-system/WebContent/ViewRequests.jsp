@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ page import="cse308.testscheduling.User"%>
+<%@ page import="cse308.testscheduling.User,cse308.testscheduling.servlet.DatabaseManager,javax.persistence.EntityManager"%>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
@@ -10,6 +10,19 @@
 	User user = (User) (session.getAttribute("user"));
 	if (user == null || user.getInstructor() == null)
 		response.sendRedirect("Index.jsp");
+	else {
+		EntityManager em = DatabaseManager.createEntityManager();
+		try {
+			  user = em.find(User.class, user.getNetId());
+			  session.setAttribute("user", user);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		finally {
+			  em.close();
+		}
+	}
 %>
 
 <!doctype html>
@@ -22,6 +35,7 @@
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script src="js/scripts.js"></script>
+<script src="/test-scheduling-system/JavaScriptServlet"></script>
 </head>
 <body>
 

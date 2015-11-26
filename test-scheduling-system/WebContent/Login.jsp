@@ -14,6 +14,7 @@
 <title>Login</title>
 <link rel="stylesheet" href="css/bootstrap.min.css">
 <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+<script src="/test-scheduling-system/JavaScriptServlet"></script>
 </head>
 <body>
 	<div class="container-fluid">

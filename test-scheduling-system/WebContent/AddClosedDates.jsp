@@ -33,6 +33,7 @@
 	src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
 <link rel="stylesheet" type="text/css"
 	href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
+	<script src="/test-scheduling-system/JavaScriptServlet"></script>
 </head>
 <body>
 
