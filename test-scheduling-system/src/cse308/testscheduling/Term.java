@@ -19,25 +19,6 @@ public class Term implements Serializable{
 	
 	public Term() {
 		super();
-		
-	}
-	
-	public Term(int id) {
-		super();
-		this.id = id;
-		if (id % 10 == 1) {
-			season = "WINTER";
-		}
-		else if (id % 10 == 4) {
-			season = "SPRING";
-		}
-		else if (id % 10 == 6) {
-			season = "SUMMER";
-		}
-		else if (id % 10 == 8) {
-			season = "FALL";
-		}
-		year = 1900 + id / 10;
 	}
 	
 	public String getSeason() {
