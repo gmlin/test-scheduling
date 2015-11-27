@@ -1,6 +1,7 @@
 package cse308.testscheduling;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +21,7 @@ public class Term implements Serializable{
 	
 	@Id
 	@Column(name = "TERM_ID")
-	private int termid;
+	private int termID;
 	
 	private String season;
 	
@@ -38,11 +39,11 @@ public class Term implements Serializable{
 	}
 	
 	public void setTermID(int id) {
-		termid = id;
+		termID = id;
 	}
 	
 	public int getTermID () {
-		return termid;
+		return termID;
 	}
 	public String getSeason() {
 		return season;
@@ -76,4 +77,7 @@ public class Term implements Serializable{
 		this.courses = courses;
 	}
 	
+	public String toString() {
+		return String.valueOf(termID);
+	}
 }

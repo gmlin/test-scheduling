@@ -64,8 +64,18 @@
 								}
 							%>
 							<div class="form-group">
+								<label for="termID">Term</label> <select
+									class="form-control" name="termID" id="termID" required>
+									<c:forEach items="${sessionScope.user.administrator.allTerms}"
+										var="term">
+										<option value="${term.termID}">${term} (${term.season} ${term.year})</option>
+									</c:forEach>
+								</select>
+							</div>
+					<!-- TODO: doesnt work lol, need to get term selected from ^ and apply to terms below instead of from administrator -->
+							<div class="form-group">
 								<label for="numSeats">Number of Seats</label> <input
-									type="number" class="form-control" value=${user.administrator.testingCenter.numSeats} id="numSeats"
+									type="number" class="form-control" value=${termID.testingCenter.numSeats} id="numSeats"
 									name="numSeats">
 							</div>
 							<div class="form-group">

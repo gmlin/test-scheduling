@@ -227,5 +227,8 @@ public class Administrator implements Serializable {
 			
 		}
 	}
-
+	
+	public List<Term> getAllTerms(){ 
+		return DatabaseManager.getAllInstances(DatabaseManager.createEntityManager(), Term.class);
+	}
 }

@@ -73,7 +73,17 @@ public class TestCaseSetup {
 		admin.setTestingCenter(t);
 		t.setTerm(term1);
 		term1.setTestingCenter(t);
-
+		
+		TestingCenter t2 = new TestingCenter();
+		t2.setNumSeats(100);
+		t2.setNumSetAsideSeats(10);
+		t2.setOpenTime(new Timestamp(0, 0, 0, 7, 0, 0, 0));
+		t2.setCloseTime(new Timestamp(0, 0, 0, 19, 0, 0, 0));
+		t2.setGapTime(10);
+		t2.setReminderInterval(30);
+		t2.setTerm(term2);
+		term2.setTestingCenter(t2);
+		
 		User u2 = new User();
 		u2.setNetId("instructor");
 		u2.setPassword("123");
