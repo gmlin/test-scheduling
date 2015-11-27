@@ -62,8 +62,9 @@
 									name="exam" id="exam" required>
 									<c:forEach items="${sessionScope.user.student.availableExams}"
 										var="exam">
-										<option value="${exam.examId}">${exam.examId}
-											${exam.startDateTime } to ${exam.endDateTime }</option>
+										<option value="${exam.examId}">${exam.examId} 
+										(${exam.course.term.season} ${exam.course.term.year}) 
+										Time: ${exam.startDateTime } to ${exam.endDateTime }</option>
 									</c:forEach>
 								</select>
 							</div>

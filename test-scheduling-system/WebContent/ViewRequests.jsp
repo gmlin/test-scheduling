@@ -67,6 +67,7 @@
 						%>
 						<table class="table">
 							<thead>
+								<th>Term</th>
 								<th>Exam ID</th>
 								<th>Start Time</th>
 								<th>End Time</th>
@@ -80,6 +81,7 @@
 								<c:forEach var="exam"
 									items="${sessionScope.user.instructor.allExams}">
 									<tr>
+										<td>${exam.course.term.season} ${exam.course.term.year}</td>
 										<td>${exam.examId}</td>
 										<td>${exam.startDateTime }</td>
 										<td>${exam.endDateTime }</td>

@@ -52,10 +52,16 @@ public class TestCaseSetup {
 		u1.setAdministrator(admin);
 		admin.setUser(u1);
 
-		Term te = new Term();
-		te.setTermID(1158);
-		te.setSeason("Fall");
-		te.setYear(2015);
+		Term term1 = new Term();
+		term1.setTermID(1158);
+		term1.setSeason("Fall");
+		term1.setYear(2015);
+		
+		Term term2 = new Term();
+		term2.setTermID(1161);
+		term2.setSeason("Winter");
+		term2.setYear(2016);
+		
 		
 		TestingCenter t = new TestingCenter();
 		t.setNumSeats(64);
@@ -65,8 +71,8 @@ public class TestCaseSetup {
 		t.setGapTime(10);
 		t.setReminderInterval(30);
 		admin.setTestingCenter(t);
-		t.setTerm(te);
-		te.setTestingCenter(t);
+		t.setTerm(term1);
+		term1.setTestingCenter(t);
 
 		User u2 = new User();
 		u2.setNetId("instructor");
@@ -133,8 +139,8 @@ public class TestCaseSetup {
 		c1.addStudent(student1);
 		c1.addStudent(student2);
 		c1.addStudent(student3);
-		c1.setTerm(te);
-		te.addCourse(c1);
+		c1.setTerm(term1);
+		term1.addCourse(c1);
 
 		Course c2 = new Course();
 		c2.setCourseId("22222-1158");
@@ -151,8 +157,26 @@ public class TestCaseSetup {
 		c2.addStudent(student1);
 		c2.addStudent(student2);
 		c2.addStudent(student3);
-		c2.setTerm(te);
-		te.addCourse(c2);
+		c2.setTerm(term1);
+		term1.addCourse(c2);
+		
+		Course c3 = new Course();
+		c3.setCourseId("11111-1161");
+		c3.setSubject("CSE");
+		c3.setCatalogNumber("308");
+		c3.setSection("01");
+		student1.addCourse(c3);
+		student2.addCourse(c3);
+		student3.addCourse(c3);
+		instructor.addCourse(c3);
+		instructor2.addCourse(c3);
+		c3.addInstructor(instructor);
+		c3.addInstructor(instructor2);
+		c3.addStudent(student1);
+		c3.addStudent(student2);
+		c3.addStudent(student3);
+		c3.setTerm(term2);
+		term2.addCourse(c3);
 
 		Seat seat;
 		for (int i = 0; i < t.getNumSeats(); i++) {
@@ -167,8 +191,10 @@ public class TestCaseSetup {
 		em.persist(u5);
 		em.persist(c1);
 		em.persist(c2);
+		em.persist(c3);
 		em.persist(t);
-		em.persist(te);
+		em.persist(term1);
+		em.persist(term2);
 
 		em.getTransaction().commit();
 

@@ -56,6 +56,7 @@
 							<div class="form-group">
 								<table class="table">
 									<thead>
+										<th>Term</th>
 										<th>Exam ID</th>
 										<th>Course/Instructor</th>
 										<th>Start Time</th>
@@ -70,6 +71,7 @@
 											items="${sessionScope.user.administrator.pendingExams}"
 											var="exam">
 											<tr>
+												<td>${exam.course.term.season} ${exam.course.term.year}</td>
 												<td>${exam.examId }</td>
 												<td><c:if test="${exam.adHoc}">
                                                         ${exam.instructor}
