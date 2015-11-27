@@ -5,9 +5,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <%
-    User user = (User)(session.getAttribute("user"));
-    if (user == null || user.getAdministrator() == null)
-        response.sendRedirect("Index.jsp");
+	User user = (User) (session.getAttribute("user"));
+	if (user == null || user.getAdministrator() == null)
+		response.sendRedirect("Index.jsp");
 %>
 
 <!doctype html>
@@ -16,7 +16,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Edit Testing Center Information</title>
 <link rel="stylesheet" type="text/css"
-    href="//cdn.jsdelivr.net/bootstrap/latest/css/bootstrap.css" />
+	href="//cdn.jsdelivr.net/bootstrap/latest/css/bootstrap.css" />
 <link rel="stylesheet" href="css/bootstrap.min.css">
 <link href="css/styles.css" rel="stylesheet">
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
@@ -32,7 +32,7 @@
 	src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
 <link rel="stylesheet" type="text/css"
 	href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
-	<script src="/test-scheduling-system/JavaScriptServlet"></script>
+<script src="/test-scheduling-system/JavaScriptServlet"></script>
 </head>
 <body>
 
@@ -56,50 +56,82 @@
 						<h4 class="text-center">Edit Testing Center Information</h4>
 					</div>
 					<div class="panel-body">
-						<form action="edit_testing_center_info" method="post">
-						<%
+						<form action="set_term" method="post">
+							<%
 								if (session.getAttribute("message") != null) {
 									out.println(session.getAttribute("message"));
 									session.removeAttribute("message");
 								}
 							%>
 							<div class="form-group">
-								<label for="termID">Term</label> <select
+								<label for="termID">Current Term</label> <select
 									class="form-control" name="termID" id="termID" required>
 									<c:forEach items="${sessionScope.user.administrator.allTerms}"
 										var="term">
-										<option value="${term.termID}">${term} (${term.season} ${term.year})</option>
+										<c:if test="${term.current }">
+											<option value="${term.termID}" selected>${term}
+												(${term.season} ${term.year})</option>
+										</c:if>
+										<c:if test="${ not term.current }">
+											<option value="${term.termID}">${term}
+												(${term.season} ${term.year})</option>
+										</c:if>
 									</c:forEach>
 								</select>
 							</div>
-					<!-- TODO: doesnt work lol, need to get term selected from ^ and apply to terms below instead of from administrator -->
+							<button type="submit" class="btn btn-default">Set</button>
+
+						</form>
+						<form action="edit_testing_center_info" method="post">
+							<%
+								if (session.getAttribute("message") != null) {
+									out.println(session.getAttribute("message"));
+									session.removeAttribute("message");
+								}
+							%>
+							<c:set var="testingCenter"
+								value="${sessionScope.user.administrator.currentTerm.testingCenter}"
+								scope="session" />
+
+							<input type="hidden" name="changeterm" value="no" />
 							<div class="form-group">
 								<label for="numSeats">Number of Seats</label> <input
-									type="number" class="form-control" value=${termID.testingCenter.numSeats} id="numSeats"
+									type="number" class="form-control"
+									value=${sessionScope.testingCenter.numSeats } id="numSeats"
 									name="numSeats">
 							</div>
 							<div class="form-group">
 								<label for="numSetAside">Number of Set-Aside Seats</label> <input
-									type="number" class="form-control" value=${sessionScope.user.administrator.testingCenter.numSetAsideSeats} id="numSetAside"
-									name="numSetAside">
+									type="number" class="form-control"
+									value=${sessionScope.testingCenter.numSetAsideSeats
+									}
+									id="numSetAside" name="numSetAside">
 							</div>
 							<div class="form-group">
 								<label>Testing Center Hours</label><br> <label
-									for="openTime">Open Time</label> <input type="time" value=${sessionScope.user.administrator.testingCenter.openTimeString}
+									for="openTime">Open Time</label> <input type="time"
+									value=${sessionScope.testingCenter.openTimeString
+									}
 									id="openTime" name="openTime">
 							</div>
 							<div class="form-group">
-								<label for="closeTime">Close Time</label><input type="time" value=${sessionScope.user.administrator.testingCenter.closeTimeString}
+								<label for="closeTime">Close Time</label><input type="time"
+									value=${sessionScope.testingCenter.closeTimeString
+									}
 									id="closeTime" name="closeTime">
-							</div>	
+							</div>
 							<div class="form-group">
 								<label for="gapTime">Appointment Gap Time</label> <input
-									type="number" class="form-control" id="gapTime" max=30 min=0 value=${sessionScope.user.administrator.testingCenter.gapTime}
-									name="gapTime"> 
+									type="number" class="form-control" id="gapTime" max=30 min=0
+									value=${sessionScope.testingCenter.gapTime
+									}
+									name="gapTime">
 							</div>
 							<div class="form-group">
 								<label for="reminderInterval">Reminder Interval</label> <input
-									type="number" class="form-control" id="reminderInterval" value=${sessionScope.user.administrator.testingCenter.reminderInterval}
+									type="number" class="form-control" id="reminderInterval"
+									value=${sessionScope.testingCenter.reminderInterval
+									}
 									name="reminderInterval">
 							</div>
 							<button type="submit" class="btn btn-default">Submit</button>

@@ -56,21 +56,17 @@ public class EditTestingCenterServlet extends HttpServlet {
 		try{
 			User user = em.find(User.class, userId);
 			Administrator admin = user.getAdministrator();
-			TestingCenter tc = admin.getTestingCenter();
-			tc.setNumSeats(Integer.parseInt(request.getParameter("numSeats")));
-			tc.setNumSetAsideSeats(Integer.parseInt(request.getParameter("numSetAside")));
+			int numSeats = Integer.parseInt(request.getParameter("numSeats"));
+			int numSetAside = Integer.parseInt(request.getParameter("numSetAside"));
 			String timestring = request.getParameter("openTime");
 			String[] ts = timestring.split(":");
 			String timestring2 = request.getParameter("closeTime");
 			String[] ts2 = timestring2.split(":");
-			tc.setOpenTime(new Timestamp(0, 0, 0, Integer.parseInt(ts[0]), Integer.parseInt(ts[1]), 0, 0));
-			tc.setCloseTime(new Timestamp(0, 0, 0, Integer.parseInt(ts2[0]), Integer.parseInt(ts2[1]), 0, 0));
-			
-			tc.setGapTime(Integer.parseInt(request.getParameter("gapTime")));
-			tc.setReminderInterval(Integer.parseInt(request.getParameter("reminderInterval")));
-			
-			
-			admin.modifyTestingCenter(em, tc);
+			Timestamp openTime = new Timestamp(0, 0, 0, Integer.parseInt(ts[0]), Integer.parseInt(ts[1]), 0, 0);
+			Timestamp closeTime = new Timestamp(0, 0, 0, Integer.parseInt(ts2[0]), Integer.parseInt(ts2[1]), 0, 0);
+			int gapTime = Integer.parseInt(request.getParameter("gapTime"));
+			int reminderInterval = Integer.parseInt(request.getParameter("reminderInterval"));
+			admin.modifyTestingCenter(em, numSeats, numSetAside, openTime, closeTime, gapTime, reminderInterval);
 			session.setAttribute("user", user);
 			session.setAttribute("message", "Testing Center has been updated");
 		} catch (Exception e) {

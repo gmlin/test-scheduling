@@ -56,12 +56,14 @@ public class TestCaseSetup {
 		term1.setTermID(1158);
 		term1.setSeason("Fall");
 		term1.setYear(2015);
+		term1.setCurrent(true);
 		
 		Term term2 = new Term();
 		term2.setTermID(1161);
 		term2.setSeason("Winter");
 		term2.setYear(2016);
-		
+		term2.setCurrent(false);
+
 		
 		TestingCenter t = new TestingCenter();
 		t.setNumSeats(64);

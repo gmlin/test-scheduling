@@ -55,6 +55,9 @@ public class TestingCenter implements Serializable {
 	@Column(name = "REMINDER_INTERVAL")
 	private int reminderInterval;
 	
+	@Column(name = "CURRENT")
+	private boolean current;
+	
 	@OneToOne
 	@JoinColumn(name = "TERM_ID")
 	private Term term;
@@ -151,4 +154,5 @@ public class TestingCenter implements Serializable {
 	public void setTerm(Term term) {
 		this.term = term;
 	}
+
 }

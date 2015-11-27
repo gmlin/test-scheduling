@@ -47,7 +47,7 @@ public class Administrator implements Serializable {
 	public Administrator() {
 		super();
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public List<Exam> getApprovedExams() {
 		EntityManager em = DatabaseManager.createEntityManager();
@@ -80,7 +80,7 @@ public class Administrator implements Serializable {
 		}
 		return futureAppointments;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public List<Exam> getPendingExams() {
 		EntityManager em = DatabaseManager.createEntityManager();
@@ -91,7 +91,7 @@ public class Administrator implements Serializable {
 		try {
 			pendingExams = query.getResultList();
 		} catch (Exception e) {
-			 throw e;
+			throw e;
 		} finally {
 			em.close();
 		}
@@ -121,28 +121,11 @@ public class Administrator implements Serializable {
 			//em.close();
 		}
 	}
-	
+
 	public void setTestingCenter(TestingCenter testingCenter) {
 		this.testingCenter = testingCenter;
 	}
-	
-	public void modifyTestingCenter(EntityManager em, TestingCenter testingCenter){
-		try{
-			em.getTransaction().begin();
-			TestingCenter tc = em.find(TestingCenter.class, testingCenter.getId());
-			//tc.setNumSeats(testingCenter.getNumSeats());
-			tc = testingCenter;
-			em.persist(tc);
-			em.getTransaction().commit();
-		}
-		catch(Exception e){
-			throw e;
-		}
-		finally{
-			
-		}
-		
-	}
+
 
 	public void setUser(User user) {
 		this.user = user;
@@ -172,7 +155,7 @@ public class Administrator implements Serializable {
 			throw e;
 		}
 		finally {
-			
+
 		}
 	}
 
@@ -182,7 +165,7 @@ public class Administrator implements Serializable {
 			Seat seat = em.find(Seat.class, seatNumber);
 			LocalDateTime apptEnd = dateTime.toLocalDateTime().plusMinutes(appt.getExam().getDuration());
 			if (dateTime.before(appt.getExam().getStartDateTime())
-				|| apptEnd.isAfter(appt.getExam().getEndDateTime().toLocalDateTime())) {
+					|| apptEnd.isAfter(appt.getExam().getEndDateTime().toLocalDateTime())) {
 				return false;
 			}
 			if ((appt.getSeat().equals(seat) || seat.examAt(dateTime) == null)) {
@@ -203,7 +186,7 @@ public class Administrator implements Serializable {
 			throw e;
 		}
 		finally {
-			
+
 		}
 	}
 
@@ -224,11 +207,57 @@ public class Administrator implements Serializable {
 			throw e;
 		}
 		finally {
-			
+
 		}
 	}
-	
+
 	public List<Term> getAllTerms(){ 
 		return DatabaseManager.getAllInstances(DatabaseManager.createEntityManager(), Term.class);
+	}
+
+	public Term getCurrentTerm() {
+		EntityManager em = DatabaseManager.createEntityManager();
+		Query query = em.createQuery("SELECT term FROM Term term WHERE term.current = true");
+		Term term = (Term) query.getResultList().get(0);
+		return term;
+	}
+
+	public void setCurrentTerm(EntityManager em, int termId) {
+		try {
+			em.getTransaction().begin();
+			Query query = em.createQuery("SELECT term FROM Term term WHERE term.current = true");
+			Term term = (Term) query.getResultList().get(0);
+			Term currentTerm = em.find(Term.class, termId);
+			term.setCurrent(false);
+			currentTerm.setCurrent(true);
+			em.getTransaction().commit();
+		}
+		catch (Exception e) {
+			throw e;
+		}
+	}
+
+	public void modifyTestingCenter(EntityManager em, int numSeats, int numSetAside, Timestamp openTime,
+			Timestamp closeTime, int gapTime, int reminderInterval) {
+		try{
+			Query query = em.createQuery("SELECT term FROM Term term WHERE term.current = true");
+			Term term = (Term) query.getResultList().get(0);
+			TestingCenter tc = term.getTestingCenter();
+			em.getTransaction().begin();
+			tc.setNumSeats(numSeats);
+			tc.setNumSetAsideSeats(numSetAside);
+			tc.setOpenTime(openTime);
+			tc.setCloseTime(closeTime);
+			tc.setGapTime(gapTime);
+			tc.setReminderInterval(reminderInterval);
+			em.getTransaction().commit();
+		}
+		catch(Exception e){
+			throw e;
+		}
+		finally{
+
+		}
+
 	}
 }

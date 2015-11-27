@@ -31,7 +31,9 @@ public class Term implements Serializable{
 	private List<Course> courses;
 	
 	@OneToOne(mappedBy = "term", cascade = CascadeType.ALL)
-	private TestingCenter center;
+	private TestingCenter testingCenter;
+	
+	private boolean current;
 	
 	public Term() {
 		super();
@@ -61,10 +63,6 @@ public class Term implements Serializable{
 		year = y;
 	}
 	
-	public void setTestingCenter(TestingCenter c) {
-		center = c;
-	}
-	
 	public List<Course> getCourses() {
 		return courses;
 	}
@@ -79,5 +77,21 @@ public class Term implements Serializable{
 	
 	public String toString() {
 		return String.valueOf(termID);
+	}
+
+	public boolean isCurrent() {
+		return current;
+	}
+
+	public void setCurrent(boolean current) {
+		this.current = current;
+	}
+
+	public TestingCenter getTestingCenter() {
+		return testingCenter;
+	}
+
+	public void setTestingCenter(TestingCenter testingCenter) {
+		this.testingCenter = testingCenter;
 	}
 }
