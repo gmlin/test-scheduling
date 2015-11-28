@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityManager;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
@@ -17,6 +18,9 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Query;
+
+import cse308.testscheduling.servlet.DatabaseManager;
 
 /**
  * Entity implementation class for Entity: Exam
@@ -198,5 +202,44 @@ public class Exam implements Serializable, Comparable<Exam> {
 	@Override
 	public int compareTo(Exam o) {
 		return o.getStartDateTime().compareTo(this.getStartDateTime());
+	}
+	
+	@SuppressWarnings({ "deprecation", "unchecked" })
+	public Term getTerm() {
+		if (adHoc) {
+			try {
+				EntityManager em = DatabaseManager.createEntityManager();
+				Query query = em.createQuery("SELECT term FROM Term term WHERE term.season =:season"
+						+ " AND term.year =:year");
+				String season;
+				if (endDateTime.getMonth() == 0) {
+					season = "Winter";
+				}
+				else if (endDateTime.getMonth() > 0 && endDateTime.getMonth() < 5) {
+					season = "Spring";
+				}
+				else if (endDateTime.getMonth() >= 5 && endDateTime.getMonth() < 8) {
+					season = "Summer";
+				}
+				else {
+					season = "Fall";
+				}
+				query.setParameter("season", season);
+				query.setParameter("year", endDateTime.getYear() + 1900);
+				List<Term> result = query.getResultList();
+				if (result.size() == 0) {
+					return null;
+				}
+				else {
+					return result.get(0);
+				}
+			}
+			catch (Exception e) {
+				throw e;
+			}
+		}
+		else {
+			return course.getTerm();
+		}
 	}
 }

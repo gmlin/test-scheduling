@@ -2,6 +2,7 @@ package cse308.testscheduling;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.List;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 
@@ -12,6 +13,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.Id;
 import javax.persistence.NoResultException;
 import javax.persistence.OneToOne;
+import javax.persistence.Query;
 import javax.servlet.http.HttpSession;
 
 import cse308.testscheduling.servlet.DatabaseManager;
@@ -125,5 +127,16 @@ public class User implements Serializable {
 
 	public void setStudent(Student student) {
 		this.student = student;
+	}
+	
+	public Term getCurrentTerm() {
+		EntityManager em = DatabaseManager.createEntityManager();
+		Query query = em.createQuery("SELECT term FROM Term term WHERE term.current = true");
+		Term term = (Term) query.getResultList().get(0);
+		return term;
+	}
+
+	public List<Term> getAllTerms(){ 
+		return DatabaseManager.getAllInstances(DatabaseManager.createEntityManager(), Term.class);
 	}
 }

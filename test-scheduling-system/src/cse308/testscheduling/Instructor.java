@@ -289,5 +289,15 @@ public class Instructor implements Serializable {
 	public String toString() {
 		return user.getFirstName() + " " + user.getLastName();
 	}
-
+	
+	public List<Exam> getTermExams(int termId) {
+		List<Exam> exams = getAllExams();
+		List<Exam> termExams = new ArrayList<Exam>();
+		for (Exam exam : exams) {
+			if (exam.getTerm().getTermID() == termId) {
+				termExams.add(exam);
+			}
+		}
+		return termExams;
+	}
 }

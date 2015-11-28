@@ -40,6 +40,7 @@ public class Term implements Serializable{
 		setCourses(new ArrayList<Course>());
 	}
 	
+	
 	public void setTermID(int id) {
 		termID = id;
 	}

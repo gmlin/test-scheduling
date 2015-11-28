@@ -66,7 +66,7 @@
 							<div class="form-group">
 								<label for="termID">Current Term</label> <select
 									class="form-control" name="termID" id="termID" required>
-									<c:forEach items="${sessionScope.user.administrator.allTerms}"
+									<c:forEach items="${sessionScope.user.allTerms}"
 										var="term">
 										<c:if test="${term.current }">
 											<option value="${term.termID}" selected>${term}
@@ -90,7 +90,7 @@
 								}
 							%>
 							<c:set var="testingCenter"
-								value="${sessionScope.user.administrator.currentTerm.testingCenter}"
+								value="${sessionScope.user.currentTerm.testingCenter}"
 								scope="session" />
 
 							<input type="hidden" name="changeterm" value="no" />

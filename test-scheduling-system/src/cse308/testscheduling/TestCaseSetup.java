@@ -72,7 +72,6 @@ public class TestCaseSetup {
 		t.setCloseTime(new Timestamp(0, 0, 0, 20, 0, 0, 0));
 		t.setGapTime(10);
 		t.setReminderInterval(30);
-		admin.setTestingCenter(t);
 		t.setTerm(term1);
 		term1.setTestingCenter(t);
 		
@@ -134,7 +133,6 @@ public class TestCaseSetup {
 		Administrator admin2 = new Administrator();
 		u5.setAdministrator(admin2);
 		admin2.setUser(u5);
-		admin2.setTestingCenter(t);
 
 		Course c1 = new Course();
 		c1.setCourseId("11111-1158");

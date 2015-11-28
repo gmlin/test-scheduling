@@ -39,11 +39,6 @@ public class Administrator implements Serializable {
 	@JoinColumn(name = "NET_ID")
 	private User user;
 
-	// this is a many-to-one association between admin and testing center
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "TESTINGCENTER_ID")
-	private TestingCenter testingCenter;
-
 	public Administrator() {
 		super();
 	}
@@ -98,9 +93,6 @@ public class Administrator implements Serializable {
 		return pendingExams;
 	}
 
-	public TestingCenter getTestingCenter() {
-		return testingCenter;
-	}
 
 	public User getUser() {
 		return user;
@@ -122,9 +114,6 @@ public class Administrator implements Serializable {
 		}
 	}
 
-	public void setTestingCenter(TestingCenter testingCenter) {
-		this.testingCenter = testingCenter;
-	}
 
 
 	public void setUser(User user) {
@@ -211,31 +200,8 @@ public class Administrator implements Serializable {
 		}
 	}
 
-	public List<Term> getAllTerms(){ 
-		return DatabaseManager.getAllInstances(DatabaseManager.createEntityManager(), Term.class);
-	}
 
-	public Term getCurrentTerm() {
-		EntityManager em = DatabaseManager.createEntityManager();
-		Query query = em.createQuery("SELECT term FROM Term term WHERE term.current = true");
-		Term term = (Term) query.getResultList().get(0);
-		return term;
-	}
 
-	public void setCurrentTerm(EntityManager em, int termId) {
-		try {
-			em.getTransaction().begin();
-			Query query = em.createQuery("SELECT term FROM Term term WHERE term.current = true");
-			Term term = (Term) query.getResultList().get(0);
-			Term currentTerm = em.find(Term.class, termId);
-			term.setCurrent(false);
-			currentTerm.setCurrent(true);
-			em.getTransaction().commit();
-		}
-		catch (Exception e) {
-			throw e;
-		}
-	}
 
 	public void modifyTestingCenter(EntityManager em, int numSeats, int numSetAside, Timestamp openTime,
 			Timestamp closeTime, int gapTime, int reminderInterval) {
@@ -259,5 +225,20 @@ public class Administrator implements Serializable {
 
 		}
 
+	}
+	
+	public void setCurrentTerm(EntityManager em, int termId) {
+		try {
+			em.getTransaction().begin();
+			Query query = em.createQuery("SELECT term FROM Term term WHERE term.current = true");
+			Term term = (Term) query.getResultList().get(0);
+			Term currentTerm = em.find(Term.class, termId);
+			term.setCurrent(false);
+			currentTerm.setCurrent(true);
+			em.getTransaction().commit();
+		}
+		catch (Exception e) {
+			throw e;
+		}
 	}
 }
