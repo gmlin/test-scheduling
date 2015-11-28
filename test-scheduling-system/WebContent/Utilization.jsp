@@ -16,14 +16,27 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Check In</title>
+<title>Add Closed Dates and Reserved Periods</title>
+<link rel="stylesheet" type="text/css"
+    href="//cdn.jsdelivr.net/bootstrap/latest/css/bootstrap.css" />
 <link rel="stylesheet" href="css/bootstrap.min.css">
 <link href="css/styles.css" rel="stylesheet">
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
-<script src="js/scripts.js"></script>
-<script src="/test-scheduling-system/JavaScriptServlet"></script>
 
+<script src="js/scripts.js"></script>
+<script type="text/javascript"
+	src="//cdn.jsdelivr.net/jquery/1/jquery.min.js"></script>
+<script type="text/javascript"
+	src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+
+<!-- Include Date Range Picker -->
+<script type="text/javascript"
+	src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
+<link rel="stylesheet" type="text/css"
+	href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
+	<script src="/test-scheduling-system/JavaScriptServlet"></script>
+	
 </head>
 <body>
 
@@ -47,6 +60,26 @@
                         <h4 class="text-center">Utilization</h4>
                     </div>
                     <div class="panel-body">
+                    	<form action="utilization" method="get">
+							<div class="form-group">
+								<label for="utilizationDateRange">Date Range</label> <input
+									type="text" name="utilizationDateRange" id="utilizationDateRange">
+								<script type="text/javascript">
+								$(function() {
+    								$('input[name="utilizationDateRange"]').daterangepicker();
+								});
+								</script>
+							</div>
+							<button type="submit" class="btn btn-default">Submit</button>
+							<br></br>
+							<br></br>
+							<%
+								if (session.getAttribute("message") != null) {
+									out.println(session.getAttribute("message"));
+									session.removeAttribute("message");
+								}
+							%>
+						</form>
                     </div>
                 </div>
             </div>

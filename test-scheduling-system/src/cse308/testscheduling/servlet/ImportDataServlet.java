@@ -30,6 +30,7 @@ import cse308.testscheduling.Exam;
 import cse308.testscheduling.Instructor;
 import cse308.testscheduling.Seat;
 import cse308.testscheduling.Student;
+import cse308.testscheduling.Term;
 import cse308.testscheduling.User;
 
 @WebServlet("/import_data")
@@ -152,11 +153,43 @@ public class ImportDataServlet extends HttpServlet{
 			String d = parts[3];
 			String f = parts[4];
 			
+			String g = a.substring(a.length()-4); //4digit term
+			int intterm = Integer.parseInt(g);
+			Term term = em.find(Term.class, intterm);
+			
 			Course newCourse = new Course();
 			newCourse.setCourseId(a);
 			newCourse.setSubject(b);
 			newCourse.setCatalogNumber(c);
 			newCourse.setSection(d);
+			if(term == null){
+				
+				Term newTerm = new Term();
+				newTerm.setTermID(intterm);
+				if(g.substring(g.length() -1).equals("1")){
+					newTerm.setSeason("WINTER");
+				}
+				if(g.substring(g.length() -1).equals("4")){
+					newTerm.setSeason("SPRING");
+				}
+				if(g.substring(g.length() -1).equals("6")){
+					newTerm.setSeason("SUMMER");
+				}
+				if(g.substring(g.length() -1).equals("8")){
+					newTerm.setSeason("FALL");
+				}
+				newTerm.setYear(Integer.parseInt("20" +g.substring(1, 3)));
+				newTerm.setCurrent(false);
+				
+				newTerm.addCourse(newCourse);
+				newCourse.setTerm(newTerm);
+				em.persist(newTerm);
+				
+			}
+			else {
+				term.addCourse(newCourse);
+				newCourse.setTerm(term);
+			}
 						
 			try{
 				for(Instructor instructor : currentInstructorList){
@@ -183,6 +216,8 @@ public class ImportDataServlet extends HttpServlet{
 		Query query = em.createQuery("SELECT course FROM Course course");
 		List<Course> courseList = null;
 		courseList = query.getResultList();
+		
+		
 		while ((line3 = reader3.readLine()) != null) {
 			parts = line3.split(",");
 			String a = parts[0];
