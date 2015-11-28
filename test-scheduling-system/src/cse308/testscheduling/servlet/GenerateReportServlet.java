@@ -78,7 +78,8 @@ public class GenerateReportServlet extends HttpServlet{
 			    
 			} else if (report.equals("weekly")) {
 			    session.setAttribute("message", "Weekly Appointment Report<br></br>"
-			    		+ term );
+			    		+ "Number of student appointments on each week of term " + term + " (with course identifiers):<br></br>"
+			    		);
 			    
 			} else if (report.equals("term")) {
 				List<Course> courses = new ArrayList<Course>();
