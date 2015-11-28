@@ -52,7 +52,7 @@
 							<div class="form-group">
 								<label for="termID">Term</label><select
 									class="form-control" name="termID" id="termID" required>
-									<c:forEach items="${sessionScope.user.administrator.allTerms}"
+									<c:forEach items="${sessionScope.user.allTerms}"
 										var="term">
 										<option value="${term.termID}">${term}
 												(${term.season} ${term.year})</option>
@@ -71,7 +71,7 @@
 							<div class="form-group">
 								<label for="termStart">Term Start</label><select
 									class="form-control" name="termStart" id="termStart" required>
-									<c:forEach items="${sessionScope.user.administrator.allTerms}"
+									<c:forEach items="${sessionScope.user.allTerms}"
 										var="term">
 										<option value="${term.termID}">${term}
 												(${term.season} ${term.year})</option>
@@ -81,7 +81,7 @@
 							<div class="form-group">
 								<label for="termEnd">Term End</label><select
 									class="form-control" name="termEnd" id="termEnd" required>
-									<c:forEach items="${sessionScope.user.administrator.allTerms}"
+									<c:forEach items="${sessionScope.user.allTerms}"
 										var="term">
 										<option value="${term.termID}">${term}
 												(${term.season} ${term.year})</option>

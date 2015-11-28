@@ -72,9 +72,14 @@ public class GenerateReportServlet extends HttpServlet{
 						int totalappointments = 0;
 						for (Course c: t.getCourses()) {
 							for (Exam e: c.getExams()) {
-								for (Appointment a: e.getAppointments()) {
-									totalappointments++;
-								}
+								totalappointments += e.getAppointments().size();
+							}
+						}
+						Query query2 = em.createQuery("SELECT exam FROM Exam exam WHERE exam.adHoc = true");
+						List<Exam> adHocs = query2.getResultList();
+						for (Exam e: adHocs) {
+							if (e.getTerm().getTermID() == t.getTermID()) {
+								totalappointments += e.getAppointments().size();
 							}
 						}
 						termsTotal.add("Term " + t + " has " + totalappointments + " student appointments");
