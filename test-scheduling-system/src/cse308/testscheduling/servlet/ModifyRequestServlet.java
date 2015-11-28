@@ -59,18 +59,17 @@ public class ModifyRequestServlet extends HttpServlet {
 			logger.addHandler(fh2);
 			User user = em.find(User.class, userId);
 			Administrator admin = user.getAdministrator();
-			if (examIds.hasMoreElements()) {
-				examIds.nextElement();
-			}
 			while (examIds.hasMoreElements()) {
 				String examId = examIds.nextElement();
-				System.out.println("Exam id is (" + examId + ")");
-				if (request.getParameter(examId).equals("approve")) {
-					admin.modifyRequest(em, examId, Status.APPROVED);
-					logger.log(Level.INFO, examId + " has been approved by admin");
-				} else {
-					admin.modifyRequest(em, examId, Status.DENIED);
-					logger.log(Level.INFO, examId + " has been denied by admin");
+				if (!examId.equals("OWASP_CSRFTOKEN")) {
+					System.out.println("Exam id is (" + examId + ")");
+					if (request.getParameter(examId).equals("approve")) {
+						admin.modifyRequest(em, examId, Status.APPROVED);
+						logger.log(Level.INFO, examId + " has been approved by admin");
+					} else {
+						admin.modifyRequest(em, examId, Status.DENIED);
+						logger.log(Level.INFO, examId + " has been denied by admin");
+					}
 				}
 			}
 			session.setAttribute("user", user);
