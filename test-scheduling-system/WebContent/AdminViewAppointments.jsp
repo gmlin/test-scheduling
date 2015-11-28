@@ -67,7 +67,7 @@
                                     <c:forEach var="appt"
                                         items="${sessionScope.user.administrator.futureAppointments}">
                                         <tr>
-                                        	<td>${appt.exam.course.term.season} ${appt.exam.course.term.year}</td>
+                                        	<td>${appt.exam.term.season} ${appt.exam.term.year}</td>
                                             <td>${appt.id}</td>
                                             <td>${appt.exam.examId }
                                             <td>${appt.dateString }</td>
