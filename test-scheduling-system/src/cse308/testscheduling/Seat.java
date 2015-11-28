@@ -13,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Query;
 import javax.persistence.CascadeType;
 
 import cse308.testscheduling.servlet.DatabaseManager;
@@ -23,7 +24,7 @@ import cse308.testscheduling.servlet.DatabaseManager;
  */
 @Entity
 
-public class Seat implements Serializable {
+public class Seat implements Serializable, Comparable<Seat> {
 
 	private static final long serialVersionUID = 1L;
 
@@ -53,17 +54,34 @@ public class Seat implements Serializable {
 		EntityManager em = DatabaseManager.createEntityManager();
 		Seat seat1 = em.find(Seat.class, seatNumber - 1);
 		Seat seat2 = em.find(Seat.class, seatNumber + 1);
-		if ((seat1 != null && e.equals(seat1.examAt(t))) || (seat2 != null && e.equals(seat2.examAt(t)))) {
-			em.close();
-			return false;
-		}
 		em.close();
+		if (seat1 != null) {
+			for (Appointment appt :seat1.getAppointments()) {
+				if (appt.overlapsWith(t, e.getDuration())) {
+					return false;
+				}
+			}
+		}
+		if (seat2 != null) {
+			for (Appointment appt :seat2.getAppointments()) {
+				if (appt.overlapsWithExam(t, e)) {
+					return false;
+				}
+			}
+		}
+		
 		return true;
 	}
 
 	public Exam examAt(Timestamp t) {
+		EntityManager em = DatabaseManager.createEntityManager();
+		Query query = em.createQuery("SELECT term FROM Term term WHERE term.current = true");
+		Term term = (Term) query.getResultList().get(0);
+		em.close();
+		int gapTime = term.getTestingCenter().getGapTime();
 		for (Appointment appt : appointments) {
-			if (appt.getDateTime().compareTo(t) <= 0 || appt.getEndDateTime().compareTo(t) >= 0) {
+			Timestamp end = Timestamp.valueOf(appt.getEndDateTime().toLocalDateTime().plusMinutes(gapTime));
+			if (appt.getDateTime().compareTo(t) <= 0 || end.compareTo(t) >= 0) {
 				return appt.getExam();
 			}
 		}
@@ -83,18 +101,28 @@ public class Seat implements Serializable {
 	}
 
 	@SuppressWarnings("deprecation")
-	public boolean isAppointable(Timestamp t, Exam e) {
+	public boolean isAppointable(Timestamp t, Exam e) throws Exception {
 		LocalDateTime apptEnd = t.toLocalDateTime().plusMinutes(e.getDuration());
 		if (t.before(e.getStartDateTime())
 				|| apptEnd.isAfter(e.getEndDateTime().toLocalDateTime())) {
-			return false;
+			throw new Exception("Invalid appointment times.");
+		}
+		EntityManager em = DatabaseManager.createEntityManager();
+		Query query = em.createQuery("SELECT term FROM Term term WHERE term.current = true");
+		Term term = (Term) query.getResultList().get(0);
+		em.close();
+		TestingCenter tc = term.getTestingCenter();
+		if (!tc.isOpen(t) || !tc.isOpen(Timestamp.valueOf(t.toLocalDateTime().plusMinutes(e.getDuration())))) {
+			throw new Exception("Testing center is not open for entirety of appointment.");
 		}
 		if (checkAdjacent(t, e)) {
 			if (appointments.isEmpty()) {
 				return true;
 			}
-			if (examAt(t) != null) {
-				return false;
+			for (Appointment appt : appointments) {
+				if (appt.overlapsWith(t, e.getDuration())) {
+					return false;
+				}
 			}
 			return true;
 		}
@@ -127,5 +155,9 @@ public class Seat implements Serializable {
 		if (seatNumber != other.seatNumber)
 			return false;
 		return true;
+	}
+	@Override
+	public int compareTo(Seat o) {
+		return this.seatNumber - o.seatNumber;
 	}
 }

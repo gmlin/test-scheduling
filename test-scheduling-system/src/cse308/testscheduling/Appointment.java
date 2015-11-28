@@ -6,12 +6,16 @@ import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityManager;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Query;
+
+import cse308.testscheduling.servlet.DatabaseManager;
 
 /**
  * Entity implementation class for Entity: Appointment
@@ -79,7 +83,12 @@ public class Appointment implements Serializable, Comparable<Appointment> {
 	}
 
 	public Timestamp getEndDateTime() {
-		return Timestamp.valueOf(dateTime.toLocalDateTime().plusMinutes(exam.getDuration()));
+		EntityManager em = DatabaseManager.createEntityManager();
+		Query query = em.createQuery("SELECT term FROM Term term WHERE term.current = true");
+		Term term = (Term) query.getResultList().get(0);
+		em.close();
+		int gapTime = term.getTestingCenter().getGapTime();
+		return Timestamp.valueOf(dateTime.toLocalDateTime().plusMinutes(exam.getDuration() + gapTime));
 	}
 
 	public Exam getExam() {
@@ -110,7 +119,7 @@ public class Appointment implements Serializable, Comparable<Appointment> {
 	public boolean isCancelable() {
 		if (attendance)
 			return false;
-		return LocalDateTime.now().minusDays(1).isBefore(dateTime.toLocalDateTime());
+		return LocalDateTime.now().plusDays(1).isBefore(dateTime.toLocalDateTime());
 	}
 
 	public void setAttendance(boolean attendance) {
@@ -142,4 +151,38 @@ public class Appointment implements Serializable, Comparable<Appointment> {
 		return o.getDateTime().compareTo(this.getDateTime());
 	}
 	
+	public boolean overlapsWith(Timestamp start, int duration) {
+		EntityManager em = DatabaseManager.createEntityManager();
+		Query query = em.createQuery("SELECT term FROM Term term WHERE term.current = true");
+		Term term = (Term) query.getResultList().get(0);
+		em.close();
+		int gapTime = term.getTestingCenter().getGapTime();
+		Timestamp end = Timestamp.valueOf(start.toLocalDateTime().plusMinutes(duration + gapTime));
+		if (!this.getDateTime().before(end) || !start.before(this.getEndDateTime())) {
+			return false;
+		}
+		else {
+			return true;
+		}
+	}
+	
+	public boolean overlapsWithExam(Timestamp start, Exam exam) {
+		if (!this.getExam().equals(exam)) {
+			return false;
+		}
+		else {
+			EntityManager em = DatabaseManager.createEntityManager();
+			Query query = em.createQuery("SELECT term FROM Term term WHERE term.current = true");
+			Term term = (Term) query.getResultList().get(0);
+			em.close();
+			int gapTime = term.getTestingCenter().getGapTime();
+			Timestamp end = Timestamp.valueOf(start.toLocalDateTime().plusMinutes(exam.getDuration() + gapTime));
+			if (!this.getDateTime().before(end) || !start.before(this.getEndDateTime())) {
+				return false;
+			}
+			else {
+				return true;
+			}
+		}
+	}
 }

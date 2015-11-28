@@ -189,8 +189,14 @@ public class TestCaseSetup {
 		term2.addCourse(c3);
 
 		Seat seat;
-		for (int i = 0; i < t.getNumSeats(); i++) {
+		for (int i = 0; i < t2.getNumSeats(); i++) {
 			seat = new Seat();
+			seat.setSetAside(false);
+			em.persist(seat);
+		}
+		for (int i = 0; i < t2.getNumSetAsideSeats(); i++) {
+			seat = new Seat();
+			seat.setSetAside(true);
 			em.persist(seat);
 		}
 

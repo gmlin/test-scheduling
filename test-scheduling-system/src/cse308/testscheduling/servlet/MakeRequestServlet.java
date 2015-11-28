@@ -62,7 +62,7 @@ public class MakeRequestServlet extends HttpServlet {
 				session.setAttribute("message", "Cannot schedule exam.");
 			}
 		} catch (Exception e) {
-			session.setAttribute("message", e.toString());
+			session.setAttribute("message", e.getMessage());
 			// logger.log(Level.SEVERE, "Error in making Exam", e);
 		} finally {
 			em.close();

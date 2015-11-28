@@ -64,7 +64,7 @@
 										var="exam">
 										<option value="${exam.examId}">${exam.examId} 
 										(${exam.course.term.season} ${exam.course.term.year}) 
-										Time: ${exam.startDateTime } to ${exam.endDateTime }</option>
+										Time: ${exam.startDateTime } to ${exam.endDateTime } ${exam.duration } min</option>
 									</c:forEach>
 								</select>
 							</div>

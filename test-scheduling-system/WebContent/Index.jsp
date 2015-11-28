@@ -43,6 +43,7 @@
 						<h4>Notices</h4>
 					</div>
 					<div class="panel-body">
+					   <p>Open hours: ${sessionScope.user.currentTerm.testingCenter.openTimeString } to ${sessionScope.user.currentTerm.testingCenter.closeTimeString }</p>
 						<c:if test="${not empty sessionScope.user.administrator}">
 							<%
 								User u = (User) session.getAttribute("user");

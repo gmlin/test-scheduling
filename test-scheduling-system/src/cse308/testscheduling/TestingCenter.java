@@ -154,5 +154,13 @@ public class TestingCenter implements Serializable {
 	public void setTerm(Term term) {
 		this.term = term;
 	}
+	
+	@SuppressWarnings("deprecation")
+	public boolean isOpen(Timestamp t) {
+		double time = t.getHours() + t.getMinutes() / 60.0;
+		double open = openTime.getHours() + openTime.getMinutes() / 60.0;
+		double close = closeTime.getHours() + closeTime.getMinutes() / 60.0;
+		return (time >= open && time <= close);
+	}
 
 }

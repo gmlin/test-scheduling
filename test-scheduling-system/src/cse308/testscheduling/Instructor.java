@@ -175,7 +175,7 @@ public class Instructor implements Serializable {
 		return result;
 	}
 
-	public boolean requestAdHocExam(EntityManager em, String[] netIds, int duration, Timestamp startDateTime, Timestamp endDateTime) {
+	public boolean requestAdHocExam(EntityManager em, String[] netIds, int duration, Timestamp startDateTime, Timestamp endDateTime) throws Exception {
 		logger.entering(getClass().getName(), "requestAdHocExam");
 		File f = new File("/AdHocExamRequestTest.log");
 		FileHandler fh = null;
@@ -192,7 +192,7 @@ public class Instructor implements Serializable {
 		if (endDateTime.before(startDateTime) 
 				|| startDateTime.toLocalDateTime().isBefore(LocalDateTime.now())
 				|| startDateTime.toLocalDateTime().plusMinutes(duration).isAfter(endDateTime.toLocalDateTime()))
-			return false;
+			throw new Exception("Invalid start and end times.");
 		//EntityManager em = DatabaseManager.createEntityManager();
 		em.getTransaction().begin();
 		try {
@@ -208,6 +208,12 @@ public class Instructor implements Serializable {
 			for (String netId : netIds) {
 				System.out.println(netId);
 				u = em.find(User.class, netId.trim());
+				if (u == null) {
+					throw new Exception("User " + netId + " does not exist.");
+				}
+				if (u.getStudent() == null) {
+					throw new Exception("User " + netId + " is not a student.");
+				}
 				u.getStudent().addAdHocExam(exam);
 				exam.addStudent(u.getStudent());
 			}
@@ -227,7 +233,7 @@ public class Instructor implements Serializable {
 		}
 	}
 
-	public boolean requestCourseExam(EntityManager em, String courseId, int duration, Timestamp startDateTime, Timestamp endDateTime) {
+	public boolean requestCourseExam(EntityManager em, String courseId, int duration, Timestamp startDateTime, Timestamp endDateTime) throws Exception {
 		logger.entering(getClass().getName(), "requestCourseExam");
 		File f = new File("/CourseExamRequestTest.log");
 		FileHandler fh = null;
@@ -244,7 +250,7 @@ public class Instructor implements Serializable {
 		if (endDateTime.before(startDateTime) 
 				|| startDateTime.toLocalDateTime().isBefore(LocalDateTime.now())
 				|| startDateTime.toLocalDateTime().plusMinutes(duration).isAfter(endDateTime.toLocalDateTime()))
-			return false;
+			throw new Exception("Invalid start and end times.");
 		//EntityManager em = DatabaseManager.createEntityManager();
 		try {
 			em.getTransaction().begin();

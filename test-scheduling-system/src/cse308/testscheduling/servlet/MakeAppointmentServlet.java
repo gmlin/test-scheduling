@@ -73,7 +73,7 @@ public class MakeAppointmentServlet extends HttpServlet {
 				session.setAttribute("message", "Successfully scheduled appointment.");
 			}
 		} catch (Exception e) {
-			session.setAttribute("message", e);
+			session.setAttribute("message", e.getMessage());
 		} finally {
 			em.close();
 			response.sendRedirect(request.getHeader("Referer"));

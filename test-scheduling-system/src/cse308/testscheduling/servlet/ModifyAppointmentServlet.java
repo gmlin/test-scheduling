@@ -70,7 +70,7 @@ public class ModifyAppointmentServlet extends HttpServlet {
 				session.setAttribute("appt", appt);
 			}
 			catch (Exception e) {
-				request.getSession().setAttribute("message", e);
+				request.getSession().setAttribute("message", e.getMessage());
 			}
 			finally {
 				em.close();
@@ -101,7 +101,7 @@ public class ModifyAppointmentServlet extends HttpServlet {
 				request.getSession().setAttribute("message", "Cannot change to this date/time or seat.");
 			}
 		} catch (Exception e) {
-			request.getSession().setAttribute("message", e.toString());
+			request.getSession().setAttribute("message", e.getMessage());
 		} finally {
 			em.close();
 			response.sendRedirect("modify_appt?appt=" + apptId);

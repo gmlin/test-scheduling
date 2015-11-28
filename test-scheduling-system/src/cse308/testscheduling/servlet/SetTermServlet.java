@@ -46,7 +46,7 @@ public class SetTermServlet extends HttpServlet {
 			session.setAttribute("message", "Term has been set.");
 		} catch (Exception e) {
 			e.printStackTrace();
-			session.setAttribute("message", e);
+			session.setAttribute("message", e.getMessage());
 		} finally {
 			em.close();
 			response.sendRedirect(request.getHeader("Referer"));

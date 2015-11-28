@@ -120,7 +120,7 @@ public class Administrator implements Serializable {
 		this.user = user;
 	}
 
-	public Appointment makeAppointment(EntityManager em, String studentId, String examId, Timestamp dateTime, boolean setAside) {
+	public Appointment makeAppointment(EntityManager em, String studentId, String examId, Timestamp dateTime, boolean setAside) throws Exception {
 		//EntityManager em = DatabaseManager.createEntityManager();
 		try {
 			User user = em.find(User.class, studentId);
@@ -135,7 +135,7 @@ public class Administrator implements Serializable {
 		}
 	}
 
-	public boolean cancelAppointment(EntityManager em, int apptId) {
+	public boolean cancelAppointment(EntityManager em, int apptId) throws Exception {
 		try {
 			Appointment appt = em.find(Appointment.class, apptId);
 			return appt.getStudent().cancelAppointment(em, apptId, true);
@@ -179,10 +179,16 @@ public class Administrator implements Serializable {
 		}
 	}
 
-	public int checkIn(EntityManager em, String studentId) {
+	public int checkIn(EntityManager em, String studentId) throws Exception {
 		try {
 			User user = em.find(User.class, studentId);
+			if (user == null) {
+				throw new Exception ("User does not exist.");
+			}
 			Student student = user.getStudent();
+			if (student == null) {
+				throw new Exception ("User is not a student.");
+			}
 			for (Appointment appt : student.getAppointments()) {
 				if (appt.getDateTime().toLocalDateTime().isBefore(LocalDateTime.now())
 						&& appt.getEndDateTime().toLocalDateTime().isAfter(LocalDateTime.now())) {
@@ -203,13 +209,32 @@ public class Administrator implements Serializable {
 
 
 
+	@SuppressWarnings("unchecked")
 	public void modifyTestingCenter(EntityManager em, int numSeats, int numSetAside, Timestamp openTime,
 			Timestamp closeTime, int gapTime, int reminderInterval) {
 		try{
 			Query query = em.createQuery("SELECT term FROM Term term WHERE term.current = true");
 			Term term = (Term) query.getResultList().get(0);
 			TestingCenter tc = term.getTestingCenter();
+			query = em.createQuery("SELECT s FROM Seat s WHERE s.setAside = false", Seat.class);
+			List<Seat> seats = query.getResultList();
+			query = em.createQuery("SELECT s FROM Seat s WHERE s.setAside = true", Seat.class);
+			List<Seat> setAsideSeats = query.getResultList();
 			em.getTransaction().begin();
+			if (numSeats > seats.size()) {
+				for (int i = 0; i < numSeats - seats.size(); i++) {
+					Seat seat = new Seat();
+					seat.setSetAside(false);
+					em.persist(seat);
+				}
+			}
+			if (numSetAside > setAsideSeats.size()) {
+				for (int i = 0; i < numSetAside - setAsideSeats.size(); i++) {
+					Seat seat = new Seat();
+					seat.setSetAside(true);
+					em.persist(seat);
+				}
+			}
 			tc.setNumSeats(numSeats);
 			tc.setNumSetAsideSeats(numSetAside);
 			tc.setOpenTime(openTime);

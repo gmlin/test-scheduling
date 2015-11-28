@@ -48,7 +48,7 @@ public class CancelRequestServlet extends HttpServlet {
 				request.getSession().setAttribute("message", "You cannot cancel this exam.");
 			}
 		} catch (Exception e) {
-			request.getSession().setAttribute("message", e);
+			request.getSession().setAttribute("message", e.getMessage());
 		} finally {
 			em.close();
 			response.sendRedirect("ViewRequests.jsp");

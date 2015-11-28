@@ -128,7 +128,7 @@ public class GenerateReportServlet extends HttpServlet{
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			session.setAttribute("message", e);
+			session.setAttribute("message", e.getMessage());
 		} finally {
 			em.close();
 			response.sendRedirect("GenerateReports.jsp");

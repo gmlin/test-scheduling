@@ -76,13 +76,13 @@ public class Student implements Serializable {
 		getCourses().add(course);
 	}
 
-	public boolean cancelAppointment(EntityManager em, int apptId, boolean admin) {
+	public boolean cancelAppointment(EntityManager em, int apptId, boolean admin) throws Exception {
 		//EntityManager em = DatabaseManager.createEntityManager();
 		em.getTransaction().begin();
 		try {
 			Appointment appt = em.find(Appointment.class, apptId);
 			if (appt == null || !appt.getStudent().equals(this))
-				return false;
+				throw new Exception("This appointment does not exist or you do not have permissions to cancel this appointment.");
 			if (admin || appt.isCancelable()) {
 				appt.getExam().getAppointments().remove(appt);
 				appt.getSeat().getAppointments().remove(appt);
@@ -151,16 +151,22 @@ public class Student implements Serializable {
 	}
 
 	@SuppressWarnings("unchecked")
-	public Appointment makeAppointment(EntityManager em, String examId, Timestamp dateTime, boolean setAside) {
+	public Appointment makeAppointment(EntityManager em, String examId, Timestamp dateTime, boolean setAside) throws Exception {
 		//EntityManager em = DatabaseManager.createEntityManager();
+		
 		try {
 			Query query = em.createQuery("SELECT appt FROM Appointment appt "
 					+ "WHERE appt.student = :student AND appt.exam =:exam");
 			Exam exam = em.find(Exam.class, examId);
+			for (Appointment appt : appointments) {
+				if (appt.overlapsWith(dateTime, exam.getDuration())) {
+					throw new Exception("Student already has appointment during this time.");
+				}
+			}
 			query.setParameter("student", this);
 			query.setParameter("exam", exam);
 			if (!query.getResultList().isEmpty())
-				return null;
+				throw new Exception("Student already has an appointment for this exam.");
 			em.getTransaction().begin();
 			if (setAside) {
 				query = em.createQuery("SELECT s FROM Seat s WHERE s.setAside = true", Seat.class);
@@ -169,6 +175,16 @@ public class Student implements Serializable {
 				query = em.createQuery("SELECT s FROM Seat s WHERE s.setAside = false", Seat.class);
 			}
 			List<Seat> seats = query.getResultList();
+			query = em.createQuery("SELECT term FROM Term term WHERE term.current = true");
+			Term term = (Term) query.getResultList().get(0);
+			TestingCenter tc = term.getTestingCenter();
+			Collections.sort(seats);
+			if (setAside) {
+				seats = seats.subList(0, tc.getNumSetAsideSeats());
+			}
+			else {
+				seats = seats.subList(0, tc.getNumSeats());
+			}
 			Appointment appt = null;
 			for (Seat seat : seats) {
 				if (seat.isAppointable(dateTime, exam)) {
@@ -188,6 +204,9 @@ public class Student implements Serializable {
 			}
 			if (appt != null) {
 				em.getTransaction().commit();
+			}
+			else {
+				throw new Exception("No seats available.");
 			}
 			return appt;
 		} catch (Exception e) {
