@@ -1,8 +1,11 @@
 package cse308.testscheduling.servlet;
 
 import java.io.IOException;
+import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeMap;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -38,8 +41,40 @@ public class GenerateReportServlet extends HttpServlet{
 			    session.setAttribute("message", "No report selected");
 			    
 			} else if (report.equals("daily")) {
+				TreeMap<Date, Integer> days = new TreeMap<Date, Integer>();
+				for (Course c: term.getCourses()) {
+					for (Exam e: c.getExams()) {
+						for (Appointment a: e.getAppointments()) {
+							Timestamp t = a.getDateTime();
+							Date d = new Date(t.getYear(), t.getMonth(), t.getDate());
+							if (!(days.containsKey(d))) {
+								days.put(d,1);
+							} else {
+								Integer i = days.get(d)+1;
+								days.put(d,i);
+							}
+						}
+					}
+				}
+				Query query = em.createQuery("SELECT exam FROM Exam exam WHERE exam.adHoc = true");
+				List<Exam> adHocs = query.getResultList();
+				for (Exam e: adHocs) {
+					if (e.getTerm().getTermID() == term.getTermID()) {
+						for (Appointment a: e.getAppointments()) {
+							Timestamp t = a.getDateTime();
+							Date d = new Date(t.getYear(), t.getMonth(), t.getDate());
+							if (!(days.containsKey(d))) {
+								days.put(d,1);
+							} else {
+								Integer i = days.get(d)+1;
+								days.put(d,i);
+							}
+						}
+					}
+				}
 			    session.setAttribute("message", "Daily Appointment Report<br></br>" 
-			    		+ term);
+			    		+ "Number of student appointments on each day of term " + term + ":<br></br>"
+			    		+ days + "<br></br>(Days not listed have no appointments)");
 			    
 			} else if (report.equals("weekly")) {
 			    session.setAttribute("message", "Weekly Appointment Report<br></br>"
@@ -72,15 +107,20 @@ public class GenerateReportServlet extends HttpServlet{
 						int totalappointments = 0;
 						for (Course c: t.getCourses()) {
 							for (Exam e: c.getExams()) {
-								for (Appointment a: e.getAppointments()) {
-									totalappointments++;
-								}
+								totalappointments += e.getAppointments().size();
+							}
+						}
+						Query query2 = em.createQuery("SELECT exam FROM Exam exam WHERE exam.adHoc = true");
+						List<Exam> adHocs = query2.getResultList();
+						for (Exam e: adHocs) {
+							if (e.getTerm().getTermID() == t.getTermID()) {
+								totalappointments += e.getAppointments().size();
 							}
 						}
 						termsTotal.add("Term " + t + " has " + totalappointments + " student appointments");
 					}
 					session.setAttribute("message", "Term Range Appointment Report<br></br>"
-							+ "Total number of student appointments in each term between term " + termStart +" and term " + termEnd + ":<br></br>"
+							+ "Number of student appointments in each term between term " + termStart +" and term " + termEnd + ":<br></br>"
 							+ termsTotal);
 				}
 			} else {
