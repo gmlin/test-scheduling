@@ -234,6 +234,16 @@ public class Student implements Serializable {
 			return false;
 		return true;
 	}
-
+	
+	public List<Appointment> getTermAppointments(int termId) {
+		
+		List<Appointment> termAppts = new ArrayList<Appointment>();
+		for (Appointment appt : appointments) {
+			if (appt.getExam().getTerm().getTermID() == termId) {
+				termAppts.add(appt);
+			}
+		}
+		return termAppts;
+	}
 
 }
