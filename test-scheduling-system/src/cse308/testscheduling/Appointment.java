@@ -141,5 +141,4 @@ public class Appointment implements Serializable, Comparable<Appointment> {
 	public int compareTo(Appointment o) {
 		return o.getDateTime().compareTo(this.getDateTime());
 	}
-	
 }

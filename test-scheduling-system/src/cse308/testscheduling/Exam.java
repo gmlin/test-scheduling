@@ -1,7 +1,9 @@
 package cse308.testscheduling;
 
 import java.io.Serializable;
+import java.sql.Date;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -243,8 +245,13 @@ public class Exam implements Serializable, Comparable<Exam> {
 		}
 	}
 	
-	public int getTotalDuration() {
-		//returns duration + gap time, rounded up to nearest 30 
-		return ((getDuration() + getCourse().getTerm().getTestingCenter().getGapTime() + 29) / 30) * 30;
-	}
+	public int getDays() {
+		long startDate = startDateTime.getTime();
+		long endDate = endDateTime.getTime();
+		long milPerDay = 1000*60*60*24; 
+
+		int numOfDays = (int) ((endDate - startDate) / milPerDay); 
+
+		return (numOfDays + 1); 	
+		}
 }
