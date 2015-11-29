@@ -150,7 +150,6 @@ public class Appointment implements Serializable, Comparable<Appointment> {
 	public int compareTo(Appointment o) {
 		return o.getDateTime().compareTo(this.getDateTime());
 	}
-	
 	public boolean overlapsWith(Timestamp start, int duration) {
 		EntityManager em = DatabaseManager.createEntityManager();
 		Query query = em.createQuery("SELECT term FROM Term term WHERE term.current = true");
