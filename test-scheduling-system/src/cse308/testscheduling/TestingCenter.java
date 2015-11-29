@@ -154,5 +154,13 @@ public class TestingCenter implements Serializable {
 	public void setTerm(Term term) {
 		this.term = term;
 	}
+	
+	public long getTotalOpenTime() {
+		long milliseconds1 = getOpenTime().getTime();
+		long milliseconds2 = getCloseTime().getTime();
 
+		long diff = milliseconds2 - milliseconds1;
+		long diffMinutes = diff / (60 * 1000);
+		return diffMinutes;
+	}
 }

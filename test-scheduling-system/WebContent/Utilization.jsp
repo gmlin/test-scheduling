@@ -61,6 +61,16 @@
                     </div>
                     <div class="panel-body">
                     	<form action="utilization" method="get">
+                    		<div class="form-group">
+								<label for="termID">Term</label><select
+									class="form-control" name="termID" id="termID" required>
+									<c:forEach items="${sessionScope.user.allTerms}"
+										var="term">
+										<option value="${term.termID}">${term}
+												(${term.season} ${term.year})</option>
+									</c:forEach>
+								</select>
+							</div>
 							<div class="form-group">
 								<label for="utilizationDateRange">Date Range</label> <input
 									type="text" name="utilizationDateRange" id="utilizationDateRange">

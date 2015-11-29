@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import cse308.testscheduling.Appointment;
+import cse308.testscheduling.Term;
 
 @WebServlet("/utilization")
 public class UtilizationServlet extends HttpServlet{
@@ -33,6 +34,7 @@ public class UtilizationServlet extends HttpServlet{
 		HttpSession session = request.getSession();
 		EntityManager em = DatabaseManager.createEntityManager();
 		String range = request.getParameter("utilizationDateRange");
+		Term term = em.find(Term.class, Integer.parseInt(request.getParameter("termID")));
 		String[] split = range.split(" - ", 2);
 		String start = split[0];
 		String end = split[1];
@@ -40,7 +42,8 @@ public class UtilizationServlet extends HttpServlet{
 		try {
 			Date startDate = format.parse(start);
 			Date endDate = format.parse(end);
-			TreeMap<LocalDate, Double> days = new TreeMap<LocalDate, Double>();
+			TreeMap<LocalDate, Double> pastcurrentdays = new TreeMap<LocalDate, Double>();
+			TreeMap<LocalDate, Double> futuredays = new TreeMap<LocalDate, Double>();
 			LocalDate startD = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 			LocalDate endD = endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 			for (LocalDate date = startD; !date.isAfter(endD); date = date.plusDays(1)) {
@@ -52,20 +55,22 @@ public class UtilizationServlet extends HttpServlet{
 				query.setParameter("t2", Timestamp.valueOf(date.plusDays(1).atStartOfDay()));
 				List<Appointment> appts = query.getResultList();
 				for (Appointment appt: appts) {
-					//get totalduration by adding up duration of every exam
-					//(duration + gap time + time rounded up to next timeslot)
-					
+					totalduration += appt.getExam().getTotalDuration();
 				}
+				actual = (double)totalduration/(
+						((double)term.getTestingCenter().getNumSeats() + (double)term.getTestingCenter().getNumSetAsideSeats())
+						* (double)term.getTestingCenter().getTotalOpenTime());
 				if (!(date.isAfter(LocalDate.now()))) {
 					//actual utilization for current and previous days
-					days.put(date, actual);
+					pastcurrentdays.put(date, actual);
 				} else {
 					//expected utilization for future days
-					days.put(date, expected);
+					futuredays.put(date, expected);
 				}
 			}
-			session.setAttribute("message", "The utilization for each day in the date range " + range + ":<br></br>"
-					+ days);
+			session.setAttribute("message", "The utilization for each day in the date range " + range + ":<br></br><br></br>"
+					+ "Actual utilization of past and current days:<br></br>" + pastcurrentdays + "<br></br>"
+					+ "Expected utilization of future days:<br></br>" + futuredays);
 		} catch (Exception e) {
 			session.setAttribute("message", e);
 		} finally {

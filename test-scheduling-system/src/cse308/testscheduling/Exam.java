@@ -242,4 +242,9 @@ public class Exam implements Serializable, Comparable<Exam> {
 			return course.getTerm();
 		}
 	}
+	
+	public int getTotalDuration() {
+		//returns duration + gap time, rounded up to nearest 30 
+		return ((getDuration() + getCourse().getTerm().getTestingCenter().getGapTime() + 29) / 30) * 30;
+	}
 }
