@@ -46,6 +46,7 @@
 						<h4 class="text-center">Appointments</h4>
 					</div>
 					<div class="panel-body">
+					   <c:if test="${empty param.apptId }">
 						<form action="ViewAppointments.jsp" method="get">
 							<div class="form-group">
 								<label for="termID">Term</label> <select class="form-control"
@@ -104,7 +105,7 @@
                                     items="${sessionScope.user.student.getTermAppointments(param.termID)}">
                                     <tr>
                                         <td>${appt.exam.term.season}${appt.exam.term.year}</td>
-                                        <td>${appt.id}</td>
+                                        <td><a href="ViewAppointments.jsp?apptId=${appt.id }">${appt.id }</a></td>
                                         <td>${appt.exam.examId }
                                         <td>${appt.dateString }</td>
                                         <td>${appt.timeString }</td>
@@ -152,6 +153,9 @@
 								
 							</tbody>
 						</table>
+						</c:if>
+						<c:if test="${not empty param.apptId }">
+						</c:if>
 					</div>
 				</div>
 			</div>

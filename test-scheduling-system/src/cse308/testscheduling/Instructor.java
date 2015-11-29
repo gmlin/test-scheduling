@@ -306,4 +306,13 @@ public class Instructor implements Serializable {
 		}
 		return termExams;
 	}
+	
+	public Exam getExam(String examId) {
+		for (Exam exam : getAllExams()) {
+			if (exam.getExamId().equals(examId)) {
+				return exam;
+			}
+		}
+		return null;
+	}
 }

@@ -265,4 +265,19 @@ public class Student implements Serializable {
 		return termAppts;
 	}
 
+	
+	public String getExamStatus(String examId) {
+		for (Appointment a : appointments) {
+			if (a.getExam().getExamId().equals(examId)) {
+				if (a.getAttendance() == true) {
+					return "Attended";
+				}
+				else {
+					return "Not attended";
+				}
+			}
+		}
+		return "No appointment";
+	}
+	
 }
