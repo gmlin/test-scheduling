@@ -154,7 +154,12 @@ public class Exam implements Serializable, Comparable<Exam> {
 	}
 
 	public List<Student> getStudents() {
-		return students;
+		if (adHoc) {
+			return students;
+		}
+		else {
+			return course.getStudents();
+		}
 	}
 
 	@Override

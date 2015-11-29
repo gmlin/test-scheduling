@@ -52,7 +52,7 @@ public class CheckInServlet extends HttpServlet {
 				request.getSession().setAttribute("message", "No appointment found for student.");
 			}
 		} catch (Exception e) {
-			request.getSession().setAttribute("message", e.toString());
+			request.getSession().setAttribute("message", e.getMessage());
 		} finally {
 			em.close();
 			response.sendRedirect("CheckIn.jsp");

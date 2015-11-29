@@ -46,6 +46,7 @@
 						<h4 class="text-center">Appointments</h4>
 					</div>
 					<div class="panel-body">
+					   <c:if test="${empty param.apptId }">
 						<form action="ViewAppointments.jsp" method="get">
 							<div class="form-group">
 								<label for="termID">Term</label> <select class="form-control"
@@ -99,31 +100,62 @@
 								<th>Cancel</th>
 							</thead>
 							<tbody>
-								<c:forEach var="appt"
-									items="${sessionScope.user.student.getTermAppointments(param.termID)}">
-									<tr>
-										<td>${appt.exam.term.season}${appt.exam.term.year}</td>
-										<td>${appt.id}</td>
-										<td>${appt.exam.examId }
-										<td>${appt.dateString }</td>
-										<td>${appt.timeString }</td>
-										<td>${appt.exam.duration }</td>
-										<td>${appt.seat.seatNumber }</td>
-										<td><c:if test="${appt.attendance }">
-											 Yes
-											 </c:if> <c:if test="${not appt.attendance }">
-											 No
+							<c:if test="${not empty param.termID }">
+                                        <c:forEach var="appt"
+                                    items="${sessionScope.user.student.getTermAppointments(param.termID)}">
+                                    <tr>
+                                        <td>${appt.exam.term.season}${appt.exam.term.year}</td>
+                                        <td><a href="ViewAppointments.jsp?apptId=${appt.id }">${appt.id }</a></td>
+                                        <td>${appt.exam.examId }
+                                        <td>${appt.dateString }</td>
+                                        <td>${appt.timeString }</td>
+                                        <td>${appt.exam.duration }</td>
+                                        <td>${appt.seat.seatNumber }</td>
+                                        <td><c:if test="${appt.attendance }">
+                                             Yes
+                                             </c:if> <c:if test="${not appt.attendance }">
+                                             No
                                              </c:if></td>
-										<c:if test="${appt.cancelable }">
-											<td><a href="cancel_appt?cancel=${appt.id }">Cancel</a></td>
-										</c:if>
-										<c:if test="${not appt.cancelable }">
-											<td>N/A</td>
-										</c:if>
-									</tr>
-								</c:forEach>
+                                        <c:if test="${appt.cancelable }">
+                                            <td><a href="cancel_appt?cancel=${appt.id }">Cancel</a></td>
+                                        </c:if>
+                                        <c:if test="${not appt.cancelable }">
+                                            <td>N/A</td>
+                                        </c:if>
+                                    </tr>
+                                </c:forEach>
+                                    </c:if>
+                                    <c:if test="${empty param.termID }">
+                                        <c:forEach var="appt"
+                                    items="${sessionScope.user.student.getTermAppointments(sessionScope.user.currentTerm.termID)}">
+                                    <tr>
+                                        <td>${appt.exam.term.season}${appt.exam.term.year}</td>
+                                        <td>${appt.id}</td>
+                                        <td>${appt.exam.examId }
+                                        <td>${appt.dateString }</td>
+                                        <td>${appt.timeString }</td>
+                                        <td>${appt.exam.duration }</td>
+                                        <td>${appt.seat.seatNumber }</td>
+                                        <td><c:if test="${appt.attendance }">
+                                             Yes
+                                             </c:if> <c:if test="${not appt.attendance }">
+                                             No
+                                             </c:if></td>
+                                        <c:if test="${appt.cancelable }">
+                                            <td><a href="cancel_appt?cancel=${appt.id }">Cancel</a></td>
+                                        </c:if>
+                                        <c:if test="${not appt.cancelable }">
+                                            <td>N/A</td>
+                                        </c:if>
+                                    </tr>
+                                </c:forEach>
+                                    </c:if>
+								
 							</tbody>
 						</table>
+						</c:if>
+						<c:if test="${not empty param.apptId }">
+						</c:if>
 					</div>
 				</div>
 			</div>

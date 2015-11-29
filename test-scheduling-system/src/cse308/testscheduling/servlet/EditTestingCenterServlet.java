@@ -70,7 +70,7 @@ public class EditTestingCenterServlet extends HttpServlet {
 			session.setAttribute("user", user);
 			session.setAttribute("message", "Testing Center has been updated");
 		} catch (Exception e) {
-			session.setAttribute("message", e);
+			session.setAttribute("message", e.getMessage());
 		} finally {
 			em.close();
 			response.sendRedirect(request.getHeader("Referer"));

@@ -158,9 +158,16 @@ public class TestingCenter implements Serializable {
 	public long getTotalOpenTime() {
 		long milliseconds1 = getOpenTime().getTime();
 		long milliseconds2 = getCloseTime().getTime();
-
 		long diff = milliseconds2 - milliseconds1;
 		long diffMinutes = diff / (60 * 1000);
 		return diffMinutes;
+	}
+	
+	@SuppressWarnings("deprecation")
+	public boolean isOpen(Timestamp t) {
+		double time = t.getHours() + t.getMinutes() / 60.0;
+		double open = openTime.getHours() + openTime.getMinutes() / 60.0;
+		double close = closeTime.getHours() + closeTime.getMinutes() / 60.0;
+		return (time >= open && time <= close);
 	}
 }

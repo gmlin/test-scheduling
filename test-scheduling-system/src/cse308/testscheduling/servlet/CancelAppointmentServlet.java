@@ -45,10 +45,10 @@ public class CancelAppointmentServlet extends HttpServlet {
 				request.getSession().setAttribute("message", "Successfully canceled appointment.");
 			}
 			else {
-				request.getSession().setAttribute("message", "You cannot cancel this appointment.");
+				request.getSession().setAttribute("message", "It is too late to cancel this appointment.");
 			}
 		} catch (Exception e) {
-			request.getSession().setAttribute("message", e);
+			request.getSession().setAttribute("message", e.getMessage());
 		} finally {
 			em.close();
 			response.sendRedirect("ViewAppointments.jsp");

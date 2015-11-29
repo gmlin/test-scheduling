@@ -76,7 +76,7 @@ public class ModifyRequestServlet extends HttpServlet {
 			request.getSession().setAttribute("message", "Exams successfully approved/denied.");
 		} catch (Exception e) {
 			e.printStackTrace();
-			request.getSession().setAttribute("message", e.toString());
+			request.getSession().setAttribute("message", e.getMessage());
 			logger.log(Level.SEVERE, "Error in approving/denying exam request", e);
 		} finally {
 			em.close();

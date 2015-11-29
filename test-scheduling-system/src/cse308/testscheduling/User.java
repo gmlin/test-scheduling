@@ -133,10 +133,14 @@ public class User implements Serializable {
 		EntityManager em = DatabaseManager.createEntityManager();
 		Query query = em.createQuery("SELECT term FROM Term term WHERE term.current = true");
 		Term term = (Term) query.getResultList().get(0);
+		em.close();
 		return term;
 	}
 
-	public List<Term> getAllTerms(){ 
-		return DatabaseManager.getAllInstances(DatabaseManager.createEntityManager(), Term.class);
+	public List<Term> getAllTerms(){
+		EntityManager em = DatabaseManager.createEntityManager();
+		List<Term> terms = DatabaseManager.getAllInstances(em, Term.class);
+		em.close();
+		return terms;
 	}
 }
