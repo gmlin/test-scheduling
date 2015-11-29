@@ -3,6 +3,7 @@ package cse308.testscheduling;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -60,11 +61,11 @@ public class Administrator implements Serializable {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Exam> getFutureAppointments() {
+	public List<Appointment> getFutureAppointments() {
 		EntityManager em = DatabaseManager.createEntityManager();
 		Query query = em.createQuery("SELECT appt FROM Appointment appt "
 				+ "WHERE appt.dateTime > CURRENT_TIMESTAMP");
-		List<Exam> futureAppointments = null;
+		List<Appointment> futureAppointments = null;
 		try {
 			futureAppointments = query.getResultList();
 		} catch (Exception e) {
@@ -148,7 +149,7 @@ public class Administrator implements Serializable {
 		}
 	}
 
-	public boolean modifyAppointment(EntityManager em, int apptId, Timestamp dateTime, int seatNumber, boolean attendance) {
+	public boolean modifyAppointment(EntityManager em, int apptId, Timestamp dateTime, int seatNumber, boolean attendance) throws Exception {
 		try {
 			Appointment appt = em.find(Appointment.class, apptId);
 			Seat seat = em.find(Seat.class, seatNumber);
@@ -156,6 +157,12 @@ public class Administrator implements Serializable {
 			if (dateTime.before(appt.getExam().getStartDateTime())
 					|| apptEnd.isAfter(appt.getExam().getEndDateTime().toLocalDateTime())) {
 				return false;
+			}
+			Student student = appt.getStudent();
+			for (Appointment app : student.getAppointments()) {
+				if (app.overlapsWith(dateTime, app.getExam().getDuration()) && app.getId() != appt.getId()) {
+					throw new Exception("Student already has appointment during this time.");
+				}
 			}
 			if ((appt.getSeat().equals(seat) || seat.examAt(dateTime) == null)) {
 				em.getTransaction().begin();
@@ -265,5 +272,29 @@ public class Administrator implements Serializable {
 		catch (Exception e) {
 			throw e;
 		}
+	}
+	
+	public int seatsAvailable(String dateTime) {
+		try {
+			EntityManager em = DatabaseManager.createEntityManager();
+			Query query = em.createQuery("SELECT term FROM Term term WHERE term.current = true");
+			Term term = (Term) query.getResultList().get(0);
+			TestingCenter tc = term.getTestingCenter();
+			em.close();
+			return tc.getNumSeats() + tc.getNumSetAsideSeats() - getAppointments(dateTime).size();
+		}
+		catch (Exception e) {
+			throw e;
+		}
+	}
+	
+	public List<Appointment> getAppointments(String dateTime) {
+		List<Appointment> appts = new ArrayList<Appointment>();
+		for (Appointment appt : getFutureAppointments()) {
+			if (appt.overlapsWith(Timestamp.valueOf(dateTime), 0)) {
+				appts.add(appt);
+			}
+		}
+		return appts;
 	}
 }
