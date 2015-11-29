@@ -1,14 +1,11 @@
 package cse308.testscheduling.servlet;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.sql.Timestamp;
-import java.util.List;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
 import javax.servlet.ServletException;
+import javax.servlet.SingleThreadModel;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -17,16 +14,15 @@ import javax.servlet.http.HttpSession;
 
 import cse308.testscheduling.Administrator;
 import cse308.testscheduling.Appointment;
-import cse308.testscheduling.Exam;
-import cse308.testscheduling.Seat;
 import cse308.testscheduling.Student;
 import cse308.testscheduling.User;
 
 /**
  * Servlet implementation class AppointmentServlet
  */
+@SuppressWarnings("deprecation")
 @WebServlet("/make_appointment")
-public class MakeAppointmentServlet extends HttpServlet {
+public class MakeAppointmentServlet extends HttpServlet implements SingleThreadModel {
 
 	private static final long serialVersionUID = 1L;
 

@@ -20,13 +20,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
-import javax.persistence.NoResultException;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Query;
-import javax.servlet.http.HttpSession;
-
-import cse308.testscheduling.servlet.DatabaseManager;
 
 /**
  * Entity implementation class for Entity: Instructor

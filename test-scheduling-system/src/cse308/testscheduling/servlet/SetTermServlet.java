@@ -1,7 +1,6 @@
 package cse308.testscheduling.servlet;
 
 import java.io.IOException;
-import java.sql.Timestamp;
 
 import javax.persistence.EntityManager;
 import javax.servlet.ServletException;
@@ -12,7 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import cse308.testscheduling.Administrator;
-import cse308.testscheduling.TestingCenter;
 import cse308.testscheduling.User;
 
 /**

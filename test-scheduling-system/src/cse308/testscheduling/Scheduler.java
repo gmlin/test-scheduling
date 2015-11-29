@@ -1,7 +1,6 @@
 package cse308.testscheduling;
 
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
@@ -15,6 +14,33 @@ import cse308.testscheduling.servlet.DatabaseManager;
 
 @Singleton
 public class Scheduler {
+	
+	@SuppressWarnings("unchecked")
+	@Schedule(second="0", minute="*", hour="*")
+	public void sendReminders(Timer timer) {
+		EntityManager em = DatabaseManager.createEntityManager();
+		try {
+			Query query = em.createQuery("SELECT term FROM Term term WHERE term.current = true");
+			Term term = (Term) query.getResultList().get(0);
+			TestingCenter tc = term.getTestingCenter();
+			int reminderInterval = tc.getReminderInterval();
+			Timestamp apptTime = Timestamp.from(timer.getNextTimeout().toInstant().plus(reminderInterval - 1, ChronoUnit.MINUTES));
+			if (apptTime.getMinutes() == 0 || apptTime.getMinutes() == 30) {
+				query = em.createQuery("SELECT appt FROM Appointment appt WHERE appt.dateTime =:apptTime", Appointment.class);
+				query.setParameter("apptTime", apptTime);
+				List<Appointment> appts = query.getResultList();
+				for (Appointment appt : appts) {
+					appt.sendReminder();
+				}
+			}
+		}
+		catch (Exception e) {
+			throw e;
+		}
+		finally {
+			em.close();
+		}
+	}
 	
 	@SuppressWarnings({"unchecked"})
 	@Schedule(second="0", minute="0,30", hour="*")

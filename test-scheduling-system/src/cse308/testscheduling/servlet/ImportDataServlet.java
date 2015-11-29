@@ -4,15 +4,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import javax.persistence.Query;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -23,12 +17,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
-import cse308.testscheduling.Administrator;
-import cse308.testscheduling.Appointment;
 import cse308.testscheduling.Course;
-import cse308.testscheduling.Exam;
 import cse308.testscheduling.Instructor;
-import cse308.testscheduling.Seat;
 import cse308.testscheduling.Student;
 import cse308.testscheduling.Term;
 import cse308.testscheduling.User;

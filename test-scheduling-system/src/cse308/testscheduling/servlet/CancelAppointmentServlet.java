@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import cse308.testscheduling.Instructor;
 import cse308.testscheduling.Student;
 import cse308.testscheduling.User;
 

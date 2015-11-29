@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import cse308.testscheduling.Administrator;
-import cse308.testscheduling.TestingCenter;
 import cse308.testscheduling.User;
 
 /**

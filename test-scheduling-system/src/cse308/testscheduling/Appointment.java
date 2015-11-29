@@ -22,7 +22,6 @@ import cse308.testscheduling.servlet.DatabaseManager;
  *
  */
 @Entity
-
 public class Appointment implements Serializable, Comparable<Appointment> {
 
 	private static final long serialVersionUID = 1L;
@@ -65,6 +64,7 @@ public class Appointment implements Serializable, Comparable<Appointment> {
 
 	private boolean attendance;
 
+	
 	public Appointment() {
 		super();
 	}
@@ -185,4 +185,9 @@ public class Appointment implements Serializable, Comparable<Appointment> {
 			}
 		}
 	}
+
+	public void sendReminder() {
+		System.out.println("Reminder: " + this.id);		
+	}
+	
 }

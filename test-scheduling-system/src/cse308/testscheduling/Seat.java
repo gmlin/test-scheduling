@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
@@ -14,7 +15,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Query;
-import javax.persistence.CascadeType;
 
 import cse308.testscheduling.servlet.DatabaseManager;
 
@@ -110,8 +110,9 @@ public class Seat implements Serializable, Comparable<Seat> {
 		EntityManager em = DatabaseManager.createEntityManager();
 		Query query = em.createQuery("SELECT term FROM Term term WHERE term.current = true");
 		Term term = (Term) query.getResultList().get(0);
-		em.close();
 		TestingCenter tc = term.getTestingCenter();
+		em.close();
+		
 		if (!tc.isOpen(t) || !tc.isOpen(Timestamp.valueOf(t.toLocalDateTime().plusMinutes(e.getDuration())))) {
 			throw new Exception("Testing center is not open for entirety of appointment.");
 		}

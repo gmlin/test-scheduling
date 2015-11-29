@@ -1,11 +1,7 @@
 package cse308.testscheduling.servlet;
 
-import java.io.File;
 import java.io.IOException;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.util.logging.FileHandler;
-import java.util.logging.Level;
 
 import javax.persistence.EntityManager;
 import javax.servlet.ServletException;
@@ -17,9 +13,6 @@ import javax.servlet.http.HttpSession;
 
 import cse308.testscheduling.Administrator;
 import cse308.testscheduling.Appointment;
-import cse308.testscheduling.Instructor;
-import cse308.testscheduling.Status;
-import cse308.testscheduling.Student;
 import cse308.testscheduling.User;
 
 /**
