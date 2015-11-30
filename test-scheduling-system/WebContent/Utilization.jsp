@@ -16,7 +16,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Add Closed Dates and Reserved Periods</title>
+<title>Utilization</title>
 <link rel="stylesheet" type="text/css"
     href="//cdn.jsdelivr.net/bootstrap/latest/css/bootstrap.css" />
 <link rel="stylesheet" href="css/bootstrap.min.css">

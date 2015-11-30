@@ -4,6 +4,14 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
@@ -64,7 +72,7 @@ public class Appointment implements Serializable, Comparable<Appointment> {
 
 	private boolean attendance;
 
-	
+
 	public Appointment() {
 		super();
 	}
@@ -145,7 +153,7 @@ public class Appointment implements Serializable, Comparable<Appointment> {
 	public void setStudent(Student student) {
 		this.student = student;
 	}
-	
+
 	@Override
 	public int compareTo(Appointment o) {
 		return o.getDateTime().compareTo(this.getDateTime());
@@ -164,7 +172,7 @@ public class Appointment implements Serializable, Comparable<Appointment> {
 			return true;
 		}
 	}
-	
+
 	public boolean overlapsWithExam(Timestamp start, Exam exam) {
 		if (!this.getExam().equals(exam)) {
 			return false;
@@ -185,8 +193,27 @@ public class Appointment implements Serializable, Comparable<Appointment> {
 		}
 	}
 
-	public void sendReminder() {
-		System.out.println("Reminder: " + this.id);		
+	public void sendReminder() throws NamingException {
+		User user = this.getStudent().getUser();
+		String to = user.getEmail();
+		String from = "freyhalltestingcenter@gmail.com";
+		try {
+			InitialContext ctx = new InitialContext();
+			Session session = (Session) ctx.lookup("mail/notifications");
+			Message message = new MimeMessage(session);
+			message.setFrom(new InternetAddress(from));
+			message.setRecipients(Message.RecipientType.TO,
+					InternetAddress.parse(to));
+			message.setSubject("Appointment Reminder");
+			String text = "Hello " + user.getFirstName() + " " + user.getLastName() + ".\n"
+			+ "You have an appointment for " + this.getExam().getExamId() + " on " 
+			+ this.getDateString() + " " + this.getTimeString() + ".\n"
+			+ "Your seat number is " + this.getSeat().getSeatNumber() + ".";
+			message.setText(text);
+			Transport.send(message);
+		} catch (MessagingException e) {
+			throw new RuntimeException(e);
+		}
 	}
-	
+
 }

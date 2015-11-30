@@ -15,9 +15,9 @@ import cse308.testscheduling.servlet.DatabaseManager;
 @Singleton
 public class Scheduler {
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "deprecation" })
 	@Schedule(second="0", minute="*", hour="*")
-	public void sendReminders(Timer timer) {
+	public void sendReminders(Timer timer) throws Exception {
 		EntityManager em = DatabaseManager.createEntityManager();
 		try {
 			Query query = em.createQuery("SELECT term FROM Term term WHERE term.current = true");
