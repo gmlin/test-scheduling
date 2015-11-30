@@ -2,8 +2,10 @@ package cse308.testscheduling.servlet;
 
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -47,6 +49,8 @@ public class UtilizationServlet extends HttpServlet{
 			TreeMap<LocalDate, Double> futuredays = new TreeMap<LocalDate, Double>();
 			LocalDate startD = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 			LocalDate endD = endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+			List<String> pastcurrent = new ArrayList<String>();
+			List<String> future = new ArrayList<String>();
 			for (LocalDate date = startD; !date.isAfter(endD); date = date.plusDays(1)) {
 				Double actual = 0.0;
 				Double expected = 0.0;
@@ -88,9 +92,25 @@ public class UtilizationServlet extends HttpServlet{
 					futuredays.put(date, expected);
 				}
 			}
+			for (Map.Entry<LocalDate, Double> entry: pastcurrentdays.entrySet()) {
+				pastcurrent.add(entry.getKey() + ": " + entry.getValue() + "<br></br>");
+			}
+			for (Map.Entry<LocalDate, Double> entry: futuredays.entrySet()) {
+				future.add(entry.getKey() + ": " + entry.getValue() + "<br></br>");
+			}
+			String formatedpastcurrent = pastcurrent.toString()
+				    .replace(",", "") 
+				    .replace("[", "") 
+				    .replace("]", "")  
+				    .trim();       
+			String formatedfuture = future.toString()
+				    .replace(",", "") 
+				    .replace("[", "") 
+				    .replace("]", "")  
+				    .trim();
 			session.setAttribute("message", "The utilization for each day in the date range " + range + ":<br></br><br></br>"
-					+ "Actual utilization of past and current days:<br></br>" + pastcurrentdays + "<br></br>"
-					+ "Expected utilization of future days:<br></br>" + futuredays);
+					+ "Actual utilization of past and current days:<br></br>" + formatedpastcurrent + "<br></br>"
+					+ "Expected utilization of future days:<br></br>" + formatedfuture);
 		} catch (Exception e) {
 			session.setAttribute("message", e);
 		} finally {
