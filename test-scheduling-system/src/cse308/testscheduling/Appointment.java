@@ -72,9 +72,11 @@ public class Appointment implements Serializable, Comparable<Appointment> {
 
 	private boolean attendance;
 
+	private boolean notified;
 
 	public Appointment() {
 		super();
+		setNotified(false);
 	}
 
 	public boolean getAttendance() {
@@ -214,6 +216,14 @@ public class Appointment implements Serializable, Comparable<Appointment> {
 		} catch (MessagingException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	public boolean isNotified() {
+		return notified;
+	}
+
+	public void setNotified(boolean notified) {
+		this.notified = notified;
 	}
 
 }

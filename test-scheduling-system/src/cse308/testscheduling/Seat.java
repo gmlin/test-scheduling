@@ -72,6 +72,36 @@ public class Seat implements Serializable, Comparable<Seat> {
 		
 		return true;
 	}
+	
+	public boolean checkOneAdjacent(Timestamp t, Exam e) {
+		EntityManager em = DatabaseManager.createEntityManager();
+		Seat seat1 = em.find(Seat.class, seatNumber - 1);
+		Seat seat2 = em.find(Seat.class, seatNumber + 1);
+		em.close();
+		int adjacent = 0;
+		if (seat1 != null) {
+			for (Appointment appt :seat1.getAppointments()) {
+				if (appt.overlapsWith(t, e.getDuration())) {
+					adjacent++;
+					break;
+				}
+			}
+		}
+		if (seat2 != null) {
+			for (Appointment appt :seat2.getAppointments()) {
+				if (appt.overlapsWithExam(t, e)) {
+					adjacent++;
+					break;
+				}
+			}
+		}
+		if (adjacent == 2) {
+			return false;
+		}
+		else {
+			return true;
+		}
+	}
 
 	public Exam examAt(Timestamp t) {
 		EntityManager em = DatabaseManager.createEntityManager();
@@ -116,21 +146,17 @@ public class Seat implements Serializable, Comparable<Seat> {
 		if (!tc.isOpen(t) || !tc.isOpen(Timestamp.valueOf(t.toLocalDateTime().plusMinutes(e.getDuration())))) {
 			throw new Exception("Testing center is not open for entirety of appointment.");
 		}
-		if (checkAdjacent(t, e)) {
-			if (appointments.isEmpty()) {
-				return true;
-			}
-			for (Appointment appt : appointments) {
-				if (appt.overlapsWith(t, e.getDuration())) {
-					return false;
-				}
-			}
+		if (appointments.isEmpty()) {
 			return true;
 		}
-		else {
-			return false;
+		for (Appointment appt : appointments) {
+			if (appt.overlapsWith(t, e.getDuration())) {
+				return false;
+			}
 		}
+		return true;
 	}
+	
 
 	public void setSetAside(boolean setAside) {
 		this.setAside = setAside;

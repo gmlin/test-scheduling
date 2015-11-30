@@ -26,11 +26,12 @@ public class Scheduler {
 			int reminderInterval = tc.getReminderInterval();
 			Timestamp apptTime = Timestamp.from(timer.getNextTimeout().toInstant().plus(reminderInterval - 1, ChronoUnit.MINUTES));
 			if (apptTime.getMinutes() == 0 || apptTime.getMinutes() == 30) {
-				query = em.createQuery("SELECT appt FROM Appointment appt WHERE appt.dateTime =:apptTime", Appointment.class);
+				query = em.createQuery("SELECT appt FROM Appointment appt WHERE appt.dateTime =:apptTime AND appt.notified = false", Appointment.class);
 				query.setParameter("apptTime", apptTime);
 				List<Appointment> appts = query.getResultList();
 				for (Appointment appt : appts) {
 					appt.sendReminder();
+					appt.setNotified(true);
 				}
 			}
 		}
@@ -48,7 +49,7 @@ public class Scheduler {
 		EntityManager em = DatabaseManager.createEntityManager();
 		try {
 			em.getTransaction().begin();
-			Query query = em.createQuery("SELECT exam FROM Exam exam WHERE exam.startDateTime =:start");
+			Query query = em.createQuery("SELECT exam FROM Exam exam WHERE exam.startDateTime <=:start");
 			Timestamp now = Timestamp.from(timer.getNextTimeout().toInstant().minus(30, ChronoUnit.MINUTES));
 			System.out.println(now);
 			query.setParameter("start", now);
@@ -61,7 +62,7 @@ public class Scheduler {
 					exam.setStatus(Status.CANCELED);
 				}
 			}
-			query = em.createQuery("SELECT exam FROM Exam exam WHERE exam.endDateTime =:end AND exam.status =:status");
+			query = em.createQuery("SELECT exam FROM Exam exam WHERE exam.endDateTime <=:end AND exam.status =:status");
 			query.setParameter("end", now);
 			query.setParameter("status", Status.ONGOING);
 			List<Exam> endingExams = query.getResultList();

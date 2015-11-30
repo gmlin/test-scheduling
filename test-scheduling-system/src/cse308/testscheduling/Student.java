@@ -182,7 +182,7 @@ public class Student implements Serializable {
 			}
 			Appointment appt = null;
 			for (Seat seat : seats) {
-				if (seat.isAppointable(dateTime, exam)) {
+				if (seat.checkAdjacent(dateTime, exam) && seat.isAppointable(dateTime, exam)) {
 					appt = new Appointment();
 					appt.setAttendance(false);
 					appt.setDateTime(dateTime);
@@ -201,7 +201,49 @@ public class Student implements Serializable {
 				em.getTransaction().commit();
 			}
 			else {
-				throw new Exception("No seats available.");
+				for (Seat seat : seats) {
+					if (seat.checkOneAdjacent(dateTime, exam) && seat.isAppointable(dateTime, exam)) {
+						appt = new Appointment();
+						appt.setAttendance(false);
+						appt.setDateTime(dateTime);
+						appt.setExam(exam);
+						appt.setSeat(seat);
+						appt.setSetAsideSeat(setAside);
+						this.addAppointment(appt);
+						exam.addAppointment(appt);
+						appt.setStudent(this);
+						seat.addAppointment(appt);
+						em.persist(appt);
+						break;
+					}
+				}
+				if (appt != null) {
+					em.getTransaction().commit();
+				}
+				else {
+					for (Seat seat : seats) {
+						if (seat.isAppointable(dateTime, exam)) {
+							appt = new Appointment();
+							appt.setAttendance(false);
+							appt.setDateTime(dateTime);
+							appt.setExam(exam);
+							appt.setSeat(seat);
+							appt.setSetAsideSeat(setAside);
+							this.addAppointment(appt);
+							exam.addAppointment(appt);
+							appt.setStudent(this);
+							seat.addAppointment(appt);
+							em.persist(appt);
+							break;
+						}
+					}
+					if (appt != null) {
+						em.getTransaction().commit();
+					}
+					else {
+						throw new Exception("No seats available.");
+					}
+				}
 			}
 			return appt;
 		} catch (Exception e) {
