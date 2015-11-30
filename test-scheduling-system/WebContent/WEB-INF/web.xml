@@ -63,4 +63,8 @@
       <transport-guarantee>CONFIDENTIAL</transport-guarantee>
     </user-data-constraint>
   </security-constraint>
+  <resource-ref>
+    <res-ref-name>mail/notifications</res-ref-name>
+    <res-type>javax.mail.Session</res-type>
+</resource-ref>
 </web-app>
