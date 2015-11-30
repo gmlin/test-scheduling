@@ -3,8 +3,10 @@ package cse308.testscheduling.servlet;
 import java.io.IOException;
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 
 import javax.persistence.EntityManager;
@@ -72,9 +74,18 @@ public class GenerateReportServlet extends HttpServlet{
 						}
 					}
 				}
+				List<String> day = new ArrayList<String>();
+				for (Map.Entry<Date, Integer> entry: days.entrySet()) {
+					day.add(entry.getKey() + ": " + entry.getValue() + "<br></br>");
+				}
+				String formatedday = day.toString()
+					    .replace(",", "") 
+					    .replace("[", "") 
+					    .replace("]", "")  
+					    .trim();
 			    session.setAttribute("message", "Daily Appointment Report<br></br>" 
 			    		+ "Number of student appointments on each day of term " + term + ":<br></br>"
-			    		+ days + "<br></br>(Days not listed have no appointments)");
+			    		+ formatedday + "(Days not listed have no appointments)");
 			    
 			} else if (report.equals("weekly")) {
 			    session.setAttribute("message", "Weekly Appointment Report<br></br>"
@@ -88,9 +99,17 @@ public class GenerateReportServlet extends HttpServlet{
 						courses.add(c);
 					}
 				}
+				List<String> course = new ArrayList<String>();
+				for (Course c: courses) {
+					course.add(c.toString());
+				}
+				String formatedcourse = course.toString()
+					    .replace("[", "") 
+					    .replace("]", "")  
+					    .trim();
 				session.setAttribute("message", "Term Course Report<br></br>"
 						+ "Courses that have used the testing center in term " + term + ":<br></br>"
-						+ courses);
+						+ formatedcourse);
 			} else if (report.equals("termrange")) {
 				if (termEnd.getTermID() < termStart.getTermID())
 					session.setAttribute("message", "Please enter a valid term range");
@@ -118,11 +137,16 @@ public class GenerateReportServlet extends HttpServlet{
 								totalappointments += e.getAppointments().size();
 							}
 						}
-						termsTotal.add("Term " + t + " has " + totalappointments + " student appointments");
+						termsTotal.add("Term " + t + " has " + totalappointments + " student appointments<br></br>");
 					}
+					String formatedtotal = termsTotal.toString()
+						    .replace(",", "") 
+						    .replace("[", "") 
+						    .replace("]", "")  
+						    .trim();
 					session.setAttribute("message", "Term Range Appointment Report<br></br>"
 							+ "Number of student appointments in each term between term " + termStart +" and term " + termEnd + ":<br></br>"
-							+ termsTotal);
+							+ formatedtotal);
 				}
 			} else {
 				session.setAttribute("message", "Invalid report selected");
