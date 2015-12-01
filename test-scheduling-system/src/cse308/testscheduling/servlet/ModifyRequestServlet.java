@@ -196,6 +196,7 @@ public class ModifyRequestServlet extends HttpServlet {
 			e.printStackTrace();
 			session.setAttribute("message", e);
 		} finally {
+			em.close();
 			response.sendRedirect(request.getHeader("Referer"));
 		}
 	}

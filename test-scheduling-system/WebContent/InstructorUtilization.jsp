@@ -57,7 +57,14 @@
                                 out.println(session.getAttribute("message"));
                                 session.removeAttribute("message");
                             }
-                        %>
+                        	%>
+                        	<%
+                            if (session.getAttribute("instructorreport") != null) {
+                                out.println(session.getAttribute("instructorreport"));
+                                session.removeAttribute("instructorreport");
+                            }
+                        	%>
+                        	<br></br>
                         <form action="schedule_exam" method="post">
                             <button type="submit" class="btn btn-default">Confirm</button>
                             <a href="Index.jsp">Cancel</a>
