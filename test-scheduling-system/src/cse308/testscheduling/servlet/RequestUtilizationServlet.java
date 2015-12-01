@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import cse308.testscheduling.Appointment;
+import cse308.testscheduling.Course;
 import cse308.testscheduling.Exam;
 import cse308.testscheduling.Instructor;
 import cse308.testscheduling.Status;
@@ -54,11 +55,13 @@ public class RequestUtilizationServlet extends HttpServlet {
 		session.setAttribute("startDateTime", startDateTime);
 		session.setAttribute("endDateTime", endDateTime);
 		session.setAttribute("exam_type", request.getParameter("exam_type"));
+		String courseId = null;
+		String netIds = null;
 		if (request.getParameter("exam_type").equals("course")) {
-			String courseId = request.getParameter("courseId");
+			courseId = request.getParameter("courseId");
 			session.setAttribute("courseId", courseId);
 		} else if (request.getParameter("exam_type").equals("adhoc")) {
-			String netIds = request.getParameter("netids");
+			netIds = request.getParameter("netids");
 			session.setAttribute("netIds", netIds);
 		}
 		try {
@@ -117,6 +120,30 @@ public class RequestUtilizationServlet extends HttpServlet {
 				query3.setParameter("s3", Status.PENDING);
 				List<Exam> exams = query2.getResultList();
 				List<Exam> exams2 = query3.getResultList();
+				Exam exam = new Exam();
+				exam.setDuration(duration);
+				exam.setStartDateTime(startDateTime);
+				exam.setEndDateTime(endDateTime);
+				if (request.getParameter("exam_type").equals("course")) {
+					exam.setAdHoc(false);
+					Course course = em.find(Course.class, courseId);
+					exam.setCourse(course);
+				}
+				else {
+					exam.setAdHoc(true);
+					User u;
+					String[] netIdsList = netIds.split("\n");
+					for (String netId : netIdsList) {
+						u = em.find(User.class, netId.trim());
+						if (u == null) {
+							throw new Exception("User " + netId + " does not exist.");
+						}
+						if (u.getStudent() == null) {
+							throw new Exception("User " + netId + " is not a student.");
+						}
+						exam.addStudent(u.getStudent());
+					}
+				}
 				exams2.add(exam);
 				for (Exam e: exams) {
 					if (e.getAdHoc()) {
