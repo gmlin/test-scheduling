@@ -47,7 +47,7 @@
 						<h4 class="text-center">Schedule Course Exam</h4>
 					</div>
 					<div class="panel-body">
-						<form action="schedule_exam" method="post">
+						<form action="request_utilization" method="post">
 							<input type="hidden" name="exam_type" value="course" />
 							<%
 								if (session.getAttribute("message") != null) {

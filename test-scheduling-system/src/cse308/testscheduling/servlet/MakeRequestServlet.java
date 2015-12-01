@@ -42,18 +42,19 @@ public class MakeRequestServlet extends HttpServlet implements SingleThreadModel
 		HttpSession session = request.getSession();
 		String userId = (String) session.getAttribute("userid");
 		EntityManager em = DatabaseManager.createEntityManager();
-		int duration = Integer.parseInt(request.getParameter("examDuration"));
-		Timestamp startDateTime = Timestamp.valueOf(request.getParameter("startDateTime"));
-		Timestamp endDateTime = Timestamp.valueOf(request.getParameter("endDateTime"));
+		int duration = (int) session.getAttribute("duration");
+		Timestamp startDateTime =  (Timestamp) session.getAttribute("startDateTime");
+		Timestamp endDateTime = (Timestamp) session.getAttribute("endDateTime");
 		try {
 			User user = em.find(User.class, userId);
 			Instructor instructor = user.getInstructor();
 			boolean success = false;
-			if (request.getParameter("exam_type").equals("course")) {
-				String courseId = request.getParameter("courseId");
+			if (((String)session.getAttribute("exam_type")).equals("course")) {
+				String courseId = (String) session.getAttribute("courseId");
 				success = instructor.requestCourseExam(em, courseId, duration, startDateTime, endDateTime);
-			} else if (request.getParameter("exam_type").equals("adhoc")) {
-				String[] netIds = request.getParameter("netids").split("\n");
+			} else if (((String) session.getAttribute("exam_type")).equals("adhoc")) {
+				String netIdString = (String) session.getAttribute("netIds");
+				String[] netIds = netIdString.split("\n");
 				success = instructor.requestAdHocExam(em, netIds, duration, startDateTime, endDateTime);
 			}
 			if (success) {
@@ -68,7 +69,12 @@ public class MakeRequestServlet extends HttpServlet implements SingleThreadModel
 			// logger.log(Level.SEVERE, "Error in making Exam", e);
 		} finally {
 			em.close();
-			response.sendRedirect(request.getHeader("Referer"));
+			if (((String)session.getAttribute("exam_type")).equals("course")) {
+				response.sendRedirect("ScheduleExam.jsp");
+			}
+			else {
+				response.sendRedirect("ScheduleAdHoc.jsp");
+			}
 			// logger.exiting(getClass().getName(), "doPost");
 		}
 	}
