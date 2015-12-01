@@ -192,34 +192,42 @@ public class Instructor implements Serializable {
 		//EntityManager em = DatabaseManager.createEntityManager();
 		em.getTransaction().begin();
 		try {
-			Exam exam = new Exam();
-			exam.setStatus(Status.PENDING);
-			exam.setAdHoc(true);
-			exam.setExamId("adhoc_" + this.getUser().getNetId() + "_ex" + (this.getAdHocExams().size() + 1));
-			exam.setDuration(duration);
-			exam.setStartDateTime(startDateTime);
-			exam.setEndDateTime(endDateTime);
-			User u;
-			Query query;
-			for (String netId : netIds) {
-				System.out.println(netId);
-				u = em.find(User.class, netId.trim());
-				if (u == null) {
-					throw new Exception("User " + netId + " does not exist.");
+			int numStudents = netIds.length;
+			Query query = em.createQuery("SELECT term FROM Term term WHERE term.current = true");
+			Term term = (Term) query.getResultList().get(0);
+			TestingCenter tc = term.getTestingCenter();
+			if (tc.isSchedulable(em, numStudents, startDateTime, endDateTime, duration)) {
+				Exam exam = new Exam();
+				exam.setStatus(Status.PENDING);
+				exam.setAdHoc(true);
+				exam.setExamId("adhoc_" + this.getUser().getNetId() + "_ex" + (this.getAdHocExams().size() + 1));
+				exam.setDuration(duration);
+				exam.setStartDateTime(startDateTime);
+				exam.setEndDateTime(endDateTime);
+				User u;
+				for (String netId : netIds) {
+					System.out.println(netId);
+					u = em.find(User.class, netId.trim());
+					if (u == null) {
+						throw new Exception("User " + netId + " does not exist.");
+					}
+					if (u.getStudent() == null) {
+						throw new Exception("User " + netId + " is not a student.");
+					}
+					u.getStudent().addAdHocExam(exam);
+					exam.addStudent(u.getStudent());
 				}
-				if (u.getStudent() == null) {
-					throw new Exception("User " + netId + " is not a student.");
-				}
-				u.getStudent().addAdHocExam(exam);
-				exam.addStudent(u.getStudent());
+				exam.setInstructor(this);
+				this.addAdHocExam(exam);
+				em.persist(exam);
+				em.getTransaction().commit();
+				logger.log(Level.INFO, "AdHoc Exam Sucessfully Requested" + " . Duration is: " + duration
+						+ ". StartDate is " + startDateTime + ". EndDate is " + endDateTime);
+				return true;
 			}
-			exam.setInstructor(this);
-			this.addAdHocExam(exam);
-			em.persist(exam);
-			em.getTransaction().commit();
-			logger.log(Level.INFO, "AdHoc Exam Sucessfully Requested" + " . Duration is: " + duration
-					+ ". StartDate is " + startDateTime + ". EndDate is " + endDateTime);
-			return true;
+			else {
+				throw new Exception("Exam is not schedulable.");
+			}
 		} catch (Exception e) {
 			logger.log(Level.SEVERE, "Error in making AdHoc Exam", e);
 			throw e;

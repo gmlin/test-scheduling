@@ -27,6 +27,7 @@ import cse308.testscheduling.Appointment;
 import cse308.testscheduling.Exam;
 import cse308.testscheduling.Status;
 import cse308.testscheduling.Term;
+import cse308.testscheduling.TestingCenter;
 import cse308.testscheduling.User;
 
 /**
@@ -73,10 +74,18 @@ public class ModifyRequestServlet extends HttpServlet {
 				if (!examId.equals("OWASP_CSRFTOKEN")) {
 					if (request.getParameter(examId).equals("approve")) {
 						if (numapproved == 0) {
-							admin.modifyRequest(em, examId, Status.APPROVED);
-							logger.log(Level.INFO, examId + " has been approved by admin");
-							msg += examId + " has been approved by admin.<br>";
-							numapproved++;
+							Query query = em.createQuery("SELECT term FROM Term term WHERE term.current = true");
+							Term term = (Term) query.getResultList().get(0);
+							TestingCenter tc = term.getTestingCenter();
+							if (tc.isSchedulable(em, examId)) {
+								admin.modifyRequest(em, examId, Status.APPROVED);
+								logger.log(Level.INFO, examId + " has been approved by admin");
+								msg += examId + " has been approved by admin.<br>";
+								numapproved++;
+							}
+							else {
+								throw new Exception("This exam is not schedulable.");
+							}
 						}
 						else {
 							msg += "You may only approve one exam at a time.<br>";

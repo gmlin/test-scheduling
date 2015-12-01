@@ -26,7 +26,7 @@ public class Scheduler {
 			int reminderInterval = tc.getReminderInterval();
 			Timestamp apptTime = Timestamp.from(timer.getNextTimeout().toInstant().plus(reminderInterval - 1, ChronoUnit.MINUTES));
 			if (apptTime.getMinutes() == 0 || apptTime.getMinutes() == 30) {
-				query = em.createQuery("SELECT appt FROM Appointment appt WHERE appt.dateTime =:apptTime AND appt.notified = false", Appointment.class);
+				query = em.createQuery("SELECT appt FROM Appointment appt WHERE appt.dateTime <=:apptTime AND appt.notified = false", Appointment.class);
 				query.setParameter("apptTime", apptTime);
 				List<Appointment> appts = query.getResultList();
 				for (Appointment appt : appts) {

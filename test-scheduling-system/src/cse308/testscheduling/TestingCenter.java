@@ -16,6 +16,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.Query;
 
 /**
  * Entity implementation class for Entity: TestingCenter
@@ -172,15 +173,109 @@ public class TestingCenter implements Serializable {
 		return (time >= open && time <= close);
 	}
 	
-	public boolean isSchedulable(Exam e) {
+	@SuppressWarnings("unchecked")
+	public boolean isSchedulable(EntityManager em, String examId) {
+		/*
+		Exam e = em.find(Exam.class, examId);
+		Query query = em.createQuery("SELECT appt FROM Appointment appt WHERE appt.dateTime >=:startTime AND appt.dateTime <=:endTime", Appointment.class);
+		query.setParameter("startTime", e.getStartDateTime());
+		query.setParameter("endTime", e.getEndDateTime());
+		List<Appointment> appts = query.getResultList();
+		int timeSlots = computeNumTimeslots(e.getStartDateTime(), e.getEndDateTime());
+		System.out.println(timeSlots + " total timeslots.");
+		for (Appointment appt : appts) {
+			timeSlots -= appointmentTimeslots(appt.getExam().getDuration());
+		}
+		System.out.println(timeSlots + " timeslots left.");
+		System.out.println(appointmentTimeslots(e.getDuration()) * e.getStudents().size() + " timeslots needed.");
+		return timeSlots >= appointmentTimeslots(e.getDuration()) * e.getStudents().size();
+		*/
 		return true;
 	}
 
+	@SuppressWarnings("unchecked")
 	public boolean isSchedulable(EntityManager em, int numStudents, Timestamp startDateTime, Timestamp endDateTime, int duration) {
+		/*
+		 * Query query = em.createQuery("SELECT appt FROM Appointment appt WHERE appt.dateTime >=:startTime AND appt.dateTime <=:endTime", Appointment.class);
+		query.setParameter("startTime", startDateTime);
+		query.setParameter("endTime", endDateTime);
+		List<Appointment> appts = query.getResultList();
+		int timeSlots = computeNumTimeslots(startDateTime, endDateTime);
+		System.out.println(timeSlots + " total timeslots.");
+		for (Appointment appt : appts) {
+			timeSlots -= appointmentTimeslots(appt.getExam().getDuration());
+		}
+		System.out.println(timeSlots + " timeslots left.");
+		System.out.println(appointmentTimeslots(duration) * numStudents + " timeslots needed.");
+		return timeSlots >= appointmentTimeslots(duration) * numStudents;
+		*/
 		return true;
 	}
 	
+	public int computeNumTimeslots(double startHour, double endHour) {
+		if (startHour >= endHour) {
+			return 0;
+		}
+		double open = openTime.getHours();
+		if (openTime.getMinutes() == 30) {
+			open += .5;
+		}
+		else if (openTime.getMinutes() != 0) {
+			open += .5 * (openTime.getMinutes() / 30 + 1);
+		}
+		double close = closeTime.getHours();
+		if (closeTime.getMinutes() >= 30) {
+			close += 0.5;
+		}
+		double start;
+		double end;
+		if (startHour > open) {
+			start = startHour;
+		}
+		else {
+			start = open;
+		}
+		if (endHour > close) {
+			end = close;
+		}
+		else {
+			end = endHour;
+		}
+		return (int)(2 * (end - start));
+	}
+	@SuppressWarnings("deprecation")
 	public int computeNumTimeslots(Timestamp start, Timestamp end) {
-		return 0;
+		double startHour = start.getHours() + 0.5 * (start.getMinutes() / 30);
+		double endHour = end.getHours() + 0.5 * (start.getMinutes() / 30);
+		if (start.getDate() == end.getDate() && start.getMonth() == end.getMonth() && start.getYear() == end.getYear()) {
+			return (int)(2 * (endHour - startHour));
+		}
+		int timeSlots = computeNumTimeslots(startHour, endHour);
+		start = Timestamp.valueOf(start.toLocalDateTime().plusDays(1));
+		double open = openTime.getHours();
+		if (openTime.getMinutes() == 30) {
+			open += .5;
+		}
+		else if (openTime.getMinutes() != 0) {
+			open += .5 * (openTime.getMinutes() / 30 + 1);
+		}
+		double close = closeTime.getHours();
+		if (closeTime.getMinutes() >= 30) {
+			close += 0.5;
+		}
+		while (!start.toLocalDateTime().plusDays(1).isAfter(end.toLocalDateTime())) {
+			timeSlots += computeNumTimeslots(open, close);
+			start = Timestamp.valueOf(start.toLocalDateTime().plusDays(1));
+		}
+		timeSlots += computeNumTimeslots(startHour, endHour);
+		return timeSlots;
+	}
+	
+	public int appointmentTimeslots(int duration) {
+		duration += gapTime;
+		if (duration % 30 == 0) {
+			return duration / 30;
+		}
+		return duration / 30 + 1;
 	}
 }
