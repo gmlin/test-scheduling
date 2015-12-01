@@ -247,24 +247,32 @@ public class Instructor implements Serializable {
 				|| startDateTime.toLocalDateTime().isBefore(LocalDateTime.now())
 				|| startDateTime.toLocalDateTime().plusMinutes(duration).isAfter(endDateTime.toLocalDateTime()))
 			throw new Exception("Invalid start and end times.");
-		//EntityManager em = DatabaseManager.createEntityManager();
 		try {
-			em.getTransaction().begin();
-			Exam exam = new Exam();
-			exam.setStatus(Status.PENDING);
-			exam.setAdHoc(false);
 			Course course = em.find(Course.class, courseId);
-			exam.setCourse(course);
-			course.addExam(exam);
-			exam.setExamId(course + "_ex" + String.valueOf(course.getExams().size()));
-			exam.setDuration(duration);
-			exam.setStartDateTime(startDateTime);
-			exam.setEndDateTime(endDateTime);
-			em.persist(exam);
-			em.getTransaction().commit();
-			logger.log(Level.INFO, "Regular Exam Sucessfully Requested for " + course.getCourseId() + " . Duration is: "
-					+ duration + ". StartDate is " + startDateTime + ". EndDate is " + endDateTime);
-			return true;
+			int numStudents = course.getStudents().size();
+			Query query = em.createQuery("SELECT term FROM Term term WHERE term.current = true");
+			Term term = (Term) query.getResultList().get(0);
+			TestingCenter tc = term.getTestingCenter();
+			if (tc.isSchedulable(em, numStudents, startDateTime, endDateTime, duration)) {
+				em.getTransaction().begin();
+				Exam exam = new Exam();
+				exam.setStatus(Status.PENDING);
+				exam.setAdHoc(false);
+				exam.setCourse(course);
+				course.addExam(exam);
+				exam.setExamId(course + "_ex" + String.valueOf(course.getExams().size()));
+				exam.setDuration(duration);
+				exam.setStartDateTime(startDateTime);
+				exam.setEndDateTime(endDateTime);
+				em.persist(exam);
+				em.getTransaction().commit();
+				logger.log(Level.INFO, "Regular Exam Sucessfully Requested for " + course.getCourseId() + " . Duration is: "
+						+ duration + ". StartDate is " + startDateTime + ". EndDate is " + endDateTime);
+				return true;
+			}
+			else {
+				throw new Exception("Exam is not schedulable.");
+			}
 		} catch (Exception e) {
 			logger.log(Level.SEVERE, "Error in making Course Exam", e);
 			throw e;

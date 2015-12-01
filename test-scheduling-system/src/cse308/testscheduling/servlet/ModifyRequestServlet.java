@@ -66,21 +66,30 @@ public class ModifyRequestServlet extends HttpServlet {
 			logger.addHandler(fh2);
 			User user = em.find(User.class, userId);
 			Administrator admin = user.getAdministrator();
+			String msg = "";
+			int numapproved = 0;
 			while (examIds.hasMoreElements()) {
 				String examId = examIds.nextElement();
 				if (!examId.equals("OWASP_CSRFTOKEN")) {
-					System.out.println("Exam id is (" + examId + ")");
 					if (request.getParameter(examId).equals("approve")) {
-						admin.modifyRequest(em, examId, Status.APPROVED);
-						logger.log(Level.INFO, examId + " has been approved by admin");
+						if (numapproved == 0) {
+							admin.modifyRequest(em, examId, Status.APPROVED);
+							logger.log(Level.INFO, examId + " has been approved by admin");
+							msg += examId + " has been approved by admin.<br>";
+							numapproved++;
+						}
+						else {
+							msg += "You may only approve one exam at a time.<br>";
+						}
 					} else {
 						admin.modifyRequest(em, examId, Status.DENIED);
 						logger.log(Level.INFO, examId + " has been denied by admin");
+						msg += examId + " has been denied by admin.<br>";
 					}
 				}
 			}
 			session.setAttribute("user", user);
-			request.getSession().setAttribute("message", "Exams successfully approved/denied.");
+			request.getSession().setAttribute("message", msg);
 		} catch (Exception e) {
 			e.printStackTrace();
 			request.getSession().setAttribute("message", e.getMessage());

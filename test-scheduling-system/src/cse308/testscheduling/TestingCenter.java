@@ -10,6 +10,7 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityManager;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -169,5 +170,17 @@ public class TestingCenter implements Serializable {
 		double open = openTime.getHours() + openTime.getMinutes() / 60.0;
 		double close = closeTime.getHours() + closeTime.getMinutes() / 60.0;
 		return (time >= open && time <= close);
+	}
+	
+	public boolean isSchedulable(Exam e) {
+		return false;
+	}
+
+	public boolean isSchedulable(EntityManager em, int numStudents, Timestamp startDateTime, Timestamp endDateTime, int duration) {
+		return false;
+	}
+	
+	public int computeNumTimeslots(Timestamp start, Timestamp end) {
+		return 0;
 	}
 }
