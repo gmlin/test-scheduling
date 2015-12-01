@@ -103,10 +103,13 @@ public class ModifyRequestServlet extends HttpServlet {
 			LocalDate startD = exam.getStartDateTime().toLocalDateTime().toLocalDate();
 			LocalDate endD = exam.getEndDateTime().toLocalDateTime().toLocalDate();
 			TreeMap<LocalDate, Double> futuredays = new TreeMap<LocalDate, Double>();
+			TreeMap<LocalDate, Double> futuredays2 = new TreeMap<LocalDate, Double>();
 			List<String> future = new ArrayList<String>();
+			List<String> future2 = new ArrayList<String>();
 			for (LocalDate date = startD; !date.isAfter(endD); date = date.plusDays(1)) {
 				Double actual = 0.0;
 				Double expected = 0.0;
+				Double expected2 = 0.0;
 				int totalDuration = 0;
 				Query query = em.createQuery("SELECT appt FROM Appointment appt WHERE appt.dateTime > :t1 AND appt.dateTime < :t2");
 				query.setParameter("t1", Timestamp.valueOf(date.atStartOfDay()));
@@ -119,13 +122,15 @@ public class ModifyRequestServlet extends HttpServlet {
 						((double)term.getTestingCenter().getNumSeats() + (double)term.getTestingCenter().getNumSetAsideSeats())
 						* (double)term.getTestingCenter().getTotalOpenTime());
 				Double expectedApptDuration = 0.0;
+				Double expectedApptDuration2 = 0.0;
 				Query query2 = em.createQuery("SELECT exam FROM Exam exam WHERE exam.startDateTime < :t1 AND exam.endDateTime > :t2 AND (exam.status = :s1 OR exam.status = :s2)");
 				query2.setParameter("t1", Timestamp.valueOf(date.plusDays(1).atStartOfDay()));
 				query2.setParameter("t2", Timestamp.valueOf(date.atStartOfDay()));
 				query2.setParameter("s1", Status.APPROVED);
 				query2.setParameter("s2", Status.ONGOING);
 				List<Exam> exams = query2.getResultList();
-				exams.add(exam);
+				List<Exam> exams2 = query2.getResultList();
+				exams2.add(exam);
 				for (Exam e: exams) {
 					if (e.getAdHoc()) {
 						expectedApptDuration += (((double)e.getDuration() + (double)term.getTestingCenter().getGapTime())
@@ -141,17 +146,43 @@ public class ModifyRequestServlet extends HttpServlet {
 						((double)term.getTestingCenter().getNumSeats() + (double)term.getTestingCenter().getNumSetAsideSeats())
 						* (double)term.getTestingCenter().getTotalOpenTime()));	
 				futuredays.put(date, expected);
+				
+				for (Exam e: exams2) {
+					if (e.getAdHoc()) {
+						expectedApptDuration2 += (((double)e.getDuration() + (double)term.getTestingCenter().getGapTime())
+								* ((double)e.getStudents().size() - (double)e.getAppointments().size()) 
+								/ (double)e.getDays());
+					} else {
+						expectedApptDuration2 += (((double)e.getDuration() + (double)term.getTestingCenter().getGapTime())
+								* ((double)e.getCourse().getStudents().size() - (double)e.getAppointments().size()) 
+								/ (double)e.getDays());
+					}
+				}
+				expected2 = (actual + expectedApptDuration2 / (
+						((double)term.getTestingCenter().getNumSeats() + (double)term.getTestingCenter().getNumSetAsideSeats())
+						* (double)term.getTestingCenter().getTotalOpenTime()));	
+				futuredays2.put(date, expected2);
 			}
 			for (Map.Entry<LocalDate, Double> entry: futuredays.entrySet()) {
 				future.add(entry.getKey() + ": " + entry.getValue() + "<br></br>");
+			}
+			for (Map.Entry<LocalDate, Double> entry: futuredays2.entrySet()) {
+				future2.add(entry.getKey() + ": " + entry.getValue() + "<br></br>");
 			}
 			String formatedfuture = future.toString()
 				    .replace(",", "") 
 				    .replace("[", "") 
 				    .replace("]", "")  
 				    .trim();
-			session.setAttribute("report", "The expected utilization from " + startD + " to " + endD + " if this request is approved:<br></br>"
-					+ formatedfuture);
+			String formatedfuture2 = future2.toString()
+				    .replace(",", "") 
+				    .replace("[", "") 
+				    .replace("]", "")  
+				    .trim();
+			session.setAttribute("report", "The current expected utilization from " + startD + " to " + endD + ":<br></br>"
+					+ formatedfuture 
+					+ "<br></br>The expected utilization from " + startD + " to " + endD + " if exam " + exam.getExamId() + " is approved:<br></br>"
+					+ formatedfuture2);
 		} catch (Exception e) {
 			e.printStackTrace();
 			session.setAttribute("message", e);
