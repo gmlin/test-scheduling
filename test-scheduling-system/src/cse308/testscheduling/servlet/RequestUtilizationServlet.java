@@ -193,7 +193,9 @@ public class RequestUtilizationServlet extends HttpServlet {
 				    .replace("[", "") 
 				    .replace("]", "")  
 				    .trim();
-			session.setAttribute("instructorreport", "The current expected utilization from " + startD + " to " + endD + ":<br></br>");
+			session.setAttribute("instructorreport", "The current expected utilization from " + startD + " to " + endD + ":<br></br>"
+					+ formatedfuture + "<br></br>The expected utilization from " + startD + " to " + endD + " if this and all pending requests are approved:<br></br>"
+					+ formatedfuture2);
 		} catch (Exception e) {
 			session.setAttribute("message", e);
 		} finally {
