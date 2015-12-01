@@ -173,11 +173,11 @@ public class TestingCenter implements Serializable {
 	}
 	
 	public boolean isSchedulable(Exam e) {
-		return false;
+		return true;
 	}
 
 	public boolean isSchedulable(EntityManager em, int numStudents, Timestamp startDateTime, Timestamp endDateTime, int duration) {
-		return false;
+		return true;
 	}
 	
 	public int computeNumTimeslots(Timestamp start, Timestamp end) {
