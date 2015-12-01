@@ -101,6 +101,34 @@
 
 						</form>
 					</div>
+					<div class="panel-heading">
+						<h4 class="text-center">Check Utilization</h4>
+					</div>
+					<div class="panel-body">
+						<form action="modify_request" method="get">
+							<div class="form-group">
+								<label for="examu">Exam</label> <select class="form-control"
+									name="examu" id="examu" required>
+									<c:forEach items="${sessionScope.user.administrator.pendingExams}"
+										var="exam">
+										<option value="${exam.examId}">${exam.examId} 
+										(${exam.course.term.season} ${exam.course.term.year}) 
+										Time: ${exam.startDateTime } to ${exam.endDateTime } ${exam.duration } min</option>
+									</c:forEach>
+								</select>
+							</div>
+							</div>
+							<button type="submit" class="btn btn-default">Submit</button>
+							<br></br>
+							<br></br>
+							<%
+								if (session.getAttribute("report") != null) {
+									out.println(session.getAttribute("report"));
+									session.removeAttribute("report");
+								}
+							%>
+						</form>
+					</div>
 				</div>
 			</div>
 		</div>
